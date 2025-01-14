@@ -24,9 +24,9 @@ var _ MappedNullable = &OrderItemModifier{}
 type OrderItemModifier struct {
 	// The modifier's ID that is on the partner's system.
 	Id *string `json:"id,omitempty"`
-	// The modifier's price (tax-inclusive) in minor format. `round(165 * (1 + 0.06)) = 175`.
+	// The modifier's price (tax-inclusive) in minor format.  ``` price = round(165 * (1 + 0.06)) = 175 
 	Price *int64 `json:"price,omitempty"`
-	// Tax in minor format for 1 modifier. `165*0.06=10`. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+	// Tax in minor format for 1 modifier. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). ``` tax = 165*0.06=10 
 	Tax *int64 `json:"tax,omitempty"`
 	// The number of modifiers present. The value is always 1.
 	Quantity *int32 `json:"quantity,omitempty"`

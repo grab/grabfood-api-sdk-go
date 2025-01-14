@@ -32,11 +32,11 @@ type OrderCampaign struct {
 	Level *string `json:"level,omitempty"`
 	// The type of campaign.
 	Type *string `json:"type,omitempty"`
-	// The campaign redemption count in this order.
+	// The redemption count of same campaign in this order.
 	UsageCount *int64 `json:"usageCount,omitempty"`
 	// The ratio funded by the merchant in percentage.
 	MexFundedRatio *int32 `json:"mexFundedRatio,omitempty"`
-	// The deducted amount in minor unit format. `Item price(tax inclusive) * 20% discount | 2375*0.2`
+	// The total discount amount in minor unit format applied to the order based on the campaign's usage count. The amount is rounded to the nearest value for `VND`, `IDR`, and `THB`, as decimals are not supported.  ``` deductedAmount = Item price(tax inclusive) * 20% discount | 2375*0.2=475 
 	DeductedAmount *int64 `json:"deductedAmount,omitempty"`
 	// The part that the campaign is applied.
 	DeductedPart *string `json:"deductedPart,omitempty"`

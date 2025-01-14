@@ -22,9 +22,9 @@ var _ MappedNullable = &SellingTime{}
 
 // SellingTime struct for SellingTime
 type SellingTime struct {
-	// The selling time group start time in date & time format. 
+	// The selling time group start time in date & time format. UTC format is expected. 
 	StartTime *string `json:"startTime,omitempty"`
-	// The selling time group end time in date & time format. 
+	// The selling time group end time in date & time format. UTC format is expected. 
 	EndTime *string `json:"endTime,omitempty"`
 	// The selling time's ID on the partner system. This ID should be unique with length min 1 and max 64. 
 	Id *string `json:"id,omitempty"`

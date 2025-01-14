@@ -23,9 +23,9 @@ var _ MappedNullable = &OpenPeriod{}
 
 // OpenPeriod struct for OpenPeriod
 type OpenPeriod struct {
-	// The open start time in 24h format.
+	// The open start time in 24h format. Local time format is expected.
 	StartTime string `json:"startTime"`
-	// The open start time in 24h format.
+	// The open end time in 24h format. Local time format is expected.
 	EndTime string `json:"endTime"`
 	AdditionalProperties map[string]interface{}
 }

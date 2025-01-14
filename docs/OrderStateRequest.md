@@ -5,6 +5,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **MerchantID** | **string** | The merchant&#39;s ID that is in GrabFood&#39;s database. | 
+**PartnerMerchantID** | Pointer to **string** | The merchant&#39;s ID that is on the partner&#39;s database. | [optional] 
 **OrderID** | **string** | The order&#39;s ID that is returned from GrabFood. Refer to FAQs for more details about [orderID and shortOrderNumber](#section/Order/What&#39;s-the-difference-between-orderID-and-shortOrderNumber). | 
 **State** | **string** | The current order state. For takeaway orders, only &#x60;DELIVERED&#x60; and &#x60;CANCELLED&#x60; states are pushed. | 
 **DriverETA** | Pointer to **NullableInt32** | The driver&#39;s estimated of arrival (ETA) in seconds when the state is &#x60;DRIVER_ALLOCATED&#x60;. | [optional] 
@@ -49,6 +50,31 @@ and a boolean to check if the value has been set.
 
 SetMerchantID sets MerchantID field to given value.
 
+
+### GetPartnerMerchantID
+
+`func (o *OrderStateRequest) GetPartnerMerchantID() string`
+
+GetPartnerMerchantID returns the PartnerMerchantID field if non-nil, zero value otherwise.
+
+### GetPartnerMerchantIDOk
+
+`func (o *OrderStateRequest) GetPartnerMerchantIDOk() (*string, bool)`
+
+GetPartnerMerchantIDOk returns a tuple with the PartnerMerchantID field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPartnerMerchantID
+
+`func (o *OrderStateRequest) SetPartnerMerchantID(v string)`
+
+SetPartnerMerchantID sets PartnerMerchantID field to given value.
+
+### HasPartnerMerchantID
+
+`func (o *OrderStateRequest) HasPartnerMerchantID() bool`
+
+HasPartnerMerchantID returns a boolean if a field has been set.
 
 ### GetOrderID
 

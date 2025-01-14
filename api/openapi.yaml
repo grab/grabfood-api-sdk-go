@@ -4,13 +4,19 @@ info:
   title: GrabFood
   version: 1.1.3
 servers:
-- description: Staging Environment - Manual Partner Onboarding
-  url: https://partner-api.stg-myteksi.com/grabfood-sandbox
-- description: Staging Environment - Self Serve Partner Onboarding
+- description: Staging Environment
   url: https://partner-api.grab.com/grabfood-sandbox
 - description: Production Environment
   url: https://partner-api.grab.com/grabfood
 tags:
+- name: self-serve-activation-intro
+  x-displayName: Introduction
+- name: create-self-serve-journey
+  x-displayName: Create self-serve journey
+- name: push-grab-menu-webhook
+  x-displayName: Push Grab menu webhook
+- name: push-integration-status-webhook
+  x-displayName: Push integration status webhook
 - name: sdk-intro
   x-displayName: GrabFood SDK
 - name: go
@@ -27,8 +33,8 @@ tags:
   x-displayName: Update menu record
 - name: update-menu-notification
   x-displayName: Update menu notification
-- name: menu-sync-webhook
-  x-displayName: Menu sync webhook
+- name: menu-sync-state-webhook
+  x-displayName: Menu sync state webhook
 - name: trace-menu-sync
   x-displayName: Trace menu sync
 - name: sync-flow
@@ -41,7 +47,7 @@ tags:
   x-displayName: List orders
 - name: edit-order
   x-displayName: Edit orders
-- name: order-state-webhook
+- name: push-order-state-webhook
   x-displayName: Push order state webhook
 - name: mark-order-ready
   x-displayName: Mark orders ready
@@ -71,8 +77,8 @@ tags:
   x-displayName: Frequently asked questions (FAQs)
 - name: changelog
   x-displayName: Changelog
-- name: scan-to-order
-  x-displayName: Scan to order
+- name: order-types
+  x-displayName: Order Types
 - name: get-store-hour
   x-displayName: Get Store Hours
 - name: get-store-status
@@ -108,6 +114,45 @@ tags:
 - name: get-reward-native
   x-displayName: Calculate reward points
 paths:
+  /partner/v1/self-serve/activation:
+    post:
+      operationId: create-self-serve-journey
+      parameters:
+      - description: The content type of the request body. You must use `application/json`
+          for this header as GrabFood API currently does not support other formats.
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          example: application/json
+          type: string
+        style: simple
+      - description: Specify the generated authorization token of the bearer type.
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          example: Bearer <ACCESS_TOKEN_HERE>
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSelfServeJourneyRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreateSelfServeJourneyResponse'
+          description: Success
+      summary: Create self serve journey
+      tags:
+      - create-self-serve-journey
   /partner/v2/merchants/{merchantID}/store/special-opening-hour:
     put:
       operationId: update-store-special-hour
@@ -511,9 +556,7 @@ paths:
                 $ref: '#/components/schemas/GrabOauthResponse'
           description: The API request is successfully processed.
       servers:
-      - description: Staging Environment - Manual Partner Onboarding
-        url: https://api.stg-myteksi.com
-      - description: Staging Environment - Self Serve Partner Onboarding
+      - description: Staging Environment
         url: https://api.grab.com
       - description: Production Environment
         url: https://api.grab.com
@@ -745,12 +788,24 @@ paths:
           headers:
             x-job-id:
               description: "Uniquely identifies a menu sync job. Please mention this\
-                \ value while raising any issues on [Menu sync webhook](#tag/menu-sync-webhook)."
+                \ value while raising any issues on [Menu sync state webhook](#tag/menu-sync-state-webhook)."
               example: 36bb8bb8-4aef-4eca-bed9-fd5ae1e4dc11
               explode: false
               schema:
                 type: string
               style: simple
+        "4XX":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: |
+            invalid_argument Fail example with code and reason.
+            | Code | Reason           | Message                                            |
+            | -----| ---------------  | -------------------------------------------------- |
+            | 409  | invalid_argument | sync menu too frequently, retry after 120 seconds  |
+
+            > Note: A distributed interval lock mechanism with a default duration of 120 seconds is in place for the same requests sent. The lock duration is customizable and may vary across different partners.
       summary: Notify Grab of updated menu
       tags:
       - update-menu-notification
@@ -1873,8 +1928,8 @@ components:
           title: sellingTimes
           type: array
         categories:
-          description: "An array of category JSON objects. Max 100 allowed per section.\
-            \ Refer to [Categories](#categories) for more information."
+          description: "An array of category JSON objects. Max 100 allowed. Refer\
+            \ to [Categories](#categories) for more information."
           items:
             $ref: '#/components/schemas/MenuCategory'
           title: categories
@@ -2026,6 +2081,7 @@ components:
           mexFundedRatio: 100
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          smallOrderFee: 0
           deliveryFee: 400
           subtotal: 2550
           merchantChargeFee: 0
@@ -2146,14 +2202,16 @@ components:
           example: 2019-05-24T05:06:00Z
           type: string
         submitTime:
-          description: "The order submit time, based on ISO_8601/RFC3339. Only present\
-            \ in the [List Orders](#tag/list-order) response."
+          description: "The order submit time, based on ISO_8601/RFC3339. `null` in\
+            \ Submit Order payload. Only present in the [List Orders](#tag/list-order)\
+            \ response."
           example: 2019-05-24T05:16:00Z
           format: date-time
           type: string
         completeTime:
-          description: "The order complete time, based on ISO_8601/RFC3339. Only present\
-            \ in the [List Orders](#tag/list-order) response."
+          description: "The order complete time, based on ISO_8601/RFC3339. `null`\
+            \ in Submit Order payload. Only present in the [List Orders](#tag/list-order)\
+            \ response."
           example: 2019-05-24T05:26:00Z
           format: date-time
           type: string
@@ -2163,8 +2221,9 @@ components:
           example: 2019-05-24T08:26:00Z
           type: string
         orderState:
-          description: "The state of the order. Only present in the [List Orders](#tag/list-order)\
-            \ response. Refer to [Order States](#section/Order-states)."
+          description: "The state of the order. Empty in Submit Order payload. Only\
+            \ present in the [List Orders](#tag/list-order) response. Refer to [Order\
+            \ States](#section/Order-states)."
           example: DELIVERED
           type: string
         currency:
@@ -2172,25 +2231,25 @@ components:
         featureFlags:
           $ref: '#/components/schemas/orderFeatureFlags'
         items:
-          description: "The items in an array of JSON Object. Refer to [Items](#items)\
-            \ for more information."
+          description: 'The ordered items in an array of JSON Object. '
           items:
             $ref: '#/components/schemas/OrderItem'
           title: orderItems
           type: array
         campaigns:
           description: |
-            The campaigns that are applicable for the order.`null` when there is no campaign applied.
+            The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent.
           items:
             $ref: '#/components/schemas/OrderCampaign'
           nullable: true
           title: campaigns
           type: array
         promos:
-          description: An array of promotion objects. Only promotions that are funded
-            by merchants will be sent.
+          description: An array of promotion objects. `null` when there is no promo
+            code applied. Only promotions that are funded by merchants will be sent.
           items:
             $ref: '#/components/schemas/OrderPromo'
+          nullable: true
           title: promos
           type: array
         price:
@@ -2203,7 +2262,7 @@ components:
           $ref: '#/components/schemas/orderReadyEstimation'
         membershipID:
           description: Membership ID for loyalty project. Only present for loyalty
-            program partners.
+            program partners. Empty if not applicable.
           example: 12345678Z
           type: string
       required:
@@ -2227,6 +2286,11 @@ components:
           description: The merchant's ID that is in GrabFood's database.
           example: 1-CYNGRUNGSBCCC
           title: merchantID
+          type: string
+        partnerMerchantID:
+          description: The merchant's ID that is on the partner's database.
+          example: Partner-ABECU
+          title: partnerMerchantID
           type: string
         orderID:
           description: "The order's ID that is returned from GrabFood. Refer to FAQs\
@@ -2437,6 +2501,64 @@ components:
       required:
       - points
       title: Get Reward Response
+      type: object
+    PushIntegrationStatusWebhookRequest:
+      description: ""
+      properties:
+        partnerMerchantID:
+          description: The merchant's ID that is on the partner's database.
+          example: Partner-ABECU
+          title: partnerMerchantID
+          type: string
+        grabMerchantID:
+          description: The merchant's ID that is in GrabFood's database.
+          example: 1-CYNGRUNGSBCCC
+          title: merchantID
+          type: string
+        integrationStatus:
+          description: |
+            The store integration status.
+            - `INACTIVE`: Merchant integration deactivated
+            - `ACTIVE`: Merchant integration activated
+            - `SYNCING`: Merchant integration is syncing
+            - `FAILED`: Merchant integration has failed
+          enum:
+          - INACTIVE
+          - ACTIVE
+          - SYNCING
+          - FAILED
+          example: SYNCING
+          type: string
+      required:
+      - grabMerchantID
+      - integrationStatus
+      - partnerMerchantID
+      title: Integration Status
+      type: object
+    CreateSelfServeJourneyRequest:
+      description: ""
+      example:
+        partner:
+          merchantID: Partner-ABECU
+      properties:
+        partner:
+          $ref: '#/components/schemas/CreateSelfServeJourneyRequest_partner'
+      required:
+      - partner
+      title: Create self-serve journey
+      type: object
+    CreateSelfServeJourneyResponse:
+      description: ""
+      example:
+        activationUrl: https://merchant.grab.com/self-serve-activation/xxxx/activate
+      properties:
+        activationUrl:
+          description: A JSON object containing store information
+          example: https://merchant.grab.com/self-serve-activation/xxxx/activate
+          type: string
+      required:
+      - activationUrl
+      title: Create self-serve journey
       type: object
     UpdateSpecialHourRequest:
       description: Object contains store special hours.
@@ -3548,6 +3670,7 @@ components:
             mexFundedRatio: 100
           merchantID: 1-CYNGRUNGSBCCC
           price:
+            smallOrderFee: 0
             deliveryFee: 400
             subtotal: 2550
             merchantChargeFee: 0
@@ -3691,6 +3814,7 @@ components:
             mexFundedRatio: 100
           merchantID: 1-CYNGRUNGSBCCC
           price:
+            smallOrderFee: 0
             deliveryFee: 400
             subtotal: 2550
             merchantChargeFee: 0
@@ -4760,6 +4884,7 @@ components:
           mexFundedRatio: 100
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          smallOrderFee: 0
           deliveryFee: 400
           subtotal: 2550
           merchantChargeFee: 0
@@ -4880,14 +5005,16 @@ components:
           example: 2019-05-24T05:06:00Z
           type: string
         submitTime:
-          description: "The order submit time, based on ISO_8601/RFC3339. Only present\
-            \ in the [List Orders](#tag/list-order) response."
+          description: "The order submit time, based on ISO_8601/RFC3339. `null` in\
+            \ Submit Order payload. Only present in the [List Orders](#tag/list-order)\
+            \ response."
           example: 2019-05-24T05:16:00Z
           format: date-time
           type: string
         completeTime:
-          description: "The order complete time, based on ISO_8601/RFC3339. Only present\
-            \ in the [List Orders](#tag/list-order) response."
+          description: "The order complete time, based on ISO_8601/RFC3339. `null`\
+            \ in Submit Order payload. Only present in the [List Orders](#tag/list-order)\
+            \ response."
           example: 2019-05-24T05:26:00Z
           format: date-time
           type: string
@@ -4897,8 +5024,9 @@ components:
           example: 2019-05-24T08:26:00Z
           type: string
         orderState:
-          description: "The state of the order. Only present in the [List Orders](#tag/list-order)\
-            \ response. Refer to [Order States](#section/Order-states)."
+          description: "The state of the order. Empty in Submit Order payload. Only\
+            \ present in the [List Orders](#tag/list-order) response. Refer to [Order\
+            \ States](#section/Order-states)."
           example: DELIVERED
           type: string
         currency:
@@ -4906,25 +5034,25 @@ components:
         featureFlags:
           $ref: '#/components/schemas/orderFeatureFlags'
         items:
-          description: "The items in an array of JSON Object. Refer to [Items](#items)\
-            \ for more information."
+          description: 'The ordered items in an array of JSON Object. '
           items:
             $ref: '#/components/schemas/OrderItem'
           title: orderItems
           type: array
         campaigns:
           description: |
-            The campaigns that are applicable for the order.`null` when there is no campaign applied.
+            The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent.
           items:
             $ref: '#/components/schemas/OrderCampaign'
           nullable: true
           title: campaigns
           type: array
         promos:
-          description: An array of promotion objects. Only promotions that are funded
-            by merchants will be sent.
+          description: An array of promotion objects. `null` when there is no promo
+            code applied. Only promotions that are funded by merchants will be sent.
           items:
             $ref: '#/components/schemas/OrderPromo'
+          nullable: true
           title: promos
           type: array
         price:
@@ -4937,7 +5065,7 @@ components:
           $ref: '#/components/schemas/orderReadyEstimation'
         membershipID:
           description: Membership ID for loyalty project. Only present for loyalty
-            program partners.
+            program partners. Empty if not applicable.
           example: 12345678Z
           type: string
       required:
@@ -4953,6 +5081,11 @@ components:
       - shortOrderNumber
       title: Order
       type: object
+    partnerMerchantID:
+      description: The merchant's ID that is on the partner's database.
+      example: Partner-ABECU
+      title: partnerMerchantID
+      type: string
     specialOpeningHour:
       example:
         metadata:
@@ -5478,9 +5611,9 @@ components:
           - new
           type: string
         minBasketAmount:
-          description: "The minimum basket amount to be eligible for the campaign.\
-            \ Only applicable for **order-level** campaign. For example, 10.5 means\
-            \ the basket amount has to be at least $10.50."
+          description: The minimum basket amount to be eligible for the campaign.
+            Only applicable to **order-level** campaign but not to item-level discount
+            campaign.
           example: 10
           format: double
           type: number
@@ -5630,11 +5763,6 @@ components:
           type: string
       title: voucher
       type: object
-    partnerMerchantID:
-      description: The merchant's ID that is on the partner's database.
-      example: Partner-ABECU
-      title: partnerMerchantID
-      type: string
     currency:
       description: "A JSON object containing code, symbol, and exponent for a given\
         \ currency. Refer to [Country and Currency](#section/Getting-started/Country-and-currency)."
@@ -5694,8 +5822,8 @@ components:
       title: sellingTimes
       type: array
     categories:
-      description: "An array of category JSON objects. Max 100 allowed per section.\
-        \ Refer to [Categories](#categories) for more information."
+      description: "An array of category JSON objects. Max 100 allowed. Refer to [Categories](#categories)\
+        \ for more information."
       items:
         $ref: '#/components/schemas/MenuCategory'
       title: categories
@@ -5743,30 +5871,31 @@ components:
       title: orderFeatureFlags
       type: object
     orderItems:
-      description: "The items in an array of JSON Object. Refer to [Items](#items)\
-        \ for more information."
+      description: 'The ordered items in an array of JSON Object. '
       items:
         $ref: '#/components/schemas/OrderItem'
       title: orderItems
       type: array
     orderCampaigns:
       description: |
-        The campaigns that are applicable for the order.`null` when there is no campaign applied.
+        The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent.
       items:
         $ref: '#/components/schemas/OrderCampaign'
       nullable: true
       title: campaigns
       type: array
     promos:
-      description: An array of promotion objects. Only promotions that are funded
-        by merchants will be sent.
+      description: An array of promotion objects. `null` when there is no promo code
+        applied. Only promotions that are funded by merchants will be sent.
       items:
         $ref: '#/components/schemas/OrderPromo'
+      nullable: true
       title: promos
       type: array
     orderPrice:
       description: A JSON object containing order's price in the minor unit format.
       example:
+        smallOrderFee: 0
         deliveryFee: 400
         subtotal: 2550
         merchantChargeFee: 0
@@ -5777,27 +5906,32 @@ components:
         eaterPayment: 2175
       properties:
         subtotal:
-          description: Total item and modifier price (tax-inclusive) in the minor
-            unit. `Sum of all (Item price * quantity) | 2550*1=2550`.
+          description: |
+            Total item and modifier price (tax-inclusive) in the minor unit.
+            ```
+            subtotal = Sum of all (item price * quantity) | 2550*1=2550
           example: 2550
           format: int64
           type: integer
         tax:
-          description: "GrabFood's tax in the minor unit. `(subtotal-merchantFundPromo)*\
-            \ Tax /(1+Tax) | (2550-475)*0.06/1.06=117`. Refer to FAQs for more details\
-            \ about [tax](#section/Order/How-is-tax-calculated)."
+          description: |
+            GrabFood's tax in the minor unit. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+            ```
+            tax = (subtotal + merchantChargeFee - merchantFundPromo) * Tax / (1+Tax) | (2550-475)*0.06/1.06=117
           example: 117
           format: int64
           type: integer
         merchantChargeFee:
-          description: "Any additional fee charged by merchant, which is 100% paid\
-            \ out to the merchant. Eg. Takeaway, packaging costs, dine-in charge."
+          description: |
+            Any additional fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant.
+            Eg. Takeaway, packaging costs, dine-in charge.
           example: 0
           format: int64
           type: integer
         grabFundPromo:
-          description: GrabFood's promo fund in the minor unit. Calculated based on
-            funded ratio.
+          description: "GrabFood's promo fund in the minor unit. Calculated based\
+            \ on funded ratio. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`.\
+            \ Otherwise, it will be set to `0`."
           example: 300
           format: int64
           type: integer
@@ -5808,34 +5942,48 @@ components:
           format: int64
           type: integer
         basketPromo:
-          description: |
-            The total amount promo applied to the basket items only (item level/order level) in the minor unit. Delivery fee is excluded. `(grabFundPromo + merchantFundPromo) | 300 + 475 = 775`
+          description: "The total amount promo applied to the basket items only (item\
+            \ level/order level) in the minor unit, excluding delivery fee. Only present\
+            \ when `paymentType: CASH` or `orderType: DeliveredByRestaurant`. Otherwise,\
+            \ it will be set to `0`. \n```\nbasketPromo = (grabFundPromo + merchantFundPromo)\
+            \ | 300 + 475 = 775\n"
           example: 775
           format: int64
           type: integer
         deliveryFee:
-          description: The delivery fee in the minor unit.
+          description: "The delivery fee in the minor unit. Only present when `paymentType:CASH`\
+            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`."
           example: 400
           format: int64
           type: integer
+        smallOrderFee:
+          description: The fee charged by GrabFood for order that does not meet a
+            certain minimum order value. Only present when `paymentType:CASH` and
+            `orderType:DeliveredByRestaurant`.
+          example: 0
+          format: int64
+          type: integer
         eaterPayment:
-          description: The total amount consumer paid in the minor unit. `(subtotal
-            + deliveryFee) - (sum of all promo) | (2550+400)-775=2175`
+          description: "The total amount paid by the consumer in the minor unit, excluding\
+            \ some additional fees charged by GrabFood. Only present when `paymentType:CASH`\
+            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.\
+            \ \n```\neaterPayment = (subtotal + merchantChargeFee + deliveryFee) -\
+            \ (sum of all promo) | (2550+400)-775=2175\n"
           example: 2175
           format: int64
           type: integer
       required:
-      - eaterPayment
       - subtotal
       title: price
       type: object
     dineIn:
-      description: "A JSON object containing order at table information. Present only\
-        \ for dineIn order. **Not available** in [ListOrder](#tag/list-order/operation/list-orders)\
+      description: "A JSON object containing order at table information. Only applicable\
+        \ for dine-in order. `null` if not applicable. Not present in [ListOrder](#tag/list-order/operation/list-orders)\
         \ response."
       example:
         eaterCount: 2
         tableID: "1"
+      nullable: true
       properties:
         tableID:
           description: Table number.
@@ -5849,8 +5997,8 @@ components:
       title: dineIn
       type: object
     receiver:
-      description: A JSON object containing the receiver information. Currently only
-        for orders that are delivered by the restaurant.
+      description: A JSON object containing the receiver information. Only applicable
+        for orders that are delivered by the restaurant. `null` if not applicable.
       example:
         address:
           poiSource: GRAB
@@ -5864,6 +6012,7 @@ components:
           poiID: poiID
         name: Prashanth
         phones: "60122234704"
+      nullable: true
       properties:
         name:
           description: The name of the receiver.
@@ -5921,11 +6070,11 @@ components:
         endTime: 21:30
       properties:
         startTime:
-          description: The open start time in 24h format.
+          description: The open start time in 24h format. Local time format is expected.
           example: 11:30
           type: string
         endTime:
-          description: The open start time in 24h format.
+          description: The open end time in 24h format. Local time format is expected.
           example: 21:30
           type: string
       required:
@@ -6186,8 +6335,7 @@ components:
       title: outOfStockInstruction
       type: object
     orderModifiers:
-      description: "An array of JSON objects modifiers. Read [this](#categories) for\
-        \ more information."
+      description: An array of JSON objects modifiers.
       items:
         $ref: '#/components/schemas/OrderItemModifier'
       required:
@@ -6206,12 +6354,13 @@ components:
         id: item-2
       properties:
         id:
-          description: The item's ID
+          description: The free item's externalID in the partner system. Empty if
+            not applicable.
           example: item-2
           type: string
         name:
           description: |
-            The name of the item.
+            The name of the free item. Empty if not applicable.
           example: Free tote bag
           type: string
         quantity:
@@ -6279,8 +6428,8 @@ components:
           endTime: 21:30
       properties:
         periods:
-          description: "An array of open periods. `null` in [ListCampaign](#tag/list-campaign)\
-            \ response if the campaign is available all day."
+          description: An array of open periods. `null` if the campaign period is
+            closed all day.
           items:
             $ref: '#/components/schemas/openPeriod'
           nullable: true
@@ -6288,14 +6437,13 @@ components:
           type: array
       type: object
     serviceHour:
-      description: A JSON object serviceHour for each day.
+      description: A JSON object serviceHour for each day. An empty JSON object indicates
+        the menu item is not available on the day.
       properties:
         openPeriodType:
-          description: |
-            The period type for when the outlet is open.
-            - OpenPeriod = open only in given periods
-            - OpenAllDay = open 24 hours
-            - CloseAllDay = closed 24 hours
+          description: "Defines the specific time period during which the menu is\
+            \ available \n- OpenPeriod = open only in given periods\n- OpenAllDay\
+            \ = open 24 hours\n- CloseAllDay = closed 24 hours\n"
           enum:
           - OpenPeriod
           - OpenAllDay
@@ -6343,8 +6491,8 @@ components:
       title: coordinates
       type: object
     campaignPeriods:
-      description: "An array of open periods. `null` in [ListCampaign](#tag/list-campaign)\
-        \ response if the campaign is available all day."
+      description: An array of open periods. `null` if the campaign period is closed
+        all day.
       items:
         $ref: '#/components/schemas/openPeriod'
       nullable: true
@@ -6394,6 +6542,19 @@ components:
           example: 1
           type: integer
       title: RewardItem
+      type: object
+    CreateSelfServeJourneyRequest_partner:
+      description: A JSON object containing store information
+      example:
+        merchantID: Partner-ABECU
+      properties:
+        merchantID:
+          description: The merchant's ID that is on the partner's database.
+          example: Partner-ABECU
+          title: partnerMerchantID
+          type: string
+      required:
+      - merchantID
       type: object
     UpdateAdvancedPricing:
       example:
@@ -6831,12 +6992,12 @@ components:
       properties:
         startTime:
           description: |
-            The selling time group start time in date & time format.
+            The selling time group start time in date & time format. UTC format is expected.
           example: 2022-03-01 10:00:00
           type: string
         endTime:
           description: |
-            The selling time group end time in date & time format.
+            The selling time group end time in date & time format. UTC format is expected.
           example: 2025-01-21 22:00:00
           type: string
         id:
@@ -6849,6 +7010,7 @@ components:
           description: |
             The name of the selling time.
           example: Lunch deal
+          maxLength: 30
           type: string
         serviceHours:
           $ref: '#/components/schemas/serviceHours'
@@ -6858,7 +7020,7 @@ components:
       properties:
         id:
           description: The category's ID that is on the partner system. This ID should
-            be unique with a min length of 1 and max of 64.
+            be unique.
           example: category_id
           maxLength: 64
           type: string
@@ -6887,6 +7049,10 @@ components:
             time specified for the item.
           example: partner-sellingTimeID-1
           type: string
+        sequence:
+          description: The sort or display order of the category within the menu.
+          example: 1
+          type: integer
         items:
           description: "An array of item JSON objects. Max 300 allowed per category.\
             \ Refer to [Items](#items) for more information."
@@ -7097,7 +7263,7 @@ components:
       properties:
         id:
           description: |
-            The item's ExternalID in the partner system.
+            The item's externalID in the partner system.
           example: item-1
           type: string
         grabItemID:
@@ -7110,29 +7276,30 @@ components:
           example: 1
           type: integer
         price:
-          description: |
-            The price (tax-inclusive) in minor format for 1 item and modifiers under it. `Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)=2550`.
+          description: "The price for a single item along with its associated modifiers\
+            \ in minor unit and tax-inclusive. \n```\nprice = Item price(tax inclusive)\
+            \ + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)=2550\n"
           example: 2550
           format: int64
           type: integer
         tax:
-          description: "Tax in minor format for 1 item and all modifiers under it.\
-            \ `0` if tax configuration is absent. `Item tax + Modifier tax | (2241*0.06)+(165*0.06)=144`.\
-            \ Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated)."
+          description: |
+            Tax in minor format for a single item along with its associated modifiers. `0` if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+            ```
+            tax = Item tax + Modifier tax | (2241*0.06)+(165*0.06)=144
           example: 144
           format: int64
           type: integer
         specifications:
           description: |
-            An extra note for the merchant. `Blank` if no note from consumer.
+            An extra note for the merchant. Empty if no note from consumer.
           example: less sugar and chili
           maxLength: 300
           type: string
         outOfStockInstruction:
           $ref: '#/components/schemas/outOfStockInstruction'
         modifiers:
-          description: "An array of JSON objects modifiers. Read [this](#categories)\
-            \ for more information."
+          description: An array of JSON objects modifiers.
           items:
             $ref: '#/components/schemas/OrderItemModifier'
           required:
@@ -7207,7 +7374,7 @@ components:
           example: percentage
           type: string
         usageCount:
-          description: The campaign redemption count in this order.
+          description: The redemption count of same campaign in this order.
           example: 1
           format: int64
           type: integer
@@ -7216,8 +7383,11 @@ components:
           example: 100
           type: integer
         deductedAmount:
-          description: The deducted amount in minor unit format. `Item price(tax inclusive)
-            * 20% discount | 2375*0.2`
+          description: "The total discount amount in minor unit format applied to\
+            \ the order based on the campaign's usage count. The amount is rounded\
+            \ to the nearest value for `VND`, `IDR`, and `THB`, as decimals are not\
+            \ supported. \n```\ndeductedAmount = Item price(tax inclusive) * 20% discount\
+            \ | 2375*0.2=475\n"
           example: 475
           format: int64
           type: integer
@@ -7295,7 +7465,7 @@ components:
       properties:
         id:
           description: |
-            The item's ID in the partner system.
+            The item's ID in the partner system. This ID should be unique.
           example: item_id
           maxLength: 64
           type: string
@@ -7312,9 +7482,9 @@ components:
           type: object
         availableStatus:
           description: |
-            The status for the item that is in the category.
+            The status for the item. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).
 
-            Note: In order to set an item as "UNAVAILABLE", it is required to update both the `availableStatus` and `maxStock` fields, whereby the `maxStock` value should be set to 0.
+            > Note: In order to set an item as `"UNAVAILABLE"`, it is required to update both the `availableStatus` and `maxStock` fields, whereby the `maxStock` should be set to 0.
           enum:
           - AVAILABLE
           - UNAVAILABLE
@@ -7337,13 +7507,13 @@ components:
           type: object
         price:
           description: |
-            The item's price (excluding tax) in minor format. For example: 1900 means $19 with `currency.exponent` as 2. Refer to [FAQ](#section/Menu/Is-the-item-price-with-or-without-tax) for more details.
+            The item's price in minor format. For example: 1900 means $19 with `currency.exponent` as 2. Refer to [FAQ](#section/Menu/Is-the-menu-price-with-or-without-tax) to determine whether the pricing should be tax-inclusive or tax-exclusive.
           example: 1900
           format: int64
           type: integer
         photos:
           description: |
-            An array string for the item’s image URL links. Refer to FAQs for more details about [images](#section/Menu/What-are-the-recommended-formats-for-an-item-image).
+            An array string for the item’s image URL link. Only 1 image is supported. Refer to FAQs for more details about [images formats](#section/Menu/What-are-the-recommended-formats-for-an-item-image).
           items:
             example: http://example.com/image_url.jpg
             type: string
@@ -7369,16 +7539,20 @@ components:
           type: string
         sellingTimeID:
           description: |
-            The selling time's ID for the item. This value overwrites the category's selling time if it is different. Empty value implies the category's selling time will be applied.
+            The selling time's ID for the item. This value overrides the category's selling time if it is different. Empty value implies the category's selling time will be applied.
           example: partner-sellingTimeID-1
           type: string
         maxStock:
           description: |
             Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.
 
-            Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is "UNAVAILABLE". Item will be set to "AVAILABLE" if `maxStock` > 0.
+            > Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is `"UNAVAILABLE"`. Item will be set to `"AVAILABLE"` if `maxStock` > 0.
           example: 15
           format: int64
+          type: integer
+        sequence:
+          description: The sort or display order of the item within the menu.
+          example: 1
           type: integer
         advancedPricing:
           $ref: '#/components/schemas/advancedPricing'
@@ -7401,14 +7575,13 @@ components:
     ModifierGroup:
       properties:
         id:
-          description: The ModifierGroup's ID that is on the partner system. This
-            ID should be unique with a min length of 1 and max of 64.
+          description: The modifier group's ID that is on the partner system. This
+            ID should be unique.
           example: modifier_group_id
           maxLength: 64
           type: string
         name:
-          description: The name of the ModifierGroup for the item that is in the parent
-            category and section.
+          description: The name of the modifier group.
           example: Add on
           maxLength: 50
           type: string
@@ -7419,7 +7592,9 @@ components:
             \ 1 translated language. Refer [Menu Translation](#section/Menu-Translation)."
           type: object
         availableStatus:
-          description: The status for the ModifierGroup that is in the item.
+          description: "The status for the modifier group. \n\n> The item may be marked\
+            \ as `\"UNAVAILABLE\"` if no available modifier to be selected within\
+            \ the required modifier group where `\"selectionRangeMin\": 1`.\n"
           enum:
           - AVAILABLE
           - UNAVAILABLE
@@ -7427,13 +7602,18 @@ components:
           - HIDE
           type: string
         selectionRangeMin:
-          description: "The minimum quantity of the attribute. Refer to FAQs for more\
-            \ details about [selection range](#section/Menu/What-does-the-selection-range-do)."
+          description: "The minimum quantity of the modifiers to be selected. Refer\
+            \ to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do)."
           example: 0
           type: integer
         selectionRangeMax:
-          description: "The maximum quantity of the attribute. Refer to FAQs for more\
-            \ details about [selection range](#section/Menu/What-does-the-selection-range-do)."
+          description: "The maximum quantity of the modifiers to be selected. Refer\
+            \ to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do)."
+          example: 1
+          type: integer
+        sequence:
+          description: The sort or display order of the modifier group within the
+            menu.
           example: 1
           type: integer
         modifiers:
@@ -7463,14 +7643,16 @@ components:
           maxLength: 64
           type: string
         price:
-          description: The modifier's price (tax-inclusive) in minor format. `round(165
-            * (1 + 0.06)) = 175`.
+          description: "The modifier's price (tax-inclusive) in minor format. \n```\n\
+            price = round(165 * (1 + 0.06)) = 175\n"
           example: 175
           format: int64
           type: integer
         tax:
-          description: "Tax in minor format for 1 modifier. `165*0.06=10`. Refer to\
-            \ FAQs for more details about [tax](#section/Order/How-is-tax-calculated)."
+          description: |
+            Tax in minor format for 1 modifier. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+            ```
+            tax = 165*0.06=10
           example: 10
           format: int64
           type: integer
@@ -7485,7 +7667,7 @@ components:
       properties:
         id:
           description: The modifier's ID that is on the partner's system. This ID
-            should be unique with a min length of 1 and max of 64.
+            should be unique.
           example: modifier_id
           maxLength: 64
           type: string
@@ -7501,7 +7683,8 @@ components:
             \ language. Refer [Menu Translation](#section/Menu-Translation)."
           type: object
         availableStatus:
-          description: The status for the modifier that is in the ModifierGroup.
+          description: "The status for the modifier. Refer to FAQs for more details\
+            \ about [availableStatus](#section/Menu/What-is-availableStatus)."
           enum:
           - AVAILABLE
           - UNAVAILABLE
@@ -7509,8 +7692,8 @@ components:
           - HIDE
           type: string
         price:
-          description: "The modifier's price (excluding tax) in minor format. Refer\
-            \ to FAQs for more details about [tax](#section/Order/How-is-tax-calculated)."
+          description: "The modifier's price in minor format. Refer to FAQs for more\
+            \ details about [tax](#section/Menu/Is-the-menu-price-with-or-without-tax)."
           example: 200
           format: int64
           type: integer
@@ -7520,6 +7703,10 @@ components:
           example: GTIN
           maxLength: 64
           type: string
+        sequence:
+          description: The sort or display order of the modifier within the menu.
+          example: 1
+          type: integer
         advancedPricing:
           $ref: '#/components/schemas/advancedPricing'
       required:
@@ -7538,22 +7725,28 @@ x-tagGroups:
   tags:
   - get-oauth-grab
   - get-oauth-partner-webhook
+- name: Self-serve activation
+  tags:
+  - self-serve-activation-intro
+  - create-self-serve-journey
+  - push-grab-menu-webhook
+  - push-integration-status-webhook
 - name: Menu sync
   tags:
   - sync-flow
   - get-menu-webhook
   - update-menu-notification
   - update-menu-record
-  - menu-sync-webhook
+  - menu-sync-state-webhook
   - trace-menu-sync
 - name: Order sync
   tags:
-  - scan-to-order
+  - order-types
   - submit-order-webhook
   - accept-reject-order
   - list-orders
   - edit-order
-  - order-state-webhook
+  - push-order-state-webhook
   - mark-order-ready
   - update-delivery-state
   - update-order-ready-time

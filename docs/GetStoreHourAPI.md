@@ -1,6 +1,6 @@
 # \GetStoreHourAPI
 
-All URIs are relative to *https://partner-api.stg-myteksi.com/grabfood-sandbox*
+All URIs are relative to *https://partner-api.grab.com/grabfood-sandbox*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------

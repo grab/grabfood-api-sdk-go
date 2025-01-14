@@ -11,20 +11,20 @@ Name | Type | Description | Notes
 **PaymentType** | **string** | The payment method used. Refer to FAQs for more details about [paymentType](#section/Order/Does-the-paymentType-affect-partners). | 
 **Cutlery** | **bool** | The boolean value to indicate whether cutlery are needed or not. Refer to FAQs for more details about [cutlery](#section/Order/What-do-the-true-or-false-values-mean-for-cutlery). | 
 **OrderTime** | **string** | The UTC time that a consumer places the order, based on ISO_8601/RFC3339. | 
-**SubmitTime** | Pointer to **time.Time** | The order submit time, based on ISO_8601/RFC3339. Only present in the [List Orders](#tag/list-order) response. | [optional] 
-**CompleteTime** | Pointer to **time.Time** | The order complete time, based on ISO_8601/RFC3339. Only present in the [List Orders](#tag/list-order) response. | [optional] 
+**SubmitTime** | Pointer to **time.Time** | The order submit time, based on ISO_8601/RFC3339. &#x60;null&#x60; in Submit Order payload. Only present in the [List Orders](#tag/list-order) response. | [optional] 
+**CompleteTime** | Pointer to **time.Time** | The order complete time, based on ISO_8601/RFC3339. &#x60;null&#x60; in Submit Order payload. Only present in the [List Orders](#tag/list-order) response. | [optional] 
 **ScheduledTime** | Pointer to **string** | The order scheduled time, based on ISO_8601/RFC3339. Empty for non-scheduled orders. | [optional] 
-**OrderState** | Pointer to **string** | The state of the order. Only present in the [List Orders](#tag/list-order) response. Refer to [Order States](#section/Order-states). | [optional] 
+**OrderState** | Pointer to **string** | The state of the order. Empty in Submit Order payload. Only present in the [List Orders](#tag/list-order) response. Refer to [Order States](#section/Order-states). | [optional] 
 **Currency** | [**Currency**](Currency.md) |  | 
 **FeatureFlags** | [**OrderFeatureFlags**](OrderFeatureFlags.md) |  | 
-**Items** | [**[]OrderItem**](OrderItem.md) | The items in an array of JSON Object. Refer to [Items](#items) for more information. | 
-**Campaigns** | Pointer to [**[]OrderCampaign**](OrderCampaign.md) | The campaigns that are applicable for the order.&#x60;null&#x60; when there is no campaign applied.  | [optional] 
-**Promos** | Pointer to [**[]OrderPromo**](OrderPromo.md) | An array of promotion objects. Only promotions that are funded by merchants will be sent. | [optional] 
+**Items** | [**[]OrderItem**](OrderItem.md) | The ordered items in an array of JSON Object.  | 
+**Campaigns** | Pointer to [**[]OrderCampaign**](OrderCampaign.md) | The campaigns that are applicable for the order. &#x60;null&#x60; when there is no campaign applied. Only campaigns that are funded by merchants will be sent.  | [optional] 
+**Promos** | Pointer to [**[]OrderPromo**](OrderPromo.md) | An array of promotion objects. &#x60;null&#x60; when there is no promo code applied. Only promotions that are funded by merchants will be sent. | [optional] 
 **Price** | [**OrderPrice**](OrderPrice.md) |  | 
-**DineIn** | Pointer to [**DineIn**](DineIn.md) |  | [optional] 
-**Receiver** | Pointer to [**Receiver**](Receiver.md) |  | [optional] 
+**DineIn** | Pointer to [**NullableDineIn**](DineIn.md) |  | [optional] 
+**Receiver** | Pointer to [**NullableReceiver**](Receiver.md) |  | [optional] 
 **OrderReadyEstimation** | Pointer to [**OrderReadyEstimation**](OrderReadyEstimation.md) |  | [optional] 
-**MembershipID** | Pointer to **string** | Membership ID for loyalty project. Only present for loyalty program partners. | [optional] 
+**MembershipID** | Pointer to **string** | Membership ID for loyalty project. Only present for loyalty program partners. Empty if not applicable. | [optional] 
 
 ## Methods
 
@@ -410,6 +410,16 @@ SetPromos sets Promos field to given value.
 
 HasPromos returns a boolean if a field has been set.
 
+### SetPromosNil
+
+`func (o *Order) SetPromosNil(b bool)`
+
+ SetPromosNil sets the value for Promos to be an explicit nil
+
+### UnsetPromos
+`func (o *Order) UnsetPromos()`
+
+UnsetPromos ensures that no value is present for Promos, not even an explicit nil
 ### GetPrice
 
 `func (o *Order) GetPrice() OrderPrice`
@@ -455,6 +465,16 @@ SetDineIn sets DineIn field to given value.
 
 HasDineIn returns a boolean if a field has been set.
 
+### SetDineInNil
+
+`func (o *Order) SetDineInNil(b bool)`
+
+ SetDineInNil sets the value for DineIn to be an explicit nil
+
+### UnsetDineIn
+`func (o *Order) UnsetDineIn()`
+
+UnsetDineIn ensures that no value is present for DineIn, not even an explicit nil
 ### GetReceiver
 
 `func (o *Order) GetReceiver() Receiver`
@@ -480,6 +500,16 @@ SetReceiver sets Receiver field to given value.
 
 HasReceiver returns a boolean if a field has been set.
 
+### SetReceiverNil
+
+`func (o *Order) SetReceiverNil(b bool)`
+
+ SetReceiverNil sets the value for Receiver to be an explicit nil
+
+### UnsetReceiver
+`func (o *Order) UnsetReceiver()`
+
+UnsetReceiver ensures that no value is present for Receiver, not even an explicit nil
 ### GetOrderReadyEstimation
 
 `func (o *Order) GetOrderReadyEstimation() OrderReadyEstimation`

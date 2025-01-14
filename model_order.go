@@ -38,27 +38,27 @@ type Order struct {
 	Cutlery bool `json:"cutlery"`
 	// The UTC time that a consumer places the order, based on ISO_8601/RFC3339.
 	OrderTime string `json:"orderTime"`
-	// The order submit time, based on ISO_8601/RFC3339. Only present in the [List Orders](#tag/list-order) response.
+	// The order submit time, based on ISO_8601/RFC3339. `null` in Submit Order payload. Only present in the [List Orders](#tag/list-order) response.
 	SubmitTime *time.Time `json:"submitTime,omitempty"`
-	// The order complete time, based on ISO_8601/RFC3339. Only present in the [List Orders](#tag/list-order) response.
+	// The order complete time, based on ISO_8601/RFC3339. `null` in Submit Order payload. Only present in the [List Orders](#tag/list-order) response.
 	CompleteTime *time.Time `json:"completeTime,omitempty"`
 	// The order scheduled time, based on ISO_8601/RFC3339. Empty for non-scheduled orders.
 	ScheduledTime *string `json:"scheduledTime,omitempty"`
-	// The state of the order. Only present in the [List Orders](#tag/list-order) response. Refer to [Order States](#section/Order-states).
+	// The state of the order. Empty in Submit Order payload. Only present in the [List Orders](#tag/list-order) response. Refer to [Order States](#section/Order-states).
 	OrderState *string `json:"orderState,omitempty"`
 	Currency Currency `json:"currency"`
 	FeatureFlags OrderFeatureFlags `json:"featureFlags"`
-	// The items in an array of JSON Object. Refer to [Items](#items) for more information.
+	// The ordered items in an array of JSON Object. 
 	Items []OrderItem `json:"items"`
-	// The campaigns that are applicable for the order.`null` when there is no campaign applied. 
+	// The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent. 
 	Campaigns []OrderCampaign `json:"campaigns,omitempty"`
-	// An array of promotion objects. Only promotions that are funded by merchants will be sent.
+	// An array of promotion objects. `null` when there is no promo code applied. Only promotions that are funded by merchants will be sent.
 	Promos []OrderPromo `json:"promos,omitempty"`
 	Price OrderPrice `json:"price"`
-	DineIn *DineIn `json:"dineIn,omitempty"`
-	Receiver *Receiver `json:"receiver,omitempty"`
+	DineIn NullableDineIn `json:"dineIn,omitempty"`
+	Receiver NullableReceiver `json:"receiver,omitempty"`
 	OrderReadyEstimation *OrderReadyEstimation `json:"orderReadyEstimation,omitempty"`
-	// Membership ID for loyalty project. Only present for loyalty program partners.
+	// Membership ID for loyalty project. Only present for loyalty program partners. Empty if not applicable.
 	MembershipID *string `json:"membershipID,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -501,9 +501,9 @@ func (o *Order) SetCampaigns(v []OrderCampaign) {
 	o.Campaigns = v
 }
 
-// GetPromos returns the Promos field value if set, zero value otherwise.
+// GetPromos returns the Promos field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Order) GetPromos() []OrderPromo {
-	if o == nil || IsNil(o.Promos) {
+	if o == nil {
 		var ret []OrderPromo
 		return ret
 	}
@@ -512,6 +512,7 @@ func (o *Order) GetPromos() []OrderPromo {
 
 // GetPromosOk returns a tuple with the Promos field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Order) GetPromosOk() ([]OrderPromo, bool) {
 	if o == nil || IsNil(o.Promos) {
 		return nil, false
@@ -557,68 +558,88 @@ func (o *Order) SetPrice(v OrderPrice) {
 	o.Price = v
 }
 
-// GetDineIn returns the DineIn field value if set, zero value otherwise.
+// GetDineIn returns the DineIn field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Order) GetDineIn() DineIn {
-	if o == nil || IsNil(o.DineIn) {
+	if o == nil || IsNil(o.DineIn.Get()) {
 		var ret DineIn
 		return ret
 	}
-	return *o.DineIn
+	return *o.DineIn.Get()
 }
 
 // GetDineInOk returns a tuple with the DineIn field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Order) GetDineInOk() (*DineIn, bool) {
-	if o == nil || IsNil(o.DineIn) {
+	if o == nil {
 		return nil, false
 	}
-	return o.DineIn, true
+	return o.DineIn.Get(), o.DineIn.IsSet()
 }
 
 // HasDineIn returns a boolean if a field has been set.
 func (o *Order) HasDineIn() bool {
-	if o != nil && !IsNil(o.DineIn) {
+	if o != nil && o.DineIn.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetDineIn gets a reference to the given DineIn and assigns it to the DineIn field.
+// SetDineIn gets a reference to the given NullableDineIn and assigns it to the DineIn field.
 func (o *Order) SetDineIn(v DineIn) {
-	o.DineIn = &v
+	o.DineIn.Set(&v)
+}
+// SetDineInNil sets the value for DineIn to be an explicit nil
+func (o *Order) SetDineInNil() {
+	o.DineIn.Set(nil)
 }
 
-// GetReceiver returns the Receiver field value if set, zero value otherwise.
+// UnsetDineIn ensures that no value is present for DineIn, not even an explicit nil
+func (o *Order) UnsetDineIn() {
+	o.DineIn.Unset()
+}
+
+// GetReceiver returns the Receiver field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *Order) GetReceiver() Receiver {
-	if o == nil || IsNil(o.Receiver) {
+	if o == nil || IsNil(o.Receiver.Get()) {
 		var ret Receiver
 		return ret
 	}
-	return *o.Receiver
+	return *o.Receiver.Get()
 }
 
 // GetReceiverOk returns a tuple with the Receiver field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *Order) GetReceiverOk() (*Receiver, bool) {
-	if o == nil || IsNil(o.Receiver) {
+	if o == nil {
 		return nil, false
 	}
-	return o.Receiver, true
+	return o.Receiver.Get(), o.Receiver.IsSet()
 }
 
 // HasReceiver returns a boolean if a field has been set.
 func (o *Order) HasReceiver() bool {
-	if o != nil && !IsNil(o.Receiver) {
+	if o != nil && o.Receiver.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetReceiver gets a reference to the given Receiver and assigns it to the Receiver field.
+// SetReceiver gets a reference to the given NullableReceiver and assigns it to the Receiver field.
 func (o *Order) SetReceiver(v Receiver) {
-	o.Receiver = &v
+	o.Receiver.Set(&v)
+}
+// SetReceiverNil sets the value for Receiver to be an explicit nil
+func (o *Order) SetReceiverNil() {
+	o.Receiver.Set(nil)
+}
+
+// UnsetReceiver ensures that no value is present for Receiver, not even an explicit nil
+func (o *Order) UnsetReceiver() {
+	o.Receiver.Unset()
 }
 
 // GetOrderReadyEstimation returns the OrderReadyEstimation field value if set, zero value otherwise.
@@ -722,15 +743,15 @@ func (o Order) ToMap() (map[string]interface{}, error) {
 	if o.Campaigns != nil {
 		toSerialize["campaigns"] = o.Campaigns
 	}
-	if !IsNil(o.Promos) {
+	if o.Promos != nil {
 		toSerialize["promos"] = o.Promos
 	}
 	toSerialize["price"] = o.Price
-	if !IsNil(o.DineIn) {
-		toSerialize["dineIn"] = o.DineIn
+	if o.DineIn.IsSet() {
+		toSerialize["dineIn"] = o.DineIn.Get()
 	}
-	if !IsNil(o.Receiver) {
-		toSerialize["receiver"] = o.Receiver
+	if o.Receiver.IsSet() {
+		toSerialize["receiver"] = o.Receiver.Get()
 	}
 	if !IsNil(o.OrderReadyEstimation) {
 		toSerialize["orderReadyEstimation"] = o.OrderReadyEstimation

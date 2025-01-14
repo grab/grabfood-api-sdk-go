@@ -22,9 +22,9 @@ var _ MappedNullable = &OrderFreeItem{}
 
 // OrderFreeItem Free item information for `freeItem` campaign.
 type OrderFreeItem struct {
-	// The item's ID
+	// The free item's externalID in the partner system. Empty if not applicable.
 	Id *string `json:"id,omitempty"`
-	// The name of the item. 
+	// The name of the free item. Empty if not applicable. 
 	Name *string `json:"name,omitempty"`
 	// The item's quantity. Maximum is **1**.
 	Quantity *int32 `json:"quantity,omitempty"`

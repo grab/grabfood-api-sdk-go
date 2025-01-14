@@ -4,12 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | The modifier&#39;s ID that is on the partner&#39;s system. This ID should be unique with a min length of 1 and max of 64. | 
+**Id** | **string** | The modifier&#39;s ID that is on the partner&#39;s system. This ID should be unique. | 
 **Name** | **string** | The name of the modifier. | 
 **NameTranslation** | Pointer to **map[string]string** | Translation of the modifier name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation). | [optional] 
-**AvailableStatus** | **string** | The status for the modifier that is in the ModifierGroup. | 
-**Price** | Pointer to **int64** | The modifier&#39;s price (excluding tax) in minor format. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). | [optional] 
+**AvailableStatus** | **string** | The status for the modifier. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus). | 
+**Price** | Pointer to **int64** | The modifier&#39;s price in minor format. Refer to FAQs for more details about [tax](#section/Menu/Is-the-menu-price-with-or-without-tax). | [optional] 
 **Barcode** | Pointer to **string** | The barcode Number (GTIN). GTIN must be 8, 12, 13, 14 numeric digits. | [optional] 
+**Sequence** | Pointer to **int32** | The sort or display order of the modifier within the menu. | [optional] 
 **AdvancedPricing** | Pointer to [**AdvancedPricing**](AdvancedPricing.md) |  | [optional] 
 
 ## Methods
@@ -165,6 +166,31 @@ SetBarcode sets Barcode field to given value.
 `func (o *MenuModifier) HasBarcode() bool`
 
 HasBarcode returns a boolean if a field has been set.
+
+### GetSequence
+
+`func (o *MenuModifier) GetSequence() int32`
+
+GetSequence returns the Sequence field if non-nil, zero value otherwise.
+
+### GetSequenceOk
+
+`func (o *MenuModifier) GetSequenceOk() (*int32, bool)`
+
+GetSequenceOk returns a tuple with the Sequence field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSequence
+
+`func (o *MenuModifier) SetSequence(v int32)`
+
+SetSequence sets Sequence field to given value.
+
+### HasSequence
+
+`func (o *MenuModifier) HasSequence() bool`
+
+HasSequence returns a boolean if a field has been set.
 
 ### GetAdvancedPricing
 

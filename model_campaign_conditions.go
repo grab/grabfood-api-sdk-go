@@ -30,7 +30,7 @@ type CampaignConditions struct {
 	EndTime time.Time `json:"endTime"`
 	// The type of eater eligible for the campaign.  * `all` - campaign will be applied to everyone. No limitation on campaign type. * `new` - campaign will be applied to consumers who have not ordered from this store in the last three months. Only applicable to **order-level** campaign. 
 	EaterType string `json:"eaterType"`
-	// The minimum basket amount to be eligible for the campaign. Only applicable for **order-level** campaign. For example, 10.5 means the basket amount has to be at least $10.50.
+	// The minimum basket amount to be eligible for the campaign. Only applicable to **order-level** campaign but not to item-level discount campaign.
 	MinBasketAmount *float64 `json:"minBasketAmount,omitempty"`
 	// Specify the bundle quantity for bundle offer campaign.
 	BundleQuantity *int32 `json:"bundleQuantity,omitempty"`

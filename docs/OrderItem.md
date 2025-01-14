@@ -4,14 +4,14 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | The item&#39;s ExternalID in the partner system.  | 
+**Id** | **string** | The item&#39;s externalID in the partner system.  | 
 **GrabItemID** | **string** | The item&#39;s ID in Grab system. Partner can use this field in the &#x60;EditOrder&#x60; endpoint. | 
 **Quantity** | **int32** | The number of the item ordered. | 
-**Price** | **int64** | The price (tax-inclusive) in minor format for 1 item and modifiers under it. &#x60;Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)&#x3D;2550&#x60;.  | 
-**Tax** | Pointer to **int64** | Tax in minor format for 1 item and all modifiers under it. &#x60;0&#x60; if tax configuration is absent. &#x60;Item tax + Modifier tax | (2241*0.06)+(165*0.06)&#x3D;144&#x60;. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). | [optional] 
-**Specifications** | Pointer to **string** | An extra note for the merchant. &#x60;Blank&#x60; if no note from consumer.  | [optional] 
+**Price** | **int64** | The price for a single item along with its associated modifiers in minor unit and tax-inclusive.  &#x60;&#x60;&#x60; price &#x3D; Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)&#x3D;2550  | 
+**Tax** | Pointer to **int64** | Tax in minor format for a single item along with its associated modifiers. &#x60;0&#x60; if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). &#x60;&#x60;&#x60; tax &#x3D; Item tax + Modifier tax | (2241*0.06)+(165*0.06)&#x3D;144  | [optional] 
+**Specifications** | Pointer to **string** | An extra note for the merchant. Empty if no note from consumer.  | [optional] 
 **OutOfStockInstruction** | Pointer to [**NullableOutOfStockInstruction**](OutOfStockInstruction.md) |  | [optional] 
-**Modifiers** | Pointer to [**[]OrderItemModifier**](OrderItemModifier.md) | An array of JSON objects modifiers. Read [this](#categories) for more information. | [optional] 
+**Modifiers** | Pointer to [**[]OrderItemModifier**](OrderItemModifier.md) | An array of JSON objects modifiers. | [optional] 
 
 ## Methods
 

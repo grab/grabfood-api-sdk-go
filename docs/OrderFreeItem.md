@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | Pointer to **string** | The item&#39;s ID | [optional] 
-**Name** | Pointer to **string** | The name of the item.  | [optional] 
+**Id** | Pointer to **string** | The free item&#39;s externalID in the partner system. Empty if not applicable. | [optional] 
+**Name** | Pointer to **string** | The name of the free item. Empty if not applicable.  | [optional] 
 **Quantity** | Pointer to **int32** | The item&#39;s quantity. Maximum is **1**. | [optional] 
 **Price** | Pointer to **int64** | The item&#39;s price in minor unit format. | [optional] 
 

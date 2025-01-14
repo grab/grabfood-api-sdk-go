@@ -22,7 +22,7 @@ var _ MappedNullable = &WorkingHourDay{}
 
 // WorkingHourDay A JSON object for workingHour for a day.
 type WorkingHourDay struct {
-	// An array of open periods. `null` in [ListCampaign](#tag/list-campaign) response if the campaign is available all day.
+	// An array of open periods. `null` if the campaign period is closed all day.
 	Periods []OpenPeriod `json:"periods,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

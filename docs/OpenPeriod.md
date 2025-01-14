@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**StartTime** | **string** | The open start time in 24h format. | 
-**EndTime** | **string** | The open start time in 24h format. | 
+**StartTime** | **string** | The open start time in 24h format. Local time format is expected. | 
+**EndTime** | **string** | The open end time in 24h format. Local time format is expected. | 
 
 ## Methods
 
