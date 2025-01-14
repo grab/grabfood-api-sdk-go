@@ -23,21 +23,21 @@ var _ MappedNullable = &MenuItem{}
 
 // MenuItem struct for MenuItem
 type MenuItem struct {
-	// The item's ID in the partner system. 
+	// The item's ID in the partner system. This ID should be unique. 
 	Id string `json:"id"`
 	// The name of the item.
 	Name string `json:"name"`
 	// Translation of the item name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation).
 	NameTranslation *map[string]string `json:"nameTranslation,omitempty"`
-	// The status for the item that is in the category.  Note: In order to set an item as \"UNAVAILABLE\", it is required to update both the `availableStatus` and `maxStock` fields, whereby the `maxStock` value should be set to 0. 
+	// The status for the item. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).  > Note: In order to set an item as `\"UNAVAILABLE\"`, it is required to update both the `availableStatus` and `maxStock` fields, whereby the `maxStock` should be set to 0. 
 	AvailableStatus string `json:"availableStatus"`
 	// The description of the item. There is a custom length limit of 2000 for `VN`. 
 	Description *string `json:"description,omitempty"`
 	// Translation of the item description. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation).
 	DescriptionTranslation *map[string]string `json:"descriptionTranslation,omitempty"`
-	// The item's price (excluding tax) in minor format. For example: 1900 means $19 with `currency.exponent` as 2. Refer to [FAQ](#section/Menu/Is-the-item-price-with-or-without-tax) for more details. 
+	// The item's price in minor format. For example: 1900 means $19 with `currency.exponent` as 2. Refer to [FAQ](#section/Menu/Is-the-menu-price-with-or-without-tax) to determine whether the pricing should be tax-inclusive or tax-exclusive. 
 	Price int64 `json:"price"`
-	// An array string for the item’s image URL links. Refer to FAQs for more details about [images](#section/Menu/What-are-the-recommended-formats-for-an-item-image). 
+	// An array string for the item’s image URL link. Only 1 image is supported. Refer to FAQs for more details about [images formats](#section/Menu/What-are-the-recommended-formats-for-an-item-image). 
 	Photos []string `json:"photos,omitempty"`
 	// The item's special Tag. Refer to FAQs for more details about [specialType](#section/Menu/What's-specialType). 
 	SpecialType *string `json:"specialType,omitempty"`
@@ -45,10 +45,12 @@ type MenuItem struct {
 	Taxable *bool `json:"taxable,omitempty"`
 	// The barcode Number (GTIN). Max 64 allowed. GTIN must be 8, 12, 13, 14 numeric digits. 
 	Barcode *string `json:"barcode,omitempty"`
-	// The selling time's ID for the item. This value overwrites the category's selling time if it is different. Empty value implies the category's selling time will be applied. 
+	// The selling time's ID for the item. This value overrides the category's selling time if it is different. Empty value implies the category's selling time will be applied. 
 	SellingTimeID *string `json:"sellingTimeID,omitempty"`
-	// Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.  Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is \"UNAVAILABLE\". Item will be set to \"AVAILABLE\" if `maxStock` > 0. 
+	// Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.  > Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is `\"UNAVAILABLE\"`. Item will be set to `\"AVAILABLE\"` if `maxStock` > 0. 
 	MaxStock *int64 `json:"maxStock,omitempty"`
+	// The sort or display order of the item within the menu.
+	Sequence *int32 `json:"sequence,omitempty"`
 	AdvancedPricing *AdvancedPricing `json:"advancedPricing,omitempty"`
 	Purchasability *Purchasability `json:"purchasability,omitempty"`
 	// An array of the modifierGroup JSON objects. Max 30 allowed per item. Refer to [Modifier groups](#modifier-groups) for more information.
@@ -463,6 +465,38 @@ func (o *MenuItem) SetMaxStock(v int64) {
 	o.MaxStock = &v
 }
 
+// GetSequence returns the Sequence field value if set, zero value otherwise.
+func (o *MenuItem) GetSequence() int32 {
+	if o == nil || IsNil(o.Sequence) {
+		var ret int32
+		return ret
+	}
+	return *o.Sequence
+}
+
+// GetSequenceOk returns a tuple with the Sequence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MenuItem) GetSequenceOk() (*int32, bool) {
+	if o == nil || IsNil(o.Sequence) {
+		return nil, false
+	}
+	return o.Sequence, true
+}
+
+// HasSequence returns a boolean if a field has been set.
+func (o *MenuItem) HasSequence() bool {
+	if o != nil && !IsNil(o.Sequence) {
+		return true
+	}
+
+	return false
+}
+
+// SetSequence gets a reference to the given int32 and assigns it to the Sequence field.
+func (o *MenuItem) SetSequence(v int32) {
+	o.Sequence = &v
+}
+
 // GetAdvancedPricing returns the AdvancedPricing field value if set, zero value otherwise.
 func (o *MenuItem) GetAdvancedPricing() AdvancedPricing {
 	if o == nil || IsNil(o.AdvancedPricing) {
@@ -600,6 +634,9 @@ func (o MenuItem) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.MaxStock) {
 		toSerialize["maxStock"] = o.MaxStock
 	}
+	if !IsNil(o.Sequence) {
+		toSerialize["sequence"] = o.Sequence
+	}
 	if !IsNil(o.AdvancedPricing) {
 		toSerialize["advancedPricing"] = o.AdvancedPricing
 	}
@@ -668,6 +705,7 @@ func (o *MenuItem) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "barcode")
 		delete(additionalProperties, "sellingTimeID")
 		delete(additionalProperties, "maxStock")
+		delete(additionalProperties, "sequence")
 		delete(additionalProperties, "advancedPricing")
 		delete(additionalProperties, "purchasability")
 		delete(additionalProperties, "modifierGroups")

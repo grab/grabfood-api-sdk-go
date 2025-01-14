@@ -4,19 +4,20 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | The item&#39;s ID in the partner system.  | 
+**Id** | **string** | The item&#39;s ID in the partner system. This ID should be unique.  | 
 **Name** | **string** | The name of the item. | 
 **NameTranslation** | Pointer to **map[string]string** | Translation of the item name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation). | [optional] 
-**AvailableStatus** | **string** | The status for the item that is in the category.  Note: In order to set an item as \&quot;UNAVAILABLE\&quot;, it is required to update both the &#x60;availableStatus&#x60; and &#x60;maxStock&#x60; fields, whereby the &#x60;maxStock&#x60; value should be set to 0.  | 
+**AvailableStatus** | **string** | The status for the item. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).  &gt; Note: In order to set an item as &#x60;\&quot;UNAVAILABLE\&quot;&#x60;, it is required to update both the &#x60;availableStatus&#x60; and &#x60;maxStock&#x60; fields, whereby the &#x60;maxStock&#x60; should be set to 0.  | 
 **Description** | Pointer to **string** | The description of the item. There is a custom length limit of 2000 for &#x60;VN&#x60;.  | [optional] 
 **DescriptionTranslation** | Pointer to **map[string]string** | Translation of the item description. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation). | [optional] 
-**Price** | **int64** | The item&#39;s price (excluding tax) in minor format. For example: 1900 means $19 with &#x60;currency.exponent&#x60; as 2. Refer to [FAQ](#section/Menu/Is-the-item-price-with-or-without-tax) for more details.  | 
-**Photos** | Pointer to **[]string** | An array string for the item’s image URL links. Refer to FAQs for more details about [images](#section/Menu/What-are-the-recommended-formats-for-an-item-image).  | [optional] 
+**Price** | **int64** | The item&#39;s price in minor format. For example: 1900 means $19 with &#x60;currency.exponent&#x60; as 2. Refer to [FAQ](#section/Menu/Is-the-menu-price-with-or-without-tax) to determine whether the pricing should be tax-inclusive or tax-exclusive.  | 
+**Photos** | Pointer to **[]string** | An array string for the item’s image URL link. Only 1 image is supported. Refer to FAQs for more details about [images formats](#section/Menu/What-are-the-recommended-formats-for-an-item-image).  | [optional] 
 **SpecialType** | Pointer to **string** | The item&#39;s special Tag. Refer to FAQs for more details about [specialType](#section/Menu/What&#39;s-specialType).  | [optional] 
 **Taxable** | Pointer to **bool** | **For Indonesia only.** This field allows the configuration for an item to be marked as tax applicable, and marked item would then be included in a commercial invoice to consumers as per the government&#39;s regulations.  | [optional] 
 **Barcode** | Pointer to **string** | The barcode Number (GTIN). Max 64 allowed. GTIN must be 8, 12, 13, 14 numeric digits.  | [optional] 
-**SellingTimeID** | Pointer to **string** | The selling time&#39;s ID for the item. This value overwrites the category&#39;s selling time if it is different. Empty value implies the category&#39;s selling time will be applied.  | [optional] 
-**MaxStock** | Pointer to **int64** | Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.  Note: It is necessary to set &#x60;maxStock&#x60; to 0 if the &#x60;availableStatus&#x60; of the item is \&quot;UNAVAILABLE\&quot;. Item will be set to \&quot;AVAILABLE\&quot; if &#x60;maxStock&#x60; &gt; 0.  | [optional] 
+**SellingTimeID** | Pointer to **string** | The selling time&#39;s ID for the item. This value overrides the category&#39;s selling time if it is different. Empty value implies the category&#39;s selling time will be applied.  | [optional] 
+**MaxStock** | Pointer to **int64** | Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.  &gt; Note: It is necessary to set &#x60;maxStock&#x60; to 0 if the &#x60;availableStatus&#x60; of the item is &#x60;\&quot;UNAVAILABLE\&quot;&#x60;. Item will be set to &#x60;\&quot;AVAILABLE\&quot;&#x60; if &#x60;maxStock&#x60; &gt; 0.  | [optional] 
+**Sequence** | Pointer to **int32** | The sort or display order of the item within the menu. | [optional] 
 **AdvancedPricing** | Pointer to [**AdvancedPricing**](AdvancedPricing.md) |  | [optional] 
 **Purchasability** | Pointer to [**Purchasability**](Purchasability.md) |  | [optional] 
 **ModifierGroups** | Pointer to [**[]ModifierGroup**](ModifierGroup.md) | An array of the modifierGroup JSON objects. Max 30 allowed per item. Refer to [Modifier groups](#modifier-groups) for more information. | [optional] 
@@ -344,6 +345,31 @@ SetMaxStock sets MaxStock field to given value.
 `func (o *MenuItem) HasMaxStock() bool`
 
 HasMaxStock returns a boolean if a field has been set.
+
+### GetSequence
+
+`func (o *MenuItem) GetSequence() int32`
+
+GetSequence returns the Sequence field if non-nil, zero value otherwise.
+
+### GetSequenceOk
+
+`func (o *MenuItem) GetSequenceOk() (*int32, bool)`
+
+GetSequenceOk returns a tuple with the Sequence field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSequence
+
+`func (o *MenuItem) SetSequence(v int32)`
+
+SetSequence sets Sequence field to given value.
+
+### HasSequence
+
+`func (o *MenuItem) HasSequence() bool`
+
+HasSequence returns a boolean if a field has been set.
 
 ### GetAdvancedPricing
 

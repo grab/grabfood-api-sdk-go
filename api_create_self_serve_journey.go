@@ -22,78 +22,79 @@ import (
 )
 
 
-// UpdateMenuNotificationAPIService UpdateMenuNotificationAPI service
-type UpdateMenuNotificationAPIService service
+// CreateSelfServeJourneyAPIService CreateSelfServeJourneyAPI service
+type CreateSelfServeJourneyAPIService service
 
-type ApiUpdateMenuNotificationRequest struct {
+type ApiCreateSelfServeJourneyRequest struct {
 	ctx context.Context
-	ApiService *UpdateMenuNotificationAPIService
+	ApiService *CreateSelfServeJourneyAPIService
 	contentType *string
 	authorization *string
-	updateMenuNotifRequest *UpdateMenuNotifRequest
+	createSelfServeJourneyRequest *CreateSelfServeJourneyRequest
 }
 
 // The content type of the request body. You must use &#x60;application/json&#x60; for this header as GrabFood API currently does not support other formats.
-func (r ApiUpdateMenuNotificationRequest) ContentType(contentType string) ApiUpdateMenuNotificationRequest {
+func (r ApiCreateSelfServeJourneyRequest) ContentType(contentType string) ApiCreateSelfServeJourneyRequest {
 	r.contentType = &contentType
 	return r
 }
 
 // Specify the generated authorization token of the bearer type.
-func (r ApiUpdateMenuNotificationRequest) Authorization(authorization string) ApiUpdateMenuNotificationRequest {
+func (r ApiCreateSelfServeJourneyRequest) Authorization(authorization string) ApiCreateSelfServeJourneyRequest {
 	r.authorization = &authorization
 	return r
 }
 
-// 
-func (r ApiUpdateMenuNotificationRequest) UpdateMenuNotifRequest(updateMenuNotifRequest UpdateMenuNotifRequest) ApiUpdateMenuNotificationRequest {
-	r.updateMenuNotifRequest = &updateMenuNotifRequest
+func (r ApiCreateSelfServeJourneyRequest) CreateSelfServeJourneyRequest(createSelfServeJourneyRequest CreateSelfServeJourneyRequest) ApiCreateSelfServeJourneyRequest {
+	r.createSelfServeJourneyRequest = &createSelfServeJourneyRequest
 	return r
 }
 
-func (r ApiUpdateMenuNotificationRequest) Execute() (*http.Response, error) {
-	return r.ApiService.UpdateMenuNotificationExecute(r)
+func (r ApiCreateSelfServeJourneyRequest) Execute() (*CreateSelfServeJourneyResponse, *http.Response, error) {
+	return r.ApiService.CreateSelfServeJourneyExecute(r)
 }
 
 /*
-UpdateMenuNotification Notify Grab of updated menu
+CreateSelfServeJourney Create self serve journey
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
- @return ApiUpdateMenuNotificationRequest
+ @return ApiCreateSelfServeJourneyRequest
 */
-func (a *UpdateMenuNotificationAPIService) UpdateMenuNotification(ctx context.Context) ApiUpdateMenuNotificationRequest {
-	return ApiUpdateMenuNotificationRequest{
+func (a *CreateSelfServeJourneyAPIService) CreateSelfServeJourney(ctx context.Context) ApiCreateSelfServeJourneyRequest {
+	return ApiCreateSelfServeJourneyRequest{
 		ApiService: a,
 		ctx: ctx,
 	}
 }
 
 // Execute executes the request
-func (a *UpdateMenuNotificationAPIService) UpdateMenuNotificationExecute(r ApiUpdateMenuNotificationRequest) (*http.Response, error) {
+//  @return CreateSelfServeJourneyResponse
+func (a *CreateSelfServeJourneyAPIService) CreateSelfServeJourneyExecute(r ApiCreateSelfServeJourneyRequest) (*CreateSelfServeJourneyResponse, *http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPost
 		localVarPostBody     interface{}
 		formFiles            []formFile
+		localVarReturnValue  *CreateSelfServeJourneyResponse
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "UpdateMenuNotificationAPIService.UpdateMenuNotification")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "CreateSelfServeJourneyAPIService.CreateSelfServeJourney")
 	if err != nil {
-		return nil, &GenericOpenAPIError{error: err.Error()}
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
 	}
 
-	localVarPath := localBasePath + "/partner/v1/merchant/menu/notification"
+	localVarPath := localBasePath + "/partner/v1/self-serve/activation"
 
 	localVarHeaderParams := make(map[string]string)
 	localVarQueryParams := url.Values{}
 	localVarFormParams := url.Values{}
 	if r.contentType == nil {
-		return nil, reportError("contentType is required and must be specified")
+		return localVarReturnValue, nil, reportError("contentType is required and must be specified")
 	}
 	if r.authorization == nil {
-		return nil, reportError("authorization is required and must be specified")
+		return localVarReturnValue, nil, reportError("authorization is required and must be specified")
 	}
-	if r.updateMenuNotifRequest == nil {
-		return nil, reportError("updateMenuNotifRequest is required and must be specified")
+	if r.createSelfServeJourneyRequest == nil {
+		return localVarReturnValue, nil, reportError("createSelfServeJourneyRequest is required and must be specified")
 	}
 
 	// to determine the Content-Type header
@@ -116,22 +117,22 @@ func (a *UpdateMenuNotificationAPIService) UpdateMenuNotificationExecute(r ApiUp
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "Content-Type", r.contentType, "simple", "")
 	parameterAddToHeaderOrQuery(localVarHeaderParams, "Authorization", r.authorization, "simple", "")
 	// body params
-	localVarPostBody = r.updateMenuNotifRequest
+	localVarPostBody = r.createSelfServeJourneyRequest
 	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
 	if err != nil {
-		return nil, err
+		return localVarReturnValue, nil, err
 	}
 
 	localVarHTTPResponse, err := a.client.callAPI(req)
 	if err != nil || localVarHTTPResponse == nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
 	localVarHTTPResponse.Body.Close()
 	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
 	if err != nil {
-		return localVarHTTPResponse, err
+		return localVarReturnValue, localVarHTTPResponse, err
 	}
 
 	if localVarHTTPResponse.StatusCode >= 300 {
@@ -139,18 +140,17 @@ func (a *UpdateMenuNotificationAPIService) UpdateMenuNotificationExecute(r ApiUp
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
-			var v Error
-			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
-			if err != nil {
-				newErr.error = err.Error()
-				return localVarHTTPResponse, newErr
-			}
-					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
-					newErr.model = v
-		}
-		return localVarHTTPResponse, newErr
+		return localVarReturnValue, localVarHTTPResponse, newErr
 	}
 
-	return localVarHTTPResponse, nil
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }

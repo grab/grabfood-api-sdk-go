@@ -4,11 +4,12 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | The category&#39;s ID that is on the partner system. This ID should be unique with a min length of 1 and max of 64. | 
+**Id** | **string** | The category&#39;s ID that is on the partner system. This ID should be unique. | 
 **Name** | **string** | The name of the category. | 
 **NameTranslation** | Pointer to **map[string]string** | Translation of the category name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation). | [optional] 
 **AvailableStatus** | **string** | The status for the category. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus). | 
 **SellingTimeID** | **string** | The selling time&#39;s ID for the category. All items within the category will apply the same selling time unless there is another selling time specified for the item. | 
+**Sequence** | Pointer to **int32** | The sort or display order of the category within the menu. | [optional] 
 **Items** | [**[]MenuItem**](MenuItem.md) | An array of item JSON objects. Max 300 allowed per category. Refer to [Items](#items) for more information. | 
 
 ## Methods
@@ -134,6 +135,31 @@ and a boolean to check if the value has been set.
 
 SetSellingTimeID sets SellingTimeID field to given value.
 
+
+### GetSequence
+
+`func (o *MenuCategory) GetSequence() int32`
+
+GetSequence returns the Sequence field if non-nil, zero value otherwise.
+
+### GetSequenceOk
+
+`func (o *MenuCategory) GetSequenceOk() (*int32, bool)`
+
+GetSequenceOk returns a tuple with the Sequence field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSequence
+
+`func (o *MenuCategory) SetSequence(v int32)`
+
+SetSequence sets Sequence field to given value.
+
+### HasSequence
+
+`func (o *MenuCategory) HasSequence() bool`
+
+HasSequence returns a boolean if a field has been set.
 
 ### GetItems
 

@@ -23,18 +23,20 @@ var _ MappedNullable = &ModifierGroup{}
 
 // ModifierGroup struct for ModifierGroup
 type ModifierGroup struct {
-	// The ModifierGroup's ID that is on the partner system. This ID should be unique with a min length of 1 and max of 64.
+	// The modifier group's ID that is on the partner system. This ID should be unique.
 	Id string `json:"id"`
-	// The name of the ModifierGroup for the item that is in the parent category and section.
+	// The name of the modifier group.
 	Name string `json:"name"`
 	// Translation of the modifier group name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation).
 	NameTranslation *map[string]string `json:"nameTranslation,omitempty"`
-	// The status for the ModifierGroup that is in the item.
+	// The status for the modifier group.   > The item may be marked as `\"UNAVAILABLE\"` if no available modifier to be selected within the required modifier group where `\"selectionRangeMin\": 1`. 
 	AvailableStatus string `json:"availableStatus"`
-	// The minimum quantity of the attribute. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do).
+	// The minimum quantity of the modifiers to be selected. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do).
 	SelectionRangeMin *int32 `json:"selectionRangeMin,omitempty"`
-	// The maximum quantity of the attribute. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do).
+	// The maximum quantity of the modifiers to be selected. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do).
 	SelectionRangeMax int32 `json:"selectionRangeMax"`
+	// The sort or display order of the modifier group within the menu.
+	Sequence *int32 `json:"sequence,omitempty"`
 	// An array of modifier JSON objects. Max 100 per modifierGroup. Refer to [Modifiers](#modifiers) for more information.
 	Modifiers []MenuModifier `json:"modifiers,omitempty"`
 	AdditionalProperties map[string]interface{}
@@ -223,6 +225,38 @@ func (o *ModifierGroup) SetSelectionRangeMax(v int32) {
 	o.SelectionRangeMax = v
 }
 
+// GetSequence returns the Sequence field value if set, zero value otherwise.
+func (o *ModifierGroup) GetSequence() int32 {
+	if o == nil || IsNil(o.Sequence) {
+		var ret int32
+		return ret
+	}
+	return *o.Sequence
+}
+
+// GetSequenceOk returns a tuple with the Sequence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *ModifierGroup) GetSequenceOk() (*int32, bool) {
+	if o == nil || IsNil(o.Sequence) {
+		return nil, false
+	}
+	return o.Sequence, true
+}
+
+// HasSequence returns a boolean if a field has been set.
+func (o *ModifierGroup) HasSequence() bool {
+	if o != nil && !IsNil(o.Sequence) {
+		return true
+	}
+
+	return false
+}
+
+// SetSequence gets a reference to the given int32 and assigns it to the Sequence field.
+func (o *ModifierGroup) SetSequence(v int32) {
+	o.Sequence = &v
+}
+
 // GetModifiers returns the Modifiers field value if set, zero value otherwise.
 func (o *ModifierGroup) GetModifiers() []MenuModifier {
 	if o == nil || IsNil(o.Modifiers) {
@@ -275,6 +309,9 @@ func (o ModifierGroup) ToMap() (map[string]interface{}, error) {
 		toSerialize["selectionRangeMin"] = o.SelectionRangeMin
 	}
 	toSerialize["selectionRangeMax"] = o.SelectionRangeMax
+	if !IsNil(o.Sequence) {
+		toSerialize["sequence"] = o.Sequence
+	}
 	if !IsNil(o.Modifiers) {
 		toSerialize["modifiers"] = o.Modifiers
 	}
@@ -330,6 +367,7 @@ func (o *ModifierGroup) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "availableStatus")
 		delete(additionalProperties, "selectionRangeMin")
 		delete(additionalProperties, "selectionRangeMax")
+		delete(additionalProperties, "sequence")
 		delete(additionalProperties, "modifiers")
 		o.AdditionalProperties = additionalProperties
 	}

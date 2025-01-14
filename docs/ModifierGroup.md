@@ -4,12 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Id** | **string** | The ModifierGroup&#39;s ID that is on the partner system. This ID should be unique with a min length of 1 and max of 64. | 
-**Name** | **string** | The name of the ModifierGroup for the item that is in the parent category and section. | 
+**Id** | **string** | The modifier group&#39;s ID that is on the partner system. This ID should be unique. | 
+**Name** | **string** | The name of the modifier group. | 
 **NameTranslation** | Pointer to **map[string]string** | Translation of the modifier group name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation). | [optional] 
-**AvailableStatus** | **string** | The status for the ModifierGroup that is in the item. | 
-**SelectionRangeMin** | Pointer to **int32** | The minimum quantity of the attribute. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do). | [optional] 
-**SelectionRangeMax** | **int32** | The maximum quantity of the attribute. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do). | 
+**AvailableStatus** | **string** | The status for the modifier group.   &gt; The item may be marked as &#x60;\&quot;UNAVAILABLE\&quot;&#x60; if no available modifier to be selected within the required modifier group where &#x60;\&quot;selectionRangeMin\&quot;: 1&#x60;.  | 
+**SelectionRangeMin** | Pointer to **int32** | The minimum quantity of the modifiers to be selected. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do). | [optional] 
+**SelectionRangeMax** | **int32** | The maximum quantity of the modifiers to be selected. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do). | 
+**Sequence** | Pointer to **int32** | The sort or display order of the modifier group within the menu. | [optional] 
 **Modifiers** | Pointer to [**[]MenuModifier**](MenuModifier.md) | An array of modifier JSON objects. Max 100 per modifierGroup. Refer to [Modifiers](#modifiers) for more information. | [optional] 
 
 ## Methods
@@ -160,6 +161,31 @@ and a boolean to check if the value has been set.
 
 SetSelectionRangeMax sets SelectionRangeMax field to given value.
 
+
+### GetSequence
+
+`func (o *ModifierGroup) GetSequence() int32`
+
+GetSequence returns the Sequence field if non-nil, zero value otherwise.
+
+### GetSequenceOk
+
+`func (o *ModifierGroup) GetSequenceOk() (*int32, bool)`
+
+GetSequenceOk returns a tuple with the Sequence field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetSequence
+
+`func (o *ModifierGroup) SetSequence(v int32)`
+
+SetSequence sets Sequence field to given value.
+
+### HasSequence
+
+`func (o *ModifierGroup) HasSequence() bool`
+
+HasSequence returns a boolean if a field has been set.
 
 ### GetModifiers
 

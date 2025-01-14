@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Periods** | Pointer to [**[]OpenPeriod**](OpenPeriod.md) | An array of open periods. &#x60;null&#x60; in [ListCampaign](#tag/list-campaign) response if the campaign is available all day. | [optional] 
+**Periods** | Pointer to [**[]OpenPeriod**](OpenPeriod.md) | An array of open periods. &#x60;null&#x60; if the campaign period is closed all day. | [optional] 
 
 ## Methods
 

@@ -4,7 +4,7 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**OpenPeriodType** | **string** | The period type for when the outlet is open. - OpenPeriod &#x3D; open only in given periods - OpenAllDay &#x3D; open 24 hours - CloseAllDay &#x3D; closed 24 hours  | 
+**OpenPeriodType** | **string** | Defines the specific time period during which the menu is available  - OpenPeriod &#x3D; open only in given periods - OpenAllDay &#x3D; open 24 hours - CloseAllDay &#x3D; closed 24 hours  | 
 **Periods** | Pointer to [**[]OpenPeriod**](OpenPeriod.md) | An array of open periods. Only required when &#x60;openPeriodType&#x60; is **OpenPeriod** | [optional] 
 
 ## Methods

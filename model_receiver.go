@@ -20,7 +20,7 @@ import (
 // checks if the Receiver type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &Receiver{}
 
-// Receiver A JSON object containing the receiver information. Currently only for orders that are delivered by the restaurant.
+// Receiver A JSON object containing the receiver information. Only applicable for orders that are delivered by the restaurant. `null` if not applicable.
 type Receiver struct {
 	// The name of the receiver.
 	Name *string `json:"name,omitempty"`

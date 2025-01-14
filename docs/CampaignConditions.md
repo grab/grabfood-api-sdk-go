@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **StartTime** | **time.Time** | The campaign&#39;s start time in UTC format. For example, 2021-09-23T03:30:00Z means 2021-09-23 11:30:00 (UTC +08:00). | 
 **EndTime** | **time.Time** | The campaign&#39;s end time in UTC format. | 
 **EaterType** | **string** | The type of eater eligible for the campaign.  * &#x60;all&#x60; - campaign will be applied to everyone. No limitation on campaign type. * &#x60;new&#x60; - campaign will be applied to consumers who have not ordered from this store in the last three months. Only applicable to **order-level** campaign.  | 
-**MinBasketAmount** | Pointer to **float64** | The minimum basket amount to be eligible for the campaign. Only applicable for **order-level** campaign. For example, 10.5 means the basket amount has to be at least $10.50. | [optional] 
+**MinBasketAmount** | Pointer to **float64** | The minimum basket amount to be eligible for the campaign. Only applicable to **order-level** campaign but not to item-level discount campaign. | [optional] 
 **BundleQuantity** | Pointer to **int32** | Specify the bundle quantity for bundle offer campaign. | [optional] 
 **WorkingHour** | Pointer to [**WorkingHour**](WorkingHour.md) |  | [optional] 
 

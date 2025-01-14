@@ -1,18 +1,18 @@
-# \UpdateDeliveryStateAPI
+# \CreateSelfServeJourneyAPI
 
 All URIs are relative to *https://partner-api.grab.com/grabfood-sandbox*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**UpdateDeliveryState**](UpdateDeliveryStateAPI.md#UpdateDeliveryState) | **Post** /partner/v1/order/delivery | Update delivery state
+[**CreateSelfServeJourney**](CreateSelfServeJourneyAPI.md#CreateSelfServeJourney) | **Post** /partner/v1/self-serve/activation | Create self serve journey
 
 
 
-## UpdateDeliveryState
+## CreateSelfServeJourney
 
-> UpdateDeliveryState(ctx).ContentType(contentType).Authorization(authorization).OrderDeliveryRequest(orderDeliveryRequest).Execute()
+> CreateSelfServeJourneyResponse CreateSelfServeJourney(ctx).ContentType(contentType).Authorization(authorization).CreateSelfServeJourneyRequest(createSelfServeJourneyRequest).Execute()
 
-Update delivery state
+Create self serve journey
 
 ### Example
 
@@ -29,15 +29,17 @@ import (
 func main() {
 	contentType := "application/json" // string | The content type of the request body. You must use `application/json` for this header as GrabFood API currently does not support other formats.
 	authorization := "Bearer <ACCESS_TOKEN_HERE>" // string | Specify the generated authorization token of the bearer type.
-	orderDeliveryRequest := *grabfood.NewOrderDeliveryRequest("123-CYNKLPCVRN5", "Collect", "Delivered") // OrderDeliveryRequest | 
+	createSelfServeJourneyRequest := *grabfood.NewCreateSelfServeJourneyRequest(*grabfood.NewCreateSelfServeJourneyRequestPartner("Partner-ABECU")) // CreateSelfServeJourneyRequest | 
 
 	configuration := grabfood.NewConfiguration()
 	apiClient := grabfood.NewAPIClient(configuration)
-	r, err := apiClient.UpdateDeliveryStateAPI.UpdateDeliveryState(context.Background()).ContentType(contentType).Authorization(authorization).OrderDeliveryRequest(orderDeliveryRequest).Execute()
+	resp, r, err := apiClient.CreateSelfServeJourneyAPI.CreateSelfServeJourney(context.Background()).ContentType(contentType).Authorization(authorization).CreateSelfServeJourneyRequest(createSelfServeJourneyRequest).Execute()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Error when calling `UpdateDeliveryStateAPI.UpdateDeliveryState``: %v\n", err)
+		fmt.Fprintf(os.Stderr, "Error when calling `CreateSelfServeJourneyAPI.CreateSelfServeJourney``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
 	}
+	// response from `CreateSelfServeJourney`: CreateSelfServeJourneyResponse
+	fmt.Fprintf(os.Stdout, "Response from `CreateSelfServeJourneyAPI.CreateSelfServeJourney`: %v\n", resp)
 }
 ```
 
@@ -47,18 +49,18 @@ func main() {
 
 ### Other Parameters
 
-Other parameters are passed through a pointer to a apiUpdateDeliveryStateRequest struct via the builder pattern
+Other parameters are passed through a pointer to a apiCreateSelfServeJourneyRequest struct via the builder pattern
 
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **contentType** | **string** | The content type of the request body. You must use &#x60;application/json&#x60; for this header as GrabFood API currently does not support other formats. | 
  **authorization** | **string** | Specify the generated authorization token of the bearer type. | 
- **orderDeliveryRequest** | [**OrderDeliveryRequest**](OrderDeliveryRequest.md) |  | 
+ **createSelfServeJourneyRequest** | [**CreateSelfServeJourneyRequest**](CreateSelfServeJourneyRequest.md) |  | 
 
 ### Return type
 
- (empty response body)
+[**CreateSelfServeJourneyResponse**](CreateSelfServeJourneyResponse.md)
 
 ### Authorization
 
@@ -67,7 +69,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)

@@ -23,7 +23,7 @@ var _ MappedNullable = &MenuCategory{}
 
 // MenuCategory struct for MenuCategory
 type MenuCategory struct {
-	// The category's ID that is on the partner system. This ID should be unique with a min length of 1 and max of 64.
+	// The category's ID that is on the partner system. This ID should be unique.
 	Id string `json:"id"`
 	// The name of the category.
 	Name string `json:"name"`
@@ -33,6 +33,8 @@ type MenuCategory struct {
 	AvailableStatus string `json:"availableStatus"`
 	// The selling time's ID for the category. All items within the category will apply the same selling time unless there is another selling time specified for the item.
 	SellingTimeID string `json:"sellingTimeID"`
+	// The sort or display order of the category within the menu.
+	Sequence *int32 `json:"sequence,omitempty"`
 	// An array of item JSON objects. Max 300 allowed per category. Refer to [Items](#items) for more information.
 	Items []MenuItem `json:"items"`
 	AdditionalProperties map[string]interface{}
@@ -190,6 +192,38 @@ func (o *MenuCategory) SetSellingTimeID(v string) {
 	o.SellingTimeID = v
 }
 
+// GetSequence returns the Sequence field value if set, zero value otherwise.
+func (o *MenuCategory) GetSequence() int32 {
+	if o == nil || IsNil(o.Sequence) {
+		var ret int32
+		return ret
+	}
+	return *o.Sequence
+}
+
+// GetSequenceOk returns a tuple with the Sequence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MenuCategory) GetSequenceOk() (*int32, bool) {
+	if o == nil || IsNil(o.Sequence) {
+		return nil, false
+	}
+	return o.Sequence, true
+}
+
+// HasSequence returns a boolean if a field has been set.
+func (o *MenuCategory) HasSequence() bool {
+	if o != nil && !IsNil(o.Sequence) {
+		return true
+	}
+
+	return false
+}
+
+// SetSequence gets a reference to the given int32 and assigns it to the Sequence field.
+func (o *MenuCategory) SetSequence(v int32) {
+	o.Sequence = &v
+}
+
 // GetItems returns the Items field value
 func (o *MenuCategory) GetItems() []MenuItem {
 	if o == nil {
@@ -231,6 +265,9 @@ func (o MenuCategory) ToMap() (map[string]interface{}, error) {
 	}
 	toSerialize["availableStatus"] = o.AvailableStatus
 	toSerialize["sellingTimeID"] = o.SellingTimeID
+	if !IsNil(o.Sequence) {
+		toSerialize["sequence"] = o.Sequence
+	}
 	toSerialize["items"] = o.Items
 
 	for key, value := range o.AdditionalProperties {
@@ -284,6 +321,7 @@ func (o *MenuCategory) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "nameTranslation")
 		delete(additionalProperties, "availableStatus")
 		delete(additionalProperties, "sellingTimeID")
+		delete(additionalProperties, "sequence")
 		delete(additionalProperties, "items")
 		o.AdditionalProperties = additionalProperties
 	}

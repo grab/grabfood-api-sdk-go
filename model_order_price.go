@@ -23,22 +23,24 @@ var _ MappedNullable = &OrderPrice{}
 
 // OrderPrice A JSON object containing order's price in the minor unit format.
 type OrderPrice struct {
-	// Total item and modifier price (tax-inclusive) in the minor unit. `Sum of all (Item price * quantity) | 2550*1=2550`.
+	// Total item and modifier price (tax-inclusive) in the minor unit. ``` subtotal = Sum of all (item price * quantity) | 2550*1=2550 
 	Subtotal int64 `json:"subtotal"`
-	// GrabFood's tax in the minor unit. `(subtotal-merchantFundPromo)* Tax /(1+Tax) | (2550-475)*0.06/1.06=117`. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+	// GrabFood's tax in the minor unit. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). ``` tax = (subtotal + merchantChargeFee - merchantFundPromo) * Tax / (1+Tax) | (2550-475)*0.06/1.06=117 
 	Tax *int64 `json:"tax,omitempty"`
-	// Any additional fee charged by merchant, which is 100% paid out to the merchant. Eg. Takeaway, packaging costs, dine-in charge.
+	// Any additional fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant. Eg. Takeaway, packaging costs, dine-in charge. 
 	MerchantChargeFee *int64 `json:"merchantChargeFee,omitempty"`
-	// GrabFood's promo fund in the minor unit. Calculated based on funded ratio.
+	// GrabFood's promo fund in the minor unit. Calculated based on funded ratio. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.
 	GrabFundPromo *int64 `json:"grabFundPromo,omitempty"`
 	// The merchant's promo fund in the minor unit. Calculated based on funded ratio.
 	MerchantFundPromo *int64 `json:"merchantFundPromo,omitempty"`
-	// The total amount promo applied to the basket items only (item level/order level) in the minor unit. Delivery fee is excluded. `(grabFundPromo + merchantFundPromo) | 300 + 475 = 775` 
+	// The total amount promo applied to the basket items only (item level/order level) in the minor unit, excluding delivery fee. Only present when `paymentType: CASH` or `orderType: DeliveredByRestaurant`. Otherwise, it will be set to `0`.  ``` basketPromo = (grabFundPromo + merchantFundPromo) | 300 + 475 = 775 
 	BasketPromo *int64 `json:"basketPromo,omitempty"`
-	// The delivery fee in the minor unit.
+	// The delivery fee in the minor unit. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.
 	DeliveryFee *int64 `json:"deliveryFee,omitempty"`
-	// The total amount consumer paid in the minor unit. `(subtotal + deliveryFee) - (sum of all promo) | (2550+400)-775=2175`
-	EaterPayment int64 `json:"eaterPayment"`
+	// The fee charged by GrabFood for order that does not meet a certain minimum order value. Only present when `paymentType:CASH` and `orderType:DeliveredByRestaurant`.
+	SmallOrderFee *int64 `json:"smallOrderFee,omitempty"`
+	// The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.  ``` eaterPayment = (subtotal + merchantChargeFee + deliveryFee) - (sum of all promo) | (2550+400)-775=2175 
+	EaterPayment *int64 `json:"eaterPayment,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -48,10 +50,9 @@ type _OrderPrice OrderPrice
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewOrderPrice(subtotal int64, eaterPayment int64) *OrderPrice {
+func NewOrderPrice(subtotal int64) *OrderPrice {
 	this := OrderPrice{}
 	this.Subtotal = subtotal
-	this.EaterPayment = eaterPayment
 	return &this
 }
 
@@ -279,28 +280,68 @@ func (o *OrderPrice) SetDeliveryFee(v int64) {
 	o.DeliveryFee = &v
 }
 
-// GetEaterPayment returns the EaterPayment field value
-func (o *OrderPrice) GetEaterPayment() int64 {
-	if o == nil {
+// GetSmallOrderFee returns the SmallOrderFee field value if set, zero value otherwise.
+func (o *OrderPrice) GetSmallOrderFee() int64 {
+	if o == nil || IsNil(o.SmallOrderFee) {
 		var ret int64
 		return ret
 	}
-
-	return o.EaterPayment
+	return *o.SmallOrderFee
 }
 
-// GetEaterPaymentOk returns a tuple with the EaterPayment field value
+// GetSmallOrderFeeOk returns a tuple with the SmallOrderFee field value if set, nil otherwise
 // and a boolean to check if the value has been set.
-func (o *OrderPrice) GetEaterPaymentOk() (*int64, bool) {
-	if o == nil {
+func (o *OrderPrice) GetSmallOrderFeeOk() (*int64, bool) {
+	if o == nil || IsNil(o.SmallOrderFee) {
 		return nil, false
 	}
-	return &o.EaterPayment, true
+	return o.SmallOrderFee, true
 }
 
-// SetEaterPayment sets field value
+// HasSmallOrderFee returns a boolean if a field has been set.
+func (o *OrderPrice) HasSmallOrderFee() bool {
+	if o != nil && !IsNil(o.SmallOrderFee) {
+		return true
+	}
+
+	return false
+}
+
+// SetSmallOrderFee gets a reference to the given int64 and assigns it to the SmallOrderFee field.
+func (o *OrderPrice) SetSmallOrderFee(v int64) {
+	o.SmallOrderFee = &v
+}
+
+// GetEaterPayment returns the EaterPayment field value if set, zero value otherwise.
+func (o *OrderPrice) GetEaterPayment() int64 {
+	if o == nil || IsNil(o.EaterPayment) {
+		var ret int64
+		return ret
+	}
+	return *o.EaterPayment
+}
+
+// GetEaterPaymentOk returns a tuple with the EaterPayment field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderPrice) GetEaterPaymentOk() (*int64, bool) {
+	if o == nil || IsNil(o.EaterPayment) {
+		return nil, false
+	}
+	return o.EaterPayment, true
+}
+
+// HasEaterPayment returns a boolean if a field has been set.
+func (o *OrderPrice) HasEaterPayment() bool {
+	if o != nil && !IsNil(o.EaterPayment) {
+		return true
+	}
+
+	return false
+}
+
+// SetEaterPayment gets a reference to the given int64 and assigns it to the EaterPayment field.
 func (o *OrderPrice) SetEaterPayment(v int64) {
-	o.EaterPayment = v
+	o.EaterPayment = &v
 }
 
 func (o OrderPrice) MarshalJSON() ([]byte, error) {
@@ -332,7 +373,12 @@ func (o OrderPrice) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.DeliveryFee) {
 		toSerialize["deliveryFee"] = o.DeliveryFee
 	}
-	toSerialize["eaterPayment"] = o.EaterPayment
+	if !IsNil(o.SmallOrderFee) {
+		toSerialize["smallOrderFee"] = o.SmallOrderFee
+	}
+	if !IsNil(o.EaterPayment) {
+		toSerialize["eaterPayment"] = o.EaterPayment
+	}
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -347,7 +393,6 @@ func (o *OrderPrice) UnmarshalJSON(data []byte) (err error) {
 	// that every required field exists as a key in the generic map.
 	requiredProperties := []string{
 		"subtotal",
-		"eaterPayment",
 	}
 
 	allProperties := make(map[string]interface{})
@@ -384,6 +429,7 @@ func (o *OrderPrice) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "merchantFundPromo")
 		delete(additionalProperties, "basketPromo")
 		delete(additionalProperties, "deliveryFee")
+		delete(additionalProperties, "smallOrderFee")
 		delete(additionalProperties, "eaterPayment")
 		o.AdditionalProperties = additionalProperties
 	}

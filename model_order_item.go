@@ -23,20 +23,20 @@ var _ MappedNullable = &OrderItem{}
 
 // OrderItem struct for OrderItem
 type OrderItem struct {
-	// The item's ExternalID in the partner system. 
+	// The item's externalID in the partner system. 
 	Id string `json:"id"`
 	// The item's ID in Grab system. Partner can use this field in the `EditOrder` endpoint.
 	GrabItemID string `json:"grabItemID"`
 	// The number of the item ordered.
 	Quantity int32 `json:"quantity"`
-	// The price (tax-inclusive) in minor format for 1 item and modifiers under it. `Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)=2550`. 
+	// The price for a single item along with its associated modifiers in minor unit and tax-inclusive.  ``` price = Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)=2550 
 	Price int64 `json:"price"`
-	// Tax in minor format for 1 item and all modifiers under it. `0` if tax configuration is absent. `Item tax + Modifier tax | (2241*0.06)+(165*0.06)=144`. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+	// Tax in minor format for a single item along with its associated modifiers. `0` if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). ``` tax = Item tax + Modifier tax | (2241*0.06)+(165*0.06)=144 
 	Tax *int64 `json:"tax,omitempty"`
-	// An extra note for the merchant. `Blank` if no note from consumer. 
+	// An extra note for the merchant. Empty if no note from consumer. 
 	Specifications *string `json:"specifications,omitempty"`
 	OutOfStockInstruction NullableOutOfStockInstruction `json:"outOfStockInstruction,omitempty"`
-	// An array of JSON objects modifiers. Read [this](#categories) for more information.
+	// An array of JSON objects modifiers.
 	Modifiers []OrderItemModifier `json:"modifiers,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

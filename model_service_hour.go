@@ -21,9 +21,9 @@ import (
 // checks if the ServiceHour type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &ServiceHour{}
 
-// ServiceHour A JSON object serviceHour for each day.
+// ServiceHour A JSON object serviceHour for each day. An empty JSON object indicates the menu item is not available on the day.
 type ServiceHour struct {
-	// The period type for when the outlet is open. - OpenPeriod = open only in given periods - OpenAllDay = open 24 hours - CloseAllDay = closed 24 hours 
+	// Defines the specific time period during which the menu is available  - OpenPeriod = open only in given periods - OpenAllDay = open 24 hours - CloseAllDay = closed 24 hours 
 	OpenPeriodType string `json:"openPeriodType"`
 	// An array of open periods. Only required when `openPeriodType` is **OpenPeriod**
 	Periods []OpenPeriod `json:"periods,omitempty"`

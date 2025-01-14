@@ -4,8 +4,8 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**StartTime** | Pointer to **string** | The selling time group start time in date &amp; time format.  | [optional] 
-**EndTime** | Pointer to **string** | The selling time group end time in date &amp; time format.  | [optional] 
+**StartTime** | Pointer to **string** | The selling time group start time in date &amp; time format. UTC format is expected.  | [optional] 
+**EndTime** | Pointer to **string** | The selling time group end time in date &amp; time format. UTC format is expected.  | [optional] 
 **Id** | Pointer to **string** | The selling time&#39;s ID on the partner system. This ID should be unique with length min 1 and max 64.  | [optional] 
 **Name** | Pointer to **string** | The name of the selling time.  | [optional] 
 **ServiceHours** | Pointer to [**ServiceHours**](ServiceHours.md) |  | [optional] 

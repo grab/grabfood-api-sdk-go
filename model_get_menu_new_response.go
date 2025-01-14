@@ -30,7 +30,7 @@ type GetMenuNewResponse struct {
 	Currency Currency `json:"currency"`
 	// An array of sellingTimes JSON objects. Max 20 allowed. Refer to [Selling Times](#selling-times) for more information.
 	SellingTimes []SellingTime `json:"sellingTimes"`
-	// An array of category JSON objects. Max 100 allowed per section. Refer to [Categories](#categories) for more information.
+	// An array of category JSON objects. Max 100 allowed. Refer to [Categories](#categories) for more information.
 	Categories []MenuCategory `json:"categories"`
 	AdditionalProperties map[string]interface{}
 }

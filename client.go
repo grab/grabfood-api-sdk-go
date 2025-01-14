@@ -60,6 +60,8 @@ type APIClient struct {
 
 	CreateCampaignAPI *CreateCampaignAPIService
 
+	CreateSelfServeJourneyAPI *CreateSelfServeJourneyAPIService
+
 	DeleteCampaignAPI *DeleteCampaignAPIService
 
 	EditOrderAPI *EditOrderAPIService
@@ -123,6 +125,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CancelOrderAPI = (*CancelOrderAPIService)(&c.common)
 	c.CheckOrderCancelableAPI = (*CheckOrderCancelableAPIService)(&c.common)
 	c.CreateCampaignAPI = (*CreateCampaignAPIService)(&c.common)
+	c.CreateSelfServeJourneyAPI = (*CreateSelfServeJourneyAPIService)(&c.common)
 	c.DeleteCampaignAPI = (*DeleteCampaignAPIService)(&c.common)
 	c.EditOrderAPI = (*EditOrderAPIService)(&c.common)
 	c.GetDineinVoucherAPI = (*GetDineinVoucherAPIService)(&c.common)

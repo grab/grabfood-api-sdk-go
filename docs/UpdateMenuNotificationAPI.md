@@ -1,6 +1,6 @@
 # \UpdateMenuNotificationAPI
 
-All URIs are relative to *https://partner-api.stg-myteksi.com/grabfood-sandbox*
+All URIs are relative to *https://partner-api.grab.com/grabfood-sandbox*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -67,7 +67,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: application/json
-- **Accept**: Not defined
+- **Accept**: application/json
 
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints)
 [[Back to Model list]](../README.md#documentation-for-models)

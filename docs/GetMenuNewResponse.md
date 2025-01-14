@@ -8,7 +8,7 @@ Name | Type | Description | Notes
 **PartnerMerchantID** | Pointer to **string** | The merchant&#39;s ID that is on the partner&#39;s database. | [optional] 
 **Currency** | [**Currency**](Currency.md) |  | 
 **SellingTimes** | [**[]SellingTime**](SellingTime.md) | An array of sellingTimes JSON objects. Max 20 allowed. Refer to [Selling Times](#selling-times) for more information. | 
-**Categories** | [**[]MenuCategory**](MenuCategory.md) | An array of category JSON objects. Max 100 allowed per section. Refer to [Categories](#categories) for more information. | 
+**Categories** | [**[]MenuCategory**](MenuCategory.md) | An array of category JSON objects. Max 100 allowed. Refer to [Categories](#categories) for more information. | 
 
 ## Methods
 

@@ -23,18 +23,20 @@ var _ MappedNullable = &MenuModifier{}
 
 // MenuModifier struct for MenuModifier
 type MenuModifier struct {
-	// The modifier's ID that is on the partner's system. This ID should be unique with a min length of 1 and max of 64.
+	// The modifier's ID that is on the partner's system. This ID should be unique.
 	Id string `json:"id"`
 	// The name of the modifier.
 	Name string `json:"name"`
 	// Translation of the modifier name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation).
 	NameTranslation *map[string]string `json:"nameTranslation,omitempty"`
-	// The status for the modifier that is in the ModifierGroup.
+	// The status for the modifier. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).
 	AvailableStatus string `json:"availableStatus"`
-	// The modifier's price (excluding tax) in minor format. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+	// The modifier's price in minor format. Refer to FAQs for more details about [tax](#section/Menu/Is-the-menu-price-with-or-without-tax).
 	Price *int64 `json:"price,omitempty"`
 	// The barcode Number (GTIN). GTIN must be 8, 12, 13, 14 numeric digits.
 	Barcode *string `json:"barcode,omitempty"`
+	// The sort or display order of the modifier within the menu.
+	Sequence *int32 `json:"sequence,omitempty"`
 	AdvancedPricing *AdvancedPricing `json:"advancedPricing,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
@@ -229,6 +231,38 @@ func (o *MenuModifier) SetBarcode(v string) {
 	o.Barcode = &v
 }
 
+// GetSequence returns the Sequence field value if set, zero value otherwise.
+func (o *MenuModifier) GetSequence() int32 {
+	if o == nil || IsNil(o.Sequence) {
+		var ret int32
+		return ret
+	}
+	return *o.Sequence
+}
+
+// GetSequenceOk returns a tuple with the Sequence field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MenuModifier) GetSequenceOk() (*int32, bool) {
+	if o == nil || IsNil(o.Sequence) {
+		return nil, false
+	}
+	return o.Sequence, true
+}
+
+// HasSequence returns a boolean if a field has been set.
+func (o *MenuModifier) HasSequence() bool {
+	if o != nil && !IsNil(o.Sequence) {
+		return true
+	}
+
+	return false
+}
+
+// SetSequence gets a reference to the given int32 and assigns it to the Sequence field.
+func (o *MenuModifier) SetSequence(v int32) {
+	o.Sequence = &v
+}
+
 // GetAdvancedPricing returns the AdvancedPricing field value if set, zero value otherwise.
 func (o *MenuModifier) GetAdvancedPricing() AdvancedPricing {
 	if o == nil || IsNil(o.AdvancedPricing) {
@@ -282,6 +316,9 @@ func (o MenuModifier) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Barcode) {
 		toSerialize["barcode"] = o.Barcode
+	}
+	if !IsNil(o.Sequence) {
+		toSerialize["sequence"] = o.Sequence
 	}
 	if !IsNil(o.AdvancedPricing) {
 		toSerialize["advancedPricing"] = o.AdvancedPricing
@@ -337,6 +374,7 @@ func (o *MenuModifier) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "availableStatus")
 		delete(additionalProperties, "price")
 		delete(additionalProperties, "barcode")
+		delete(additionalProperties, "sequence")
 		delete(additionalProperties, "advancedPricing")
 		o.AdditionalProperties = additionalProperties
 	}

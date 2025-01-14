@@ -22,9 +22,8 @@ import (
 
 // custom const
 const (
-    StgManualEnv int = 0 // staging environment for manual onboarding partner
-	StgEnv       int = 1 // staging environment for self serve onboarding partner
-	PrdEnv       int = 2 // production environment
+	StgEnv int = 0 // staging environment for self serve onboarding partner
+	PrdEnv int = 1 // production environment
 )
 
 // contextKeys are used to identify the type of value in the context.
@@ -96,16 +95,12 @@ type Configuration struct {
 func NewConfiguration() *Configuration {
 	cfg := &Configuration{
 		DefaultHeader:    make(map[string]string),
-		UserAgent:        "GrabFood-API-SDK/1.0.0/go",
+		UserAgent:        "GrabFood-API-SDK/1.0.1/go",
 		Debug:            false,
 		Servers:          ServerConfigurations{
 			{
-				URL: "https://partner-api.stg-myteksi.com/grabfood-sandbox",
-				Description: "Staging Environment - Manual Partner Onboarding",
-			},
-			{
 				URL: "https://partner-api.grab.com/grabfood-sandbox",
-				Description: "Staging Environment - Self Serve Partner Onboarding",
+				Description: "Staging Environment",
 			},
 			{
 				URL: "https://partner-api.grab.com/grabfood",
@@ -115,12 +110,8 @@ func NewConfiguration() *Configuration {
 		OperationServers: map[string]ServerConfigurations{
 			"GetOauthGrabAPIService.GetOauthGrab": {
 				{
-					URL: "https://api.stg-myteksi.com",
-					Description: "Staging Environment - Manual Partner Onboarding",
-				},
-				{
 					URL: "https://api.grab.com",
-					Description: "Staging Environment - Self Serve Partner Onboarding",
+					Description: "Staging Environment",
 				},
 				{
 					URL: "https://api.grab.com",

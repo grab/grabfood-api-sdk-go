@@ -25,6 +25,8 @@ var _ MappedNullable = &OrderStateRequest{}
 type OrderStateRequest struct {
 	// The merchant's ID that is in GrabFood's database.
 	MerchantID string `json:"merchantID"`
+	// The merchant's ID that is on the partner's database.
+	PartnerMerchantID *string `json:"partnerMerchantID,omitempty"`
 	// The order's ID that is returned from GrabFood. Refer to FAQs for more details about [orderID and shortOrderNumber](#section/Order/What's-the-difference-between-orderID-and-shortOrderNumber).
 	OrderID string `json:"orderID"`
 	// The current order state. For takeaway orders, only `DELIVERED` and `CANCELLED` states are pushed.
@@ -82,6 +84,38 @@ func (o *OrderStateRequest) GetMerchantIDOk() (*string, bool) {
 // SetMerchantID sets field value
 func (o *OrderStateRequest) SetMerchantID(v string) {
 	o.MerchantID = v
+}
+
+// GetPartnerMerchantID returns the PartnerMerchantID field value if set, zero value otherwise.
+func (o *OrderStateRequest) GetPartnerMerchantID() string {
+	if o == nil || IsNil(o.PartnerMerchantID) {
+		var ret string
+		return ret
+	}
+	return *o.PartnerMerchantID
+}
+
+// GetPartnerMerchantIDOk returns a tuple with the PartnerMerchantID field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderStateRequest) GetPartnerMerchantIDOk() (*string, bool) {
+	if o == nil || IsNil(o.PartnerMerchantID) {
+		return nil, false
+	}
+	return o.PartnerMerchantID, true
+}
+
+// HasPartnerMerchantID returns a boolean if a field has been set.
+func (o *OrderStateRequest) HasPartnerMerchantID() bool {
+	if o != nil && !IsNil(o.PartnerMerchantID) {
+		return true
+	}
+
+	return false
+}
+
+// SetPartnerMerchantID gets a reference to the given string and assigns it to the PartnerMerchantID field.
+func (o *OrderStateRequest) SetPartnerMerchantID(v string) {
+	o.PartnerMerchantID = &v
 }
 
 // GetOrderID returns the OrderID field value
@@ -249,6 +283,9 @@ func (o OrderStateRequest) MarshalJSON() ([]byte, error) {
 func (o OrderStateRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize := map[string]interface{}{}
 	toSerialize["merchantID"] = o.MerchantID
+	if !IsNil(o.PartnerMerchantID) {
+		toSerialize["partnerMerchantID"] = o.PartnerMerchantID
+	}
 	toSerialize["orderID"] = o.OrderID
 	toSerialize["state"] = o.State
 	if o.DriverETA.IsSet() {
@@ -306,6 +343,7 @@ func (o *OrderStateRequest) UnmarshalJSON(data []byte) (err error) {
 
 	if err = json.Unmarshal(data, &additionalProperties); err == nil {
 		delete(additionalProperties, "merchantID")
+		delete(additionalProperties, "partnerMerchantID")
 		delete(additionalProperties, "orderID")
 		delete(additionalProperties, "state")
 		delete(additionalProperties, "driverETA")
