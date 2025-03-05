@@ -19,6 +19,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"reflect"
 )
 
 
@@ -32,6 +33,7 @@ type ApiListOrdersRequest struct {
 	merchantID *string
 	date *string
 	page *int32
+	orderIDs *[]string
 }
 
 // Specify the generated authorization token of the bearer type.
@@ -51,9 +53,15 @@ func (r ApiListOrdersRequest) Date(date string) ApiListOrdersRequest {
 	return r
 }
 
-// Specify the page number for the report.
+// Specify the page number for the report. Required if orderIDs is not provided.
 func (r ApiListOrdersRequest) Page(page int32) ApiListOrdersRequest {
 	r.page = &page
+	return r
+}
+
+// List of order IDs. If provided, date and page are not required.
+func (r ApiListOrdersRequest) OrderIDs(orderIDs []string) ApiListOrdersRequest {
+	r.orderIDs = &orderIDs
 	return r
 }
 
@@ -100,16 +108,25 @@ func (a *ListOrdersAPIService) ListOrdersExecute(r ApiListOrdersRequest) (*ListO
 	if r.merchantID == nil {
 		return localVarReturnValue, nil, reportError("merchantID is required and must be specified")
 	}
-	if r.date == nil {
-		return localVarReturnValue, nil, reportError("date is required and must be specified")
-	}
-	if r.page == nil {
-		return localVarReturnValue, nil, reportError("page is required and must be specified")
-	}
 
 	parameterAddToHeaderOrQuery(localVarQueryParams, "merchantID", r.merchantID, "form", "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "date", r.date, "form", "")
-	parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
+	if r.date != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "date", r.date, "form", "")
+	}
+	if r.page != nil {
+		parameterAddToHeaderOrQuery(localVarQueryParams, "page", r.page, "form", "")
+	}
+	if r.orderIDs != nil {
+		t := *r.orderIDs
+		if reflect.TypeOf(t).Kind() == reflect.Slice {
+			s := reflect.ValueOf(t)
+			for i := 0; i < s.Len(); i++ {
+				parameterAddToHeaderOrQuery(localVarQueryParams, "orderIDs", s.Index(i).Interface(), "form", "multi")
+			}
+		} else {
+			parameterAddToHeaderOrQuery(localVarQueryParams, "orderIDs", t, "form", "multi")
+		}
+	}
 	// to determine the Content-Type header
 	localVarHTTPContentTypes := []string{}
 
