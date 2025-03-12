@@ -10,7 +10,7 @@ Method | HTTP request | Description
 
 ## ListOrders
 
-> ListOrdersResponse ListOrders(ctx).Authorization(authorization).MerchantID(merchantID).Date(date).Page(page).Execute()
+> ListOrdersResponse ListOrders(ctx).Authorization(authorization).MerchantID(merchantID).Date(date).Page(page).OrderIDs(orderIDs).Execute()
 
 List orders
 
@@ -29,12 +29,13 @@ import (
 func main() {
 	authorization := "Bearer <ACCESS_TOKEN_HERE>" // string | Specify the generated authorization token of the bearer type.
 	merchantID := "1-CYNGRUNGSBCCC" // string | The merchant's ID that is in GrabFood's database.
-	date := "date_example" // string | 
-	page := int32(1) // int32 | Specify the page number for the report.
+	date := "date_example" // string |  (optional)
+	page := int32(1) // int32 | Specify the page number for the report. Required if orderIDs is not provided. (optional)
+	orderIDs := []string{"Inner_example"} // []string | List of order IDs. If provided, date and page are not required. (optional)
 
 	configuration := grabfood.NewConfiguration()
 	apiClient := grabfood.NewAPIClient(configuration)
-	resp, r, err := apiClient.ListOrdersAPI.ListOrders(context.Background()).Authorization(authorization).MerchantID(merchantID).Date(date).Page(page).Execute()
+	resp, r, err := apiClient.ListOrdersAPI.ListOrders(context.Background()).Authorization(authorization).MerchantID(merchantID).Date(date).Page(page).OrderIDs(orderIDs).Execute()
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Error when calling `ListOrdersAPI.ListOrders``: %v\n", err)
 		fmt.Fprintf(os.Stderr, "Full HTTP response: %v\n", r)
@@ -58,7 +59,8 @@ Name | Type | Description  | Notes
  **authorization** | **string** | Specify the generated authorization token of the bearer type. | 
  **merchantID** | **string** | The merchant&#39;s ID that is in GrabFood&#39;s database. | 
  **date** | **string** |  | 
- **page** | **int32** | Specify the page number for the report. | 
+ **page** | **int32** | Specify the page number for the report. Required if orderIDs is not provided. | 
+ **orderIDs** | **[]string** | List of order IDs. If provided, date and page are not required. | 
 
 ### Return type
 

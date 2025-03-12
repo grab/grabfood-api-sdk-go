@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **Code** | **string** | The three-letter ISO currency code. This is the currency that is associated with the payment amount.  | 
 **Symbol** | **string** | The currency symbol.  | 
-**Exponent** | **int32** | The log base 10 of the number of times we have to multiply the major unit to get the minor unit. Should be 0 for VN and 2 for other countries (SG/MY/ID/TH/PH/KH).  | 
+**Exponent** | **int32** | The log base 10 of the number of times we have to multiply the major unit to get the minor unit. Should be 0 for VN and 2 for other countries (&#x60;SG&#x60;/&#x60;MY&#x60;/&#x60;ID&#x60;/&#x60;TH&#x60;/&#x60;PH&#x60;/&#x60;KH&#x60;/&#x60;MM&#x60;).  | 
 
 ## Methods
 

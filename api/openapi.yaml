@@ -23,6 +23,12 @@ tags:
   x-displayName: Go
 - name: java
   x-displayName: Java
+- name: node.js
+  x-displayName: Node.js
+- name: python
+  x-displayName: Python
+- name: php
+  x-displayName: PHP
 - name: get-oauth-grab
   x-displayName: Get GrabFood access token
 - name: get-oauth-partner-webhook
@@ -937,21 +943,36 @@ paths:
       - explode: true
         in: query
         name: date
-        required: true
+        required: false
         schema:
           $ref: '#/components/schemas/date'
         style: form
-      - description: Specify the page number for the report.
+      - description: Specify the page number for the report. Required if orderIDs
+          is not provided.
         example: 1
         explode: true
         in: query
         name: page
-        required: true
+        required: false
         schema:
           type: integer
         style: form
+      - description: "List of order IDs. If provided, date and page are not required."
+        example:
+        - 123-CYNKLPCVRN5
+        - 456-PCVRN5CYNKL
+        explode: true
+        in: query
+        name: orderIDs
+        required: false
+        schema:
+          items:
+            type: string
+          maxItems: 10
+          type: array
+        style: form
       responses:
-        "2xx":
+        "200":
           content:
             application/json:
               schema:
@@ -962,10 +983,16 @@ paths:
       - list-orders
       x-codeSamples:
       - lang: cURL
-        label: CLI
+        label: CLI by date
         source: |
           curl -X GET \
           https://partner-api.grab.com/grabfood/partner/v1/orders?merchantID=1-C3VEJY6CMEEGUE&date=2020-01-20&page=0 \
+          -H 'Authorization: Bearer <BEARER_TOKEN_HERE>'
+      - lang: cURL
+        label: CLI by orderIDs
+        source: |
+          curl -X GET \
+          https://partner-api.grab.com/grabfood/partner/v1/orders?merchantID=1-C3VEJY6CMEEGUE&orderIDs=123-CYNKLPCVRN5&orderIDs=456-PCVRN5CYNKL \
           -H 'Authorization: Bearer <BEARER_TOKEN_HERE>'
   /partner/v1/orders/{orderID}:
     put:
@@ -3600,7 +3627,7 @@ components:
       title: AcceptOrderRequest
       type: object
     date:
-      description: The date of your report.
+      description: The date of your report. Required if orderIDs is not provided.
       example: 2020-01-20
       title: date
       type: string
@@ -5781,6 +5808,8 @@ components:
           - SGD
           - THB
           - VND
+          - KHR
+          - MMK
           example: SGD
           maxLength: 3
           type: string
@@ -5794,12 +5823,14 @@ components:
           - S$
           - ฿
           - ₫
+          - ៛
+          - K
           example: S$
           maxLength: 3
           type: string
         exponent:
           description: |
-            The log base 10 of the number of times we have to multiply the major unit to get the minor unit. Should be 0 for VN and 2 for other countries (SG/MY/ID/TH/PH/KH).
+            The log base 10 of the number of times we have to multiply the major unit to get the minor unit. Should be 0 for VN and 2 for other countries (`SG`/`MY`/`ID`/`TH`/`PH`/`KH`/`MM`).
           example: 2
           type: integer
       required:
@@ -7721,6 +7752,9 @@ x-tagGroups:
   - sdk-intro
   - go
   - java
+  - node.js
+  - python
+  - php
 - name: Authorisation
   tags:
   - get-oauth-grab
