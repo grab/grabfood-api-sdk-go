@@ -25,9 +25,9 @@ var _ MappedNullable = &CampaignDiscount{}
 type CampaignDiscount struct {
 	// The type of discount 
 	Type string `json:"type"`
-	// The maximum discount dollar amount. It is **not required** and will be ignored when the `discount.type` is: - `net` - `delivery` - `freeItem` - `bundleSameNet` - `bundleSamePercentage` - `bundleSameFixPrice` - `bundleDiffNet` - `bundleDiffPercentage` - `bundleDiffFixPrice` 
+	// The maximum discount dollar amount. It is **not required** and will be ignored when the `discount.type` is: - `net` - `fixPrice` - `delivery` - `freeItem` - `bundleSameNet` - `bundleSamePercentage` - `bundleSameFixPrice` - `bundleDiffNet` - `bundleDiffPercentage` - `bundleDiffFixPrice` 
 	Cap *float64 `json:"cap,omitempty"`
-	// Specify the discount amount. Decimal number is not supported For VN, ID and TH. For example, `10.5` is not allowed and it should be `10.0`. * Dollar amount value when `discount.type` is `net`, `delivery`, `bundleSameNet`, `bundleSameFixPrice`, `bundleDiffNet`, `bundleDiffFixPrice`. * Percentage value (0-100) when `discount.type` is `percentage`, `bundleSamePercentage`, `bundleDiffPercentage`. * **Not required** when `discount.type` is `freeItem`. 
+	// Specify the discount amount. Decimal number is not supported For VN, ID and TH. For example, `10.5` is not allowed and it should be `10.0`. * Dollar amount value when `discount.type` is `net`, `delivery`, `fixPrice`, `bundleSameNet`, `bundleSameFixPrice`, `bundleDiffNet`, `bundleDiffFixPrice`. * Percentage value (0-100) when `discount.type` is `percentage`, `bundleSamePercentage`, `bundleDiffPercentage`. * **Not required** when `discount.type` is `freeItem`. * The order-level discount given **should not exceed 0.5 * the minimum basket amount**. 
 	Value *float64 `json:"value,omitempty"`
 	Scope CampaignScope `json:"scope"`
 	AdditionalProperties map[string]interface{}

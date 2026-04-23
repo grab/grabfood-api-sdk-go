@@ -34,7 +34,7 @@ type CampaignConditions struct {
 	MinBasketAmount *float64 `json:"minBasketAmount,omitempty"`
 	// Specify the bundle quantity for bundle offer campaign.
 	BundleQuantity *int32 `json:"bundleQuantity,omitempty"`
-	WorkingHour *WorkingHour `json:"workingHour,omitempty"`
+	WorkingHour WorkingHour `json:"workingHour"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -44,11 +44,12 @@ type _CampaignConditions CampaignConditions
 // This constructor will assign default values to properties that have it defined,
 // and makes sure properties required by API are set, but the set of arguments
 // will change when the set of required properties is changed
-func NewCampaignConditions(startTime time.Time, endTime time.Time, eaterType string) *CampaignConditions {
+func NewCampaignConditions(startTime time.Time, endTime time.Time, eaterType string, workingHour WorkingHour) *CampaignConditions {
 	this := CampaignConditions{}
 	this.StartTime = startTime
 	this.EndTime = endTime
 	this.EaterType = eaterType
+	this.WorkingHour = workingHour
 	return &this
 }
 
@@ -196,36 +197,28 @@ func (o *CampaignConditions) SetBundleQuantity(v int32) {
 	o.BundleQuantity = &v
 }
 
-// GetWorkingHour returns the WorkingHour field value if set, zero value otherwise.
+// GetWorkingHour returns the WorkingHour field value
 func (o *CampaignConditions) GetWorkingHour() WorkingHour {
-	if o == nil || IsNil(o.WorkingHour) {
+	if o == nil {
 		var ret WorkingHour
 		return ret
 	}
-	return *o.WorkingHour
+
+	return o.WorkingHour
 }
 
-// GetWorkingHourOk returns a tuple with the WorkingHour field value if set, nil otherwise
+// GetWorkingHourOk returns a tuple with the WorkingHour field value
 // and a boolean to check if the value has been set.
 func (o *CampaignConditions) GetWorkingHourOk() (*WorkingHour, bool) {
-	if o == nil || IsNil(o.WorkingHour) {
+	if o == nil {
 		return nil, false
 	}
-	return o.WorkingHour, true
+	return &o.WorkingHour, true
 }
 
-// HasWorkingHour returns a boolean if a field has been set.
-func (o *CampaignConditions) HasWorkingHour() bool {
-	if o != nil && !IsNil(o.WorkingHour) {
-		return true
-	}
-
-	return false
-}
-
-// SetWorkingHour gets a reference to the given WorkingHour and assigns it to the WorkingHour field.
+// SetWorkingHour sets field value
 func (o *CampaignConditions) SetWorkingHour(v WorkingHour) {
-	o.WorkingHour = &v
+	o.WorkingHour = v
 }
 
 func (o CampaignConditions) MarshalJSON() ([]byte, error) {
@@ -247,9 +240,7 @@ func (o CampaignConditions) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.BundleQuantity) {
 		toSerialize["bundleQuantity"] = o.BundleQuantity
 	}
-	if !IsNil(o.WorkingHour) {
-		toSerialize["workingHour"] = o.WorkingHour
-	}
+	toSerialize["workingHour"] = o.WorkingHour
 
 	for key, value := range o.AdditionalProperties {
 		toSerialize[key] = value
@@ -266,6 +257,7 @@ func (o *CampaignConditions) UnmarshalJSON(data []byte) (err error) {
 		"startTime",
 		"endTime",
 		"eaterType",
+		"workingHour",
 	}
 
 	allProperties := make(map[string]interface{})

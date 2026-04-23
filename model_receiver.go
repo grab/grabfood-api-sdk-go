@@ -20,13 +20,14 @@ import (
 // checks if the Receiver type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &Receiver{}
 
-// Receiver A JSON object containing the receiver information. Only applicable for orders that are delivered by the restaurant. `null` if not applicable.
+// Receiver A JSON object containing the receiver information.
 type Receiver struct {
 	// The name of the receiver.
 	Name *string `json:"name,omitempty"`
-	// The receiver's phone number.
+	// The receiver's phone number. Only applicable for orders that are delivered by the restaurant. `null` if not applicable.  > Note: The `phones` field will be deprecated once the virtualContact feature is fully rolled out. 
 	Phones *string `json:"phones,omitempty"`
 	Address *Address `json:"address,omitempty"`
+	VirtualContact *VirtualContact `json:"virtualContact,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -145,6 +146,38 @@ func (o *Receiver) SetAddress(v Address) {
 	o.Address = &v
 }
 
+// GetVirtualContact returns the VirtualContact field value if set, zero value otherwise.
+func (o *Receiver) GetVirtualContact() VirtualContact {
+	if o == nil || IsNil(o.VirtualContact) {
+		var ret VirtualContact
+		return ret
+	}
+	return *o.VirtualContact
+}
+
+// GetVirtualContactOk returns a tuple with the VirtualContact field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *Receiver) GetVirtualContactOk() (*VirtualContact, bool) {
+	if o == nil || IsNil(o.VirtualContact) {
+		return nil, false
+	}
+	return o.VirtualContact, true
+}
+
+// HasVirtualContact returns a boolean if a field has been set.
+func (o *Receiver) HasVirtualContact() bool {
+	if o != nil && !IsNil(o.VirtualContact) {
+		return true
+	}
+
+	return false
+}
+
+// SetVirtualContact gets a reference to the given VirtualContact and assigns it to the VirtualContact field.
+func (o *Receiver) SetVirtualContact(v VirtualContact) {
+	o.VirtualContact = &v
+}
+
 func (o Receiver) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -163,6 +196,9 @@ func (o Receiver) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Address) {
 		toSerialize["address"] = o.Address
+	}
+	if !IsNil(o.VirtualContact) {
+		toSerialize["virtualContact"] = o.VirtualContact
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -189,6 +225,7 @@ func (o *Receiver) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "name")
 		delete(additionalProperties, "phones")
 		delete(additionalProperties, "address")
+		delete(additionalProperties, "virtualContact")
 		o.AdditionalProperties = additionalProperties
 	}
 

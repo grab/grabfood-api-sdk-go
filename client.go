@@ -66,6 +66,8 @@ type APIClient struct {
 
 	EditOrderAPI *EditOrderAPIService
 
+	GenerateStoQrCodeAPI *GenerateStoQrCodeAPIService
+
 	GetDineinVoucherAPI *GetDineinVoucherAPIService
 
 	GetOauthGrabAPI *GetOauthGrabAPIService
@@ -85,6 +87,10 @@ type APIClient struct {
 	PauseStoreAPI *PauseStoreAPIService
 
 	RedeemDineinVoucherAPI *RedeemDineinVoucherAPIService
+
+	RefundOrderAPI *RefundOrderAPIService
+
+	SyncPosOrderAPI *SyncPosOrderAPIService
 
 	TraceMenuSyncAPI *TraceMenuSyncAPIService
 
@@ -128,6 +134,7 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.CreateSelfServeJourneyAPI = (*CreateSelfServeJourneyAPIService)(&c.common)
 	c.DeleteCampaignAPI = (*DeleteCampaignAPIService)(&c.common)
 	c.EditOrderAPI = (*EditOrderAPIService)(&c.common)
+	c.GenerateStoQrCodeAPI = (*GenerateStoQrCodeAPIService)(&c.common)
 	c.GetDineinVoucherAPI = (*GetDineinVoucherAPIService)(&c.common)
 	c.GetOauthGrabAPI = (*GetOauthGrabAPIService)(&c.common)
 	c.GetStoreHourAPI = (*GetStoreHourAPIService)(&c.common)
@@ -138,6 +145,8 @@ func NewAPIClient(cfg *Configuration) *APIClient {
 	c.NotifyMembershipWebviewAPI = (*NotifyMembershipWebviewAPIService)(&c.common)
 	c.PauseStoreAPI = (*PauseStoreAPIService)(&c.common)
 	c.RedeemDineinVoucherAPI = (*RedeemDineinVoucherAPIService)(&c.common)
+	c.RefundOrderAPI = (*RefundOrderAPIService)(&c.common)
+	c.SyncPosOrderAPI = (*SyncPosOrderAPIService)(&c.common)
 	c.TraceMenuSyncAPI = (*TraceMenuSyncAPIService)(&c.common)
 	c.UpdateCampaignAPI = (*UpdateCampaignAPIService)(&c.common)
 	c.UpdateDeliveryStateAPI = (*UpdateDeliveryStateAPIService)(&c.common)

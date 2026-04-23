@@ -27,8 +27,10 @@ type OrderPrice struct {
 	Subtotal int64 `json:"subtotal"`
 	// GrabFood's tax in the minor unit. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). ``` tax = (subtotal + merchantChargeFee - merchantFundPromo) * Tax / (1+Tax) | (2550-475)*0.06/1.06=117 
 	Tax *int64 `json:"tax,omitempty"`
-	// Any additional fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant. Eg. Takeaway, packaging costs, dine-in charge. 
+	// Any additional fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant. Reach out to your integration support team for the configuration. Eg. Takeaway, packaging costs, dine-in charge. 
 	MerchantChargeFee *int64 `json:"merchantChargeFee,omitempty"`
+	// Additional service charge fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant. Reach out to your integration support team for the configuration. 
+	ServiceChargeFee *int64 `json:"serviceChargeFee,omitempty"`
 	// GrabFood's promo fund in the minor unit. Calculated based on funded ratio. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.
 	GrabFundPromo *int64 `json:"grabFundPromo,omitempty"`
 	// The merchant's promo fund in the minor unit. Calculated based on funded ratio.
@@ -41,6 +43,9 @@ type OrderPrice struct {
 	SmallOrderFee *int64 `json:"smallOrderFee,omitempty"`
 	// The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.  ``` eaterPayment = (subtotal + merchantChargeFee + deliveryFee) - (sum of all promo) | (2550+400)-775=2175 
 	EaterPayment *int64 `json:"eaterPayment,omitempty"`
+	// The total merchant-related amount calculated exclusive of commission charges. Formulae is the same for all delivery method.  ``` total = subtotal + merchantChargeFee - merchantFundPromo | 2550+0-475=2075 
+	Total *int64 `json:"total,omitempty"`
+	MerchantEarning NullableMerchantEarning `json:"merchantEarning,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -150,6 +155,38 @@ func (o *OrderPrice) HasMerchantChargeFee() bool {
 // SetMerchantChargeFee gets a reference to the given int64 and assigns it to the MerchantChargeFee field.
 func (o *OrderPrice) SetMerchantChargeFee(v int64) {
 	o.MerchantChargeFee = &v
+}
+
+// GetServiceChargeFee returns the ServiceChargeFee field value if set, zero value otherwise.
+func (o *OrderPrice) GetServiceChargeFee() int64 {
+	if o == nil || IsNil(o.ServiceChargeFee) {
+		var ret int64
+		return ret
+	}
+	return *o.ServiceChargeFee
+}
+
+// GetServiceChargeFeeOk returns a tuple with the ServiceChargeFee field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderPrice) GetServiceChargeFeeOk() (*int64, bool) {
+	if o == nil || IsNil(o.ServiceChargeFee) {
+		return nil, false
+	}
+	return o.ServiceChargeFee, true
+}
+
+// HasServiceChargeFee returns a boolean if a field has been set.
+func (o *OrderPrice) HasServiceChargeFee() bool {
+	if o != nil && !IsNil(o.ServiceChargeFee) {
+		return true
+	}
+
+	return false
+}
+
+// SetServiceChargeFee gets a reference to the given int64 and assigns it to the ServiceChargeFee field.
+func (o *OrderPrice) SetServiceChargeFee(v int64) {
+	o.ServiceChargeFee = &v
 }
 
 // GetGrabFundPromo returns the GrabFundPromo field value if set, zero value otherwise.
@@ -344,6 +381,80 @@ func (o *OrderPrice) SetEaterPayment(v int64) {
 	o.EaterPayment = &v
 }
 
+// GetTotal returns the Total field value if set, zero value otherwise.
+func (o *OrderPrice) GetTotal() int64 {
+	if o == nil || IsNil(o.Total) {
+		var ret int64
+		return ret
+	}
+	return *o.Total
+}
+
+// GetTotalOk returns a tuple with the Total field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderPrice) GetTotalOk() (*int64, bool) {
+	if o == nil || IsNil(o.Total) {
+		return nil, false
+	}
+	return o.Total, true
+}
+
+// HasTotal returns a boolean if a field has been set.
+func (o *OrderPrice) HasTotal() bool {
+	if o != nil && !IsNil(o.Total) {
+		return true
+	}
+
+	return false
+}
+
+// SetTotal gets a reference to the given int64 and assigns it to the Total field.
+func (o *OrderPrice) SetTotal(v int64) {
+	o.Total = &v
+}
+
+// GetMerchantEarning returns the MerchantEarning field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *OrderPrice) GetMerchantEarning() MerchantEarning {
+	if o == nil || IsNil(o.MerchantEarning.Get()) {
+		var ret MerchantEarning
+		return ret
+	}
+	return *o.MerchantEarning.Get()
+}
+
+// GetMerchantEarningOk returns a tuple with the MerchantEarning field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *OrderPrice) GetMerchantEarningOk() (*MerchantEarning, bool) {
+	if o == nil {
+		return nil, false
+	}
+	return o.MerchantEarning.Get(), o.MerchantEarning.IsSet()
+}
+
+// HasMerchantEarning returns a boolean if a field has been set.
+func (o *OrderPrice) HasMerchantEarning() bool {
+	if o != nil && o.MerchantEarning.IsSet() {
+		return true
+	}
+
+	return false
+}
+
+// SetMerchantEarning gets a reference to the given NullableMerchantEarning and assigns it to the MerchantEarning field.
+func (o *OrderPrice) SetMerchantEarning(v MerchantEarning) {
+	o.MerchantEarning.Set(&v)
+}
+// SetMerchantEarningNil sets the value for MerchantEarning to be an explicit nil
+func (o *OrderPrice) SetMerchantEarningNil() {
+	o.MerchantEarning.Set(nil)
+}
+
+// UnsetMerchantEarning ensures that no value is present for MerchantEarning, not even an explicit nil
+func (o *OrderPrice) UnsetMerchantEarning() {
+	o.MerchantEarning.Unset()
+}
+
 func (o OrderPrice) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -360,6 +471,9 @@ func (o OrderPrice) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.MerchantChargeFee) {
 		toSerialize["merchantChargeFee"] = o.MerchantChargeFee
+	}
+	if !IsNil(o.ServiceChargeFee) {
+		toSerialize["serviceChargeFee"] = o.ServiceChargeFee
 	}
 	if !IsNil(o.GrabFundPromo) {
 		toSerialize["grabFundPromo"] = o.GrabFundPromo
@@ -378,6 +492,12 @@ func (o OrderPrice) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.EaterPayment) {
 		toSerialize["eaterPayment"] = o.EaterPayment
+	}
+	if !IsNil(o.Total) {
+		toSerialize["total"] = o.Total
+	}
+	if o.MerchantEarning.IsSet() {
+		toSerialize["merchantEarning"] = o.MerchantEarning.Get()
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -425,12 +545,15 @@ func (o *OrderPrice) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "subtotal")
 		delete(additionalProperties, "tax")
 		delete(additionalProperties, "merchantChargeFee")
+		delete(additionalProperties, "serviceChargeFee")
 		delete(additionalProperties, "grabFundPromo")
 		delete(additionalProperties, "merchantFundPromo")
 		delete(additionalProperties, "basketPromo")
 		delete(additionalProperties, "deliveryFee")
 		delete(additionalProperties, "smallOrderFee")
 		delete(additionalProperties, "eaterPayment")
+		delete(additionalProperties, "total")
+		delete(additionalProperties, "merchantEarning")
 		o.AdditionalProperties = additionalProperties
 	}
 

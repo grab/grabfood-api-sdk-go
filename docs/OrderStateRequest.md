@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **DriverETA** | Pointer to **NullableInt32** | The driver&#39;s estimated of arrival (ETA) in seconds when the state is &#x60;DRIVER_ALLOCATED&#x60;. | [optional] 
 **Code** | Pointer to **string** | The current order&#39;s sub-state. This is in free text so you should only use for reference. Grab may use this for troubleshooting. If you want some analysis, kindly use &#x60;state&#x60; instead. | [optional] 
 **Message** | Pointer to **string** | Additional information to explain the current order state. May be system status or human entered message. | [optional] 
+**Order** | Pointer to [**Order**](Order.md) |  | [optional] 
 
 ## Methods
 
@@ -200,6 +201,31 @@ SetMessage sets Message field to given value.
 `func (o *OrderStateRequest) HasMessage() bool`
 
 HasMessage returns a boolean if a field has been set.
+
+### GetOrder
+
+`func (o *OrderStateRequest) GetOrder() Order`
+
+GetOrder returns the Order field if non-nil, zero value otherwise.
+
+### GetOrderOk
+
+`func (o *OrderStateRequest) GetOrderOk() (*Order, bool)`
+
+GetOrderOk returns a tuple with the Order field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOrder
+
+`func (o *OrderStateRequest) SetOrder(v Order)`
+
+SetOrder sets Order field to given value.
+
+### HasOrder
+
+`func (o *OrderStateRequest) HasOrder() bool`
+
+HasOrder returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

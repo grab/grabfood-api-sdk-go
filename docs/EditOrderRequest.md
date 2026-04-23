@@ -7,6 +7,8 @@ Name | Type | Description | Notes
 **OrderID** | **string** | The order&#39;s ID that is returned from GrabFood. Refer to FAQs for more details about [orderID and shortOrderNumber](#section/Order/What&#39;s-the-difference-between-orderID-and-shortOrderNumber). | 
 **Items** | [**[]EditOrderItem**](EditOrderItem.md) | Specify the array of all items in the order, including deleted, added, updated and unchanged items. | 
 **OnlyRecalculate** | Pointer to **bool** | This parameter specifies whether to recalculate the edited order without submitting it. It is intended for testing purposes only. This parameter is set to false by default, which means the edited order will be recalculated and re-submitted to partners.  | [optional] 
+**DepositAmountInMin** | Pointer to **int64** | The deposit amount in minor unit in POS system. This is only applicable for STO order | [optional] 
+**OfflinePOSDiscountInMin** | Pointer to **int64** | The POS side discount amount in minor unit. This is only applicable for STO order | [optional] 
 
 ## Methods
 
@@ -91,6 +93,56 @@ SetOnlyRecalculate sets OnlyRecalculate field to given value.
 `func (o *EditOrderRequest) HasOnlyRecalculate() bool`
 
 HasOnlyRecalculate returns a boolean if a field has been set.
+
+### GetDepositAmountInMin
+
+`func (o *EditOrderRequest) GetDepositAmountInMin() int64`
+
+GetDepositAmountInMin returns the DepositAmountInMin field if non-nil, zero value otherwise.
+
+### GetDepositAmountInMinOk
+
+`func (o *EditOrderRequest) GetDepositAmountInMinOk() (*int64, bool)`
+
+GetDepositAmountInMinOk returns a tuple with the DepositAmountInMin field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDepositAmountInMin
+
+`func (o *EditOrderRequest) SetDepositAmountInMin(v int64)`
+
+SetDepositAmountInMin sets DepositAmountInMin field to given value.
+
+### HasDepositAmountInMin
+
+`func (o *EditOrderRequest) HasDepositAmountInMin() bool`
+
+HasDepositAmountInMin returns a boolean if a field has been set.
+
+### GetOfflinePOSDiscountInMin
+
+`func (o *EditOrderRequest) GetOfflinePOSDiscountInMin() int64`
+
+GetOfflinePOSDiscountInMin returns the OfflinePOSDiscountInMin field if non-nil, zero value otherwise.
+
+### GetOfflinePOSDiscountInMinOk
+
+`func (o *EditOrderRequest) GetOfflinePOSDiscountInMinOk() (*int64, bool)`
+
+GetOfflinePOSDiscountInMinOk returns a tuple with the OfflinePOSDiscountInMin field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetOfflinePOSDiscountInMin
+
+`func (o *EditOrderRequest) SetOfflinePOSDiscountInMin(v int64)`
+
+SetOfflinePOSDiscountInMin sets OfflinePOSDiscountInMin field to given value.
+
+### HasOfflinePOSDiscountInMin
+
+`func (o *EditOrderRequest) HasOfflinePOSDiscountInMin() bool`
+
+HasOfflinePOSDiscountInMin returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

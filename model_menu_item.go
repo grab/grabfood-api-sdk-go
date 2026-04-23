@@ -39,7 +39,7 @@ type MenuItem struct {
 	Price int64 `json:"price"`
 	// An array string for the item’s image URL link. Only 1 image is supported. Refer to FAQs for more details about [images formats](#section/Menu/What-are-the-recommended-formats-for-an-item-image). 
 	Photos []string `json:"photos,omitempty"`
-	// The item's special Tag. Refer to FAQs for more details about [specialType](#section/Menu/What's-specialType). 
+	// The special tag of an item. For implementation details and behavior specific to each value, refer to: **Alcohol & Tobacco** [FAQ](#section/Menu/What-happens-when-an-item-is-tagged-with-specialType-alcohol-or-tobacco) and **Meal for One** [documentation](#section/Meal-for-One). 
 	SpecialType *string `json:"specialType,omitempty"`
 	// **For Indonesia only.** This field allows the configuration for an item to be marked as tax applicable, and marked item would then be included in a commercial invoice to consumers as per the government's regulations. 
 	Taxable *bool `json:"taxable,omitempty"`
@@ -47,7 +47,7 @@ type MenuItem struct {
 	Barcode *string `json:"barcode,omitempty"`
 	// The selling time's ID for the item. This value overrides the category's selling time if it is different. Empty value implies the category's selling time will be applied. 
 	SellingTimeID *string `json:"sellingTimeID,omitempty"`
-	// Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.  > Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is `\"UNAVAILABLE\"`. Item will be set to `\"AVAILABLE\"` if `maxStock` > 0. 
+	// Available stocks under inventory for this item. Auto reduce when there is order placed for this item. The value **must not exceed** `9999999`. Empty value implies no limit.  > Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is `\"UNAVAILABLE\"`. Item will be set to `\"AVAILABLE\"` if `maxStock` > 0. 
 	MaxStock *int64 `json:"maxStock,omitempty"`
 	// The sort or display order of the item within the menu.
 	Sequence *int32 `json:"sequence,omitempty"`

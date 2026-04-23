@@ -31,6 +31,8 @@ type EditOrderItem struct {
 	Quantity *int64 `json:"quantity,omitempty"`
 	// Only applicable for `ADDED`status. Indicate if the `itemID` is an external item ID. Grab checks for the items that are mapped to the provided item ID, considering their availability. If multiple Grab items are found to be mapped to the provided external item ID, the last updated item will be chosen. If no suitable record is found, an 400 error will be returned to the partner, indicating that the submitted external item ID cannot be edited.
 	IsExternalItemID *bool `json:"isExternalItemID,omitempty"`
+	// The modifiers of the item. Only required when you want to update the modifiers of the item. Refer [Edit Order](#section/Edit-Order) for more use cases.
+	Modifiers []EditOrderItemModifier `json:"modifiers,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -167,6 +169,38 @@ func (o *EditOrderItem) SetIsExternalItemID(v bool) {
 	o.IsExternalItemID = &v
 }
 
+// GetModifiers returns the Modifiers field value if set, zero value otherwise.
+func (o *EditOrderItem) GetModifiers() []EditOrderItemModifier {
+	if o == nil || IsNil(o.Modifiers) {
+		var ret []EditOrderItemModifier
+		return ret
+	}
+	return o.Modifiers
+}
+
+// GetModifiersOk returns a tuple with the Modifiers field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EditOrderItem) GetModifiersOk() ([]EditOrderItemModifier, bool) {
+	if o == nil || IsNil(o.Modifiers) {
+		return nil, false
+	}
+	return o.Modifiers, true
+}
+
+// HasModifiers returns a boolean if a field has been set.
+func (o *EditOrderItem) HasModifiers() bool {
+	if o != nil && !IsNil(o.Modifiers) {
+		return true
+	}
+
+	return false
+}
+
+// SetModifiers gets a reference to the given []EditOrderItemModifier and assigns it to the Modifiers field.
+func (o *EditOrderItem) SetModifiers(v []EditOrderItemModifier) {
+	o.Modifiers = v
+}
+
 func (o EditOrderItem) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -184,6 +218,9 @@ func (o EditOrderItem) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.IsExternalItemID) {
 		toSerialize["isExternalItemID"] = o.IsExternalItemID
+	}
+	if !IsNil(o.Modifiers) {
+		toSerialize["modifiers"] = o.Modifiers
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -233,6 +270,7 @@ func (o *EditOrderItem) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "status")
 		delete(additionalProperties, "quantity")
 		delete(additionalProperties, "isExternalItemID")
+		delete(additionalProperties, "modifiers")
 		o.AdditionalProperties = additionalProperties
 	}
 

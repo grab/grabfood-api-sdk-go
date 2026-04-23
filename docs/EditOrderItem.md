@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **Status** | **string** | The item&#39;s edited status. Leave empty string if there is no change to the item. | 
 **Quantity** | Pointer to **int64** | The item&#39;s quantity. If the item is not being updated or deleted, use the original quantity. | [optional] 
 **IsExternalItemID** | Pointer to **bool** | Only applicable for &#x60;ADDED&#x60;status. Indicate if the &#x60;itemID&#x60; is an external item ID. Grab checks for the items that are mapped to the provided item ID, considering their availability. If multiple Grab items are found to be mapped to the provided external item ID, the last updated item will be chosen. If no suitable record is found, an 400 error will be returned to the partner, indicating that the submitted external item ID cannot be edited. | [optional] 
+**Modifiers** | Pointer to [**[]EditOrderItemModifier**](EditOrderItemModifier.md) | The modifiers of the item. Only required when you want to update the modifiers of the item. Refer [Edit Order](#section/Edit-Order) for more use cases. | [optional] 
 
 ## Methods
 
@@ -117,6 +118,31 @@ SetIsExternalItemID sets IsExternalItemID field to given value.
 `func (o *EditOrderItem) HasIsExternalItemID() bool`
 
 HasIsExternalItemID returns a boolean if a field has been set.
+
+### GetModifiers
+
+`func (o *EditOrderItem) GetModifiers() []EditOrderItemModifier`
+
+GetModifiers returns the Modifiers field if non-nil, zero value otherwise.
+
+### GetModifiersOk
+
+`func (o *EditOrderItem) GetModifiersOk() (*[]EditOrderItemModifier, bool)`
+
+GetModifiersOk returns a tuple with the Modifiers field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetModifiers
+
+`func (o *EditOrderItem) SetModifiers(v []EditOrderItemModifier)`
+
+SetModifiers sets Modifiers field to given value.
+
+### HasModifiers
+
+`func (o *EditOrderItem) HasModifiers() bool`
+
+HasModifiers returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -20,7 +20,7 @@ import (
 // checks if the Address type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &Address{}
 
-// Address A JSON object containing the receiver’s location information.
+// Address A JSON object containing the receiver’s location information. Only applicable for orders that are delivered by the restaurant. `null` if not applicable.
 type Address struct {
 	// The delivery address' unit number.
 	UnitNumber *string `json:"unitNumber,omitempty"`

@@ -22,12 +22,19 @@ var _ MappedNullable = &Purchasability{}
 
 // Purchasability Purchasability is set to true by default for all service type, unless it is explicitly set to false. Modifier will reuse it’s item’s purchasability. Refer [Service Based Menu](#section/Service-Based-Menu). 
 type Purchasability struct {
+	// **Case-sensitive**. 
 	DeliveryOnDemandGrabApp *bool `json:"Delivery_OnDemand_GrabApp,omitempty"`
+	// **Case-sensitive**. 
 	DeliveryScheduledGrabApp *bool `json:"Delivery_Scheduled_GrabApp,omitempty"`
+	// **Case-sensitive**. 
 	SelfPickUpOnDemandGrabApp *bool `json:"SelfPickUp_OnDemand_GrabApp,omitempty"`
+	// **Case-sensitive**. 
 	DineInOnDemandGrabApp *bool `json:"DineIn_OnDemand_GrabApp,omitempty"`
+	// **Case-sensitive**. 
 	DeliveryOnDemandStoreFront *bool `json:"Delivery_OnDemand_StoreFront,omitempty"`
+	// **Case-sensitive**. 
 	DeliveryScheduledStoreFront *bool `json:"Delivery_Scheduled_StoreFront,omitempty"`
+	// **Case-sensitive**.
 	SelfPickUpOnDemandStoreFront *bool `json:"SelfPickUp_OnDemand_StoreFront,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

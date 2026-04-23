@@ -34,7 +34,7 @@ type MenuSyncWebhookRequest struct {
 	UpdatedAt *string `json:"updatedAt,omitempty"`
 	// Indicates the state of the menu sync job.
 	Status *string `json:"status,omitempty"`
-	// A string array of errors that occurred during processing. This array is empty if the status is not `FAILED`.
+	// A string array of errors that occurred during processing.
 	Errors []string `json:"errors,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

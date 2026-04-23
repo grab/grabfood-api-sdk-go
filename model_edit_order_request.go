@@ -29,6 +29,10 @@ type EditOrderRequest struct {
 	Items []EditOrderItem `json:"items"`
 	// This parameter specifies whether to recalculate the edited order without submitting it. It is intended for testing purposes only. This parameter is set to false by default, which means the edited order will be recalculated and re-submitted to partners. 
 	OnlyRecalculate *bool `json:"onlyRecalculate,omitempty"`
+	// The deposit amount in minor unit in POS system. This is only applicable for STO order
+	DepositAmountInMin *int64 `json:"depositAmountInMin,omitempty"`
+	// The POS side discount amount in minor unit. This is only applicable for STO order
+	OfflinePOSDiscountInMin *int64 `json:"offlinePOSDiscountInMin,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -133,6 +137,70 @@ func (o *EditOrderRequest) SetOnlyRecalculate(v bool) {
 	o.OnlyRecalculate = &v
 }
 
+// GetDepositAmountInMin returns the DepositAmountInMin field value if set, zero value otherwise.
+func (o *EditOrderRequest) GetDepositAmountInMin() int64 {
+	if o == nil || IsNil(o.DepositAmountInMin) {
+		var ret int64
+		return ret
+	}
+	return *o.DepositAmountInMin
+}
+
+// GetDepositAmountInMinOk returns a tuple with the DepositAmountInMin field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EditOrderRequest) GetDepositAmountInMinOk() (*int64, bool) {
+	if o == nil || IsNil(o.DepositAmountInMin) {
+		return nil, false
+	}
+	return o.DepositAmountInMin, true
+}
+
+// HasDepositAmountInMin returns a boolean if a field has been set.
+func (o *EditOrderRequest) HasDepositAmountInMin() bool {
+	if o != nil && !IsNil(o.DepositAmountInMin) {
+		return true
+	}
+
+	return false
+}
+
+// SetDepositAmountInMin gets a reference to the given int64 and assigns it to the DepositAmountInMin field.
+func (o *EditOrderRequest) SetDepositAmountInMin(v int64) {
+	o.DepositAmountInMin = &v
+}
+
+// GetOfflinePOSDiscountInMin returns the OfflinePOSDiscountInMin field value if set, zero value otherwise.
+func (o *EditOrderRequest) GetOfflinePOSDiscountInMin() int64 {
+	if o == nil || IsNil(o.OfflinePOSDiscountInMin) {
+		var ret int64
+		return ret
+	}
+	return *o.OfflinePOSDiscountInMin
+}
+
+// GetOfflinePOSDiscountInMinOk returns a tuple with the OfflinePOSDiscountInMin field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *EditOrderRequest) GetOfflinePOSDiscountInMinOk() (*int64, bool) {
+	if o == nil || IsNil(o.OfflinePOSDiscountInMin) {
+		return nil, false
+	}
+	return o.OfflinePOSDiscountInMin, true
+}
+
+// HasOfflinePOSDiscountInMin returns a boolean if a field has been set.
+func (o *EditOrderRequest) HasOfflinePOSDiscountInMin() bool {
+	if o != nil && !IsNil(o.OfflinePOSDiscountInMin) {
+		return true
+	}
+
+	return false
+}
+
+// SetOfflinePOSDiscountInMin gets a reference to the given int64 and assigns it to the OfflinePOSDiscountInMin field.
+func (o *EditOrderRequest) SetOfflinePOSDiscountInMin(v int64) {
+	o.OfflinePOSDiscountInMin = &v
+}
+
 func (o EditOrderRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -147,6 +215,12 @@ func (o EditOrderRequest) ToMap() (map[string]interface{}, error) {
 	toSerialize["items"] = o.Items
 	if !IsNil(o.OnlyRecalculate) {
 		toSerialize["onlyRecalculate"] = o.OnlyRecalculate
+	}
+	if !IsNil(o.DepositAmountInMin) {
+		toSerialize["depositAmountInMin"] = o.DepositAmountInMin
+	}
+	if !IsNil(o.OfflinePOSDiscountInMin) {
+		toSerialize["offlinePOSDiscountInMin"] = o.OfflinePOSDiscountInMin
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -195,6 +269,8 @@ func (o *EditOrderRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "orderID")
 		delete(additionalProperties, "items")
 		delete(additionalProperties, "onlyRecalculate")
+		delete(additionalProperties, "depositAmountInMin")
+		delete(additionalProperties, "offlinePOSDiscountInMin")
 		o.AdditionalProperties = additionalProperties
 	}
 
