@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.0.3] - 2026-04-30
+
+### Added
+- Edit Order V2
+- Edit Order Item Modifier
+
+### Changed
+
+### Deprecated
+- Edit Order V1
+
 ## [1.0.2] - 2025-03-04
 
 ### Added
