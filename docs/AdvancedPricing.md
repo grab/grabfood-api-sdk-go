@@ -4,13 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**DeliveryOnDemandGrabApp** | Pointer to **int64** | Service type: &#x60;Delivery&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
-**DeliveryScheduledGrabApp** | Pointer to **int64** | Service type: &#x60;Delivery&#x60;, Order type: &#x60;Scheduled&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
-**SelfPickUpOnDemandGrabApp** | Pointer to **int64** | Service type: &#x60;Self Pick Up&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
-**DineInOnDemandGrabApp** | Pointer to **int64** | Service type: &#x60;Dine In&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
-**DeliveryOnDemandStoreFront** | Pointer to **int64** | Service type: &#x60;Delivery&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Store Front&#x60;  | [optional] 
-**DeliveryScheduledStoreFront** | Pointer to **int64** | Service type: &#x60;Delivery&#x60;, Order type: &#x60;Scheduled&#x60;, Channel: &#x60;Store Front&#x60;  | [optional] 
-**SelfPickUpOnDemandStoreFront** | Pointer to **int64** | Service type: &#x60;Self Pick Up&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Store Front&#x60;  | [optional] 
+**DeliveryOnDemandGrabApp** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Delivery&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
+**DeliveryScheduledGrabApp** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Delivery&#x60;, Order type: &#x60;Scheduled&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
+**SelfPickUpOnDemandGrabApp** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Self Pick Up&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
+**DineInOnDemandGrabApp** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Dine In&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Grab App&#x60;  | [optional] 
+**DeliveryOnDemandStoreFront** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Delivery&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Store Front&#x60;  | [optional] 
+**DeliveryScheduledStoreFront** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Delivery&#x60;, Order type: &#x60;Scheduled&#x60;, Channel: &#x60;Store Front&#x60;  | [optional] 
+**SelfPickUpOnDemandStoreFront** | Pointer to **int64** | **Case-sensitive**. Service type: &#x60;Self Pick Up&#x60;, Order type: &#x60;Instant&#x60;, Channel: &#x60;Store Front&#x60;  | [optional] 
 
 ## Methods
 

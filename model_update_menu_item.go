@@ -33,7 +33,7 @@ type UpdateMenuItem struct {
 	Price *int64 `json:"price,omitempty"`
 	// The record's availableStatus.   Note: In order to set an item as \"UNAVAILABLE\", it is required to update both the `availableStatus` and `maxStock` fields, whereby the `maxStock` value should be set to 0. 
 	AvailableStatus *string `json:"availableStatus,omitempty"`
-	// Available stocks under inventory for this item. Auto reduce when there is order placed for this item.  Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is \"UNAVAILABLE\". Item will be set to \"AVAILABLE\" if `maxStock` > 0. 
+	// Available stocks under inventory for this item. Auto reduce when there is order placed for this item. The value **must not exceed** `9999999`.  Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is \"UNAVAILABLE\". Item will be set to \"AVAILABLE\" if `maxStock` > 0. 
 	MaxStock *int64 `json:"maxStock,omitempty"`
 	// Price configuration (in minor unit) for different service, order type and channel combination. If a service type does not have a specified price, it will utilize the default price of the item. 
 	AdvancedPricings []UpdateAdvancedPricing `json:"advancedPricings,omitempty"`

@@ -9,13 +9,13 @@ Name | Type | Description | Notes
 **EaterType** | **string** | The type of eater eligible for the campaign.  * &#x60;all&#x60; - campaign will be applied to everyone. No limitation on campaign type. * &#x60;new&#x60; - campaign will be applied to consumers who have not ordered from this store in the last three months. Only applicable to **order-level** campaign.  | 
 **MinBasketAmount** | Pointer to **float64** | The minimum basket amount to be eligible for the campaign. Only applicable to **order-level** campaign but not to item-level discount campaign. | [optional] 
 **BundleQuantity** | Pointer to **int32** | Specify the bundle quantity for bundle offer campaign. | [optional] 
-**WorkingHour** | Pointer to [**WorkingHour**](WorkingHour.md) |  | [optional] 
+**WorkingHour** | [**WorkingHour**](WorkingHour.md) |  | 
 
 ## Methods
 
 ### NewCampaignConditions
 
-`func NewCampaignConditions(startTime time.Time, endTime time.Time, eaterType string, ) *CampaignConditions`
+`func NewCampaignConditions(startTime time.Time, endTime time.Time, eaterType string, workingHour WorkingHour, ) *CampaignConditions`
 
 NewCampaignConditions instantiates a new CampaignConditions object
 This constructor will assign default values to properties that have it defined,
@@ -159,11 +159,6 @@ and a boolean to check if the value has been set.
 
 SetWorkingHour sets WorkingHour field to given value.
 
-### HasWorkingHour
-
-`func (o *CampaignConditions) HasWorkingHour() bool`
-
-HasWorkingHour returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

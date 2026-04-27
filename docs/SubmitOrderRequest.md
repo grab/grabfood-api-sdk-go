@@ -23,8 +23,10 @@ Name | Type | Description | Notes
 **Price** | [**OrderPrice**](OrderPrice.md) |  | 
 **DineIn** | Pointer to [**NullableDineIn**](DineIn.md) |  | [optional] 
 **Receiver** | Pointer to [**NullableReceiver**](Receiver.md) |  | [optional] 
-**OrderReadyEstimation** | Pointer to [**OrderReadyEstimation**](OrderReadyEstimation.md) |  | [optional] 
+**OrderReadyEstimation** | Pointer to [**NullableOrderReadyEstimation**](OrderReadyEstimation.md) |  | [optional] 
 **MembershipID** | Pointer to **string** | Membership ID for loyalty project. Only present for loyalty program partners. Empty if not applicable. | [optional] 
+**Discounts** | Pointer to [**[]GrabDiscount1**](GrabDiscount1.md) | The discounts that are applicable for the paybill order in dineout STO case. &#x60;null&#x60; when there is no discount applied. This is only applicable for STO order  | [optional] 
+**Payments** | Pointer to [**[]Payment**](Payment.md) | An array of payment objects. &#x60;null&#x60; when there is no payment info from pos. This is only applicable for STO order | [optional] 
 
 ## Methods
 
@@ -535,6 +537,16 @@ SetOrderReadyEstimation sets OrderReadyEstimation field to given value.
 
 HasOrderReadyEstimation returns a boolean if a field has been set.
 
+### SetOrderReadyEstimationNil
+
+`func (o *SubmitOrderRequest) SetOrderReadyEstimationNil(b bool)`
+
+ SetOrderReadyEstimationNil sets the value for OrderReadyEstimation to be an explicit nil
+
+### UnsetOrderReadyEstimation
+`func (o *SubmitOrderRequest) UnsetOrderReadyEstimation()`
+
+UnsetOrderReadyEstimation ensures that no value is present for OrderReadyEstimation, not even an explicit nil
 ### GetMembershipID
 
 `func (o *SubmitOrderRequest) GetMembershipID() string`
@@ -560,6 +572,76 @@ SetMembershipID sets MembershipID field to given value.
 
 HasMembershipID returns a boolean if a field has been set.
 
+### GetDiscounts
+
+`func (o *SubmitOrderRequest) GetDiscounts() []GrabDiscount1`
+
+GetDiscounts returns the Discounts field if non-nil, zero value otherwise.
+
+### GetDiscountsOk
+
+`func (o *SubmitOrderRequest) GetDiscountsOk() (*[]GrabDiscount1, bool)`
+
+GetDiscountsOk returns a tuple with the Discounts field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetDiscounts
+
+`func (o *SubmitOrderRequest) SetDiscounts(v []GrabDiscount1)`
+
+SetDiscounts sets Discounts field to given value.
+
+### HasDiscounts
+
+`func (o *SubmitOrderRequest) HasDiscounts() bool`
+
+HasDiscounts returns a boolean if a field has been set.
+
+### SetDiscountsNil
+
+`func (o *SubmitOrderRequest) SetDiscountsNil(b bool)`
+
+ SetDiscountsNil sets the value for Discounts to be an explicit nil
+
+### UnsetDiscounts
+`func (o *SubmitOrderRequest) UnsetDiscounts()`
+
+UnsetDiscounts ensures that no value is present for Discounts, not even an explicit nil
+### GetPayments
+
+`func (o *SubmitOrderRequest) GetPayments() []Payment`
+
+GetPayments returns the Payments field if non-nil, zero value otherwise.
+
+### GetPaymentsOk
+
+`func (o *SubmitOrderRequest) GetPaymentsOk() (*[]Payment, bool)`
+
+GetPaymentsOk returns a tuple with the Payments field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetPayments
+
+`func (o *SubmitOrderRequest) SetPayments(v []Payment)`
+
+SetPayments sets Payments field to given value.
+
+### HasPayments
+
+`func (o *SubmitOrderRequest) HasPayments() bool`
+
+HasPayments returns a boolean if a field has been set.
+
+### SetPaymentsNil
+
+`func (o *SubmitOrderRequest) SetPaymentsNil(b bool)`
+
+ SetPaymentsNil sets the value for Payments to be an explicit nil
+
+### UnsetPayments
+`func (o *SubmitOrderRequest) UnsetPayments()`
+
+UnsetPayments ensures that no value is present for Payments, not even an explicit nil
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

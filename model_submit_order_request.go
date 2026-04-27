@@ -22,7 +22,7 @@ import (
 // checks if the SubmitOrderRequest type satisfies the MappedNullable interface at compile time
 var _ MappedNullable = &SubmitOrderRequest{}
 
-// SubmitOrderRequest A JSON object containing the order information. 
+// SubmitOrderRequest A JSON object containing the order information. This is only applicable for STO order in Push Order State Webhook 
 type SubmitOrderRequest struct {
 	// The order's ID that is returned from GrabFood. Refer to FAQs for more details about [orderID and shortOrderNumber](#section/Order/What's-the-difference-between-orderID-and-shortOrderNumber).
 	OrderID string `json:"orderID"`
@@ -57,9 +57,13 @@ type SubmitOrderRequest struct {
 	Price OrderPrice `json:"price"`
 	DineIn NullableDineIn `json:"dineIn,omitempty"`
 	Receiver NullableReceiver `json:"receiver,omitempty"`
-	OrderReadyEstimation *OrderReadyEstimation `json:"orderReadyEstimation,omitempty"`
+	OrderReadyEstimation NullableOrderReadyEstimation `json:"orderReadyEstimation,omitempty"`
 	// Membership ID for loyalty project. Only present for loyalty program partners. Empty if not applicable.
 	MembershipID *string `json:"membershipID,omitempty"`
+	// The discounts that are applicable for the paybill order in dineout STO case. `null` when there is no discount applied. This is only applicable for STO order 
+	Discounts []GrabDiscount1 `json:"discounts,omitempty"`
+	// An array of payment objects. `null` when there is no payment info from pos. This is only applicable for STO order
+	Payments []Payment `json:"payments,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -642,36 +646,46 @@ func (o *SubmitOrderRequest) UnsetReceiver() {
 	o.Receiver.Unset()
 }
 
-// GetOrderReadyEstimation returns the OrderReadyEstimation field value if set, zero value otherwise.
+// GetOrderReadyEstimation returns the OrderReadyEstimation field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *SubmitOrderRequest) GetOrderReadyEstimation() OrderReadyEstimation {
-	if o == nil || IsNil(o.OrderReadyEstimation) {
+	if o == nil || IsNil(o.OrderReadyEstimation.Get()) {
 		var ret OrderReadyEstimation
 		return ret
 	}
-	return *o.OrderReadyEstimation
+	return *o.OrderReadyEstimation.Get()
 }
 
 // GetOrderReadyEstimationOk returns a tuple with the OrderReadyEstimation field value if set, nil otherwise
 // and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
 func (o *SubmitOrderRequest) GetOrderReadyEstimationOk() (*OrderReadyEstimation, bool) {
-	if o == nil || IsNil(o.OrderReadyEstimation) {
+	if o == nil {
 		return nil, false
 	}
-	return o.OrderReadyEstimation, true
+	return o.OrderReadyEstimation.Get(), o.OrderReadyEstimation.IsSet()
 }
 
 // HasOrderReadyEstimation returns a boolean if a field has been set.
 func (o *SubmitOrderRequest) HasOrderReadyEstimation() bool {
-	if o != nil && !IsNil(o.OrderReadyEstimation) {
+	if o != nil && o.OrderReadyEstimation.IsSet() {
 		return true
 	}
 
 	return false
 }
 
-// SetOrderReadyEstimation gets a reference to the given OrderReadyEstimation and assigns it to the OrderReadyEstimation field.
+// SetOrderReadyEstimation gets a reference to the given NullableOrderReadyEstimation and assigns it to the OrderReadyEstimation field.
 func (o *SubmitOrderRequest) SetOrderReadyEstimation(v OrderReadyEstimation) {
-	o.OrderReadyEstimation = &v
+	o.OrderReadyEstimation.Set(&v)
+}
+// SetOrderReadyEstimationNil sets the value for OrderReadyEstimation to be an explicit nil
+func (o *SubmitOrderRequest) SetOrderReadyEstimationNil() {
+	o.OrderReadyEstimation.Set(nil)
+}
+
+// UnsetOrderReadyEstimation ensures that no value is present for OrderReadyEstimation, not even an explicit nil
+func (o *SubmitOrderRequest) UnsetOrderReadyEstimation() {
+	o.OrderReadyEstimation.Unset()
 }
 
 // GetMembershipID returns the MembershipID field value if set, zero value otherwise.
@@ -704,6 +718,72 @@ func (o *SubmitOrderRequest) HasMembershipID() bool {
 // SetMembershipID gets a reference to the given string and assigns it to the MembershipID field.
 func (o *SubmitOrderRequest) SetMembershipID(v string) {
 	o.MembershipID = &v
+}
+
+// GetDiscounts returns the Discounts field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *SubmitOrderRequest) GetDiscounts() []GrabDiscount1 {
+	if o == nil {
+		var ret []GrabDiscount1
+		return ret
+	}
+	return o.Discounts
+}
+
+// GetDiscountsOk returns a tuple with the Discounts field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmitOrderRequest) GetDiscountsOk() ([]GrabDiscount1, bool) {
+	if o == nil || IsNil(o.Discounts) {
+		return nil, false
+	}
+	return o.Discounts, true
+}
+
+// HasDiscounts returns a boolean if a field has been set.
+func (o *SubmitOrderRequest) HasDiscounts() bool {
+	if o != nil && !IsNil(o.Discounts) {
+		return true
+	}
+
+	return false
+}
+
+// SetDiscounts gets a reference to the given []GrabDiscount1 and assigns it to the Discounts field.
+func (o *SubmitOrderRequest) SetDiscounts(v []GrabDiscount1) {
+	o.Discounts = v
+}
+
+// GetPayments returns the Payments field value if set, zero value otherwise (both if not set or set to explicit null).
+func (o *SubmitOrderRequest) GetPayments() []Payment {
+	if o == nil {
+		var ret []Payment
+		return ret
+	}
+	return o.Payments
+}
+
+// GetPaymentsOk returns a tuple with the Payments field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+// NOTE: If the value is an explicit nil, `nil, true` will be returned
+func (o *SubmitOrderRequest) GetPaymentsOk() ([]Payment, bool) {
+	if o == nil || IsNil(o.Payments) {
+		return nil, false
+	}
+	return o.Payments, true
+}
+
+// HasPayments returns a boolean if a field has been set.
+func (o *SubmitOrderRequest) HasPayments() bool {
+	if o != nil && !IsNil(o.Payments) {
+		return true
+	}
+
+	return false
+}
+
+// SetPayments gets a reference to the given []Payment and assigns it to the Payments field.
+func (o *SubmitOrderRequest) SetPayments(v []Payment) {
+	o.Payments = v
 }
 
 func (o SubmitOrderRequest) MarshalJSON() ([]byte, error) {
@@ -753,11 +833,17 @@ func (o SubmitOrderRequest) ToMap() (map[string]interface{}, error) {
 	if o.Receiver.IsSet() {
 		toSerialize["receiver"] = o.Receiver.Get()
 	}
-	if !IsNil(o.OrderReadyEstimation) {
-		toSerialize["orderReadyEstimation"] = o.OrderReadyEstimation
+	if o.OrderReadyEstimation.IsSet() {
+		toSerialize["orderReadyEstimation"] = o.OrderReadyEstimation.Get()
 	}
 	if !IsNil(o.MembershipID) {
 		toSerialize["membershipID"] = o.MembershipID
+	}
+	if o.Discounts != nil {
+		toSerialize["discounts"] = o.Discounts
+	}
+	if o.Payments != nil {
+		toSerialize["payments"] = o.Payments
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -832,6 +918,8 @@ func (o *SubmitOrderRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "receiver")
 		delete(additionalProperties, "orderReadyEstimation")
 		delete(additionalProperties, "membershipID")
+		delete(additionalProperties, "discounts")
+		delete(additionalProperties, "payments")
 		o.AdditionalProperties = additionalProperties
 	}
 

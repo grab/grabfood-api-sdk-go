@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **Id** | **string** | The modifier&#39;s ID that is on the partner&#39;s system. This ID should be unique. | 
 **Name** | **string** | The name of the modifier. | 
 **NameTranslation** | Pointer to **map[string]string** | Translation of the modifier name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation). | [optional] 
-**AvailableStatus** | **string** | The status for the modifier. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus). | 
+**AvailableStatus** | **string** | The status for the modifier. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).   Note: &#x60;HIDE&#x60; will only update the modifier to unavailable, remove the modifier from the menu if you want to hide it entirely.  | 
 **Price** | Pointer to **int64** | The modifier&#39;s price in minor format. Refer to FAQs for more details about [tax](#section/Menu/Is-the-menu-price-with-or-without-tax). | [optional] 
 **Barcode** | Pointer to **string** | The barcode Number (GTIN). GTIN must be 8, 12, 13, 14 numeric digits. | [optional] 
 **Sequence** | Pointer to **int32** | The sort or display order of the modifier within the menu. | [optional] 

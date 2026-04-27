@@ -29,7 +29,7 @@ type MenuModifier struct {
 	Name string `json:"name"`
 	// Translation of the modifier name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation).
 	NameTranslation *map[string]string `json:"nameTranslation,omitempty"`
-	// The status for the modifier. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).
+	// The status for the modifier. Refer to FAQs for more details about [availableStatus](#section/Menu/What-is-availableStatus).   Note: `HIDE` will only update the modifier to unavailable, remove the modifier from the menu if you want to hide it entirely. 
 	AvailableStatus string `json:"availableStatus"`
 	// The modifier's price in minor format. Refer to FAQs for more details about [tax](#section/Menu/Is-the-menu-price-with-or-without-tax).
 	Price *int64 `json:"price,omitempty"`

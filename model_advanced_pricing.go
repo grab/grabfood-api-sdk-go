@@ -22,19 +22,19 @@ var _ MappedNullable = &AdvancedPricing{}
 
 // AdvancedPricing Price configuration (in minor unit) for different service, order type and channel combination. If a service type does not have a specified price, it will utilize the default price of the item. Refer [Service Based Menu](#section/Service-Based-Menu). 
 type AdvancedPricing struct {
-	// Service type: `Delivery`, Order type: `Instant`, Channel: `Grab App` 
+	// **Case-sensitive**. Service type: `Delivery`, Order type: `Instant`, Channel: `Grab App` 
 	DeliveryOnDemandGrabApp *int64 `json:"Delivery_OnDemand_GrabApp,omitempty"`
-	// Service type: `Delivery`, Order type: `Scheduled`, Channel: `Grab App` 
+	// **Case-sensitive**. Service type: `Delivery`, Order type: `Scheduled`, Channel: `Grab App` 
 	DeliveryScheduledGrabApp *int64 `json:"Delivery_Scheduled_GrabApp,omitempty"`
-	// Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Grab App` 
+	// **Case-sensitive**. Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Grab App` 
 	SelfPickUpOnDemandGrabApp *int64 `json:"SelfPickUp_OnDemand_GrabApp,omitempty"`
-	// Service type: `Dine In`, Order type: `Instant`, Channel: `Grab App` 
+	// **Case-sensitive**. Service type: `Dine In`, Order type: `Instant`, Channel: `Grab App` 
 	DineInOnDemandGrabApp *int64 `json:"DineIn_OnDemand_GrabApp,omitempty"`
-	// Service type: `Delivery`, Order type: `Instant`, Channel: `Store Front` 
+	// **Case-sensitive**. Service type: `Delivery`, Order type: `Instant`, Channel: `Store Front` 
 	DeliveryOnDemandStoreFront *int64 `json:"Delivery_OnDemand_StoreFront,omitempty"`
-	// Service type: `Delivery`, Order type: `Scheduled`, Channel: `Store Front` 
+	// **Case-sensitive**. Service type: `Delivery`, Order type: `Scheduled`, Channel: `Store Front` 
 	DeliveryScheduledStoreFront *int64 `json:"Delivery_Scheduled_StoreFront,omitempty"`
-	// Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Store Front` 
+	// **Case-sensitive**. Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Store Front` 
 	SelfPickUpOnDemandStoreFront *int64 `json:"SelfPickUp_OnDemand_StoreFront,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

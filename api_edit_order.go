@@ -26,7 +26,7 @@ import (
 // EditOrderAPIService EditOrderAPI service
 type EditOrderAPIService service
 
-type ApiEditOrderRequest struct {
+type ApiEditOrderV1Request struct {
 	ctx context.Context
 	ApiService *EditOrderAPIService
 	contentType *string
@@ -36,35 +36,37 @@ type ApiEditOrderRequest struct {
 }
 
 // The content type of the request body. You must use &#x60;application/json&#x60; for this header as GrabFood API currently does not support other formats.
-func (r ApiEditOrderRequest) ContentType(contentType string) ApiEditOrderRequest {
+func (r ApiEditOrderV1Request) ContentType(contentType string) ApiEditOrderV1Request {
 	r.contentType = &contentType
 	return r
 }
 
 // Specify the generated authorization token of the bearer type.
-func (r ApiEditOrderRequest) Authorization(authorization string) ApiEditOrderRequest {
+func (r ApiEditOrderV1Request) Authorization(authorization string) ApiEditOrderV1Request {
 	r.authorization = &authorization
 	return r
 }
 
-func (r ApiEditOrderRequest) EditOrderRequest(editOrderRequest EditOrderRequest) ApiEditOrderRequest {
+func (r ApiEditOrderV1Request) EditOrderRequest(editOrderRequest EditOrderRequest) ApiEditOrderV1Request {
 	r.editOrderRequest = &editOrderRequest
 	return r
 }
 
-func (r ApiEditOrderRequest) Execute() (*http.Response, error) {
-	return r.ApiService.EditOrderExecute(r)
+func (r ApiEditOrderV1Request) Execute() (*http.Response, error) {
+	return r.ApiService.EditOrderV1Execute(r)
 }
 
 /*
-EditOrder Edit Order
+EditOrderV1 Edit Order V1
 
  @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  @param orderID
- @return ApiEditOrderRequest
+ @return ApiEditOrderV1Request
+
+Deprecated
 */
-func (a *EditOrderAPIService) EditOrder(ctx context.Context, orderID string) ApiEditOrderRequest {
-	return ApiEditOrderRequest{
+func (a *EditOrderAPIService) EditOrderV1(ctx context.Context, orderID string) ApiEditOrderV1Request {
+	return ApiEditOrderV1Request{
 		ApiService: a,
 		ctx: ctx,
 		orderID: orderID,
@@ -72,14 +74,15 @@ func (a *EditOrderAPIService) EditOrder(ctx context.Context, orderID string) Api
 }
 
 // Execute executes the request
-func (a *EditOrderAPIService) EditOrderExecute(r ApiEditOrderRequest) (*http.Response, error) {
+// Deprecated
+func (a *EditOrderAPIService) EditOrderV1Execute(r ApiEditOrderV1Request) (*http.Response, error) {
 	var (
 		localVarHTTPMethod   = http.MethodPut
 		localVarPostBody     interface{}
 		formFiles            []formFile
 	)
 
-	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EditOrderAPIService.EditOrder")
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EditOrderAPIService.EditOrderV1")
 	if err != nil {
 		return nil, &GenericOpenAPIError{error: err.Error()}
 	}
@@ -143,7 +146,29 @@ func (a *EditOrderAPIService) EditOrderExecute(r ApiEditOrderRequest) (*http.Res
 			body:  localVarBody,
 			error: localVarHTTPResponse.Status,
 		}
-		if localVarHTTPResponse.StatusCode >= 400 && localVarHTTPResponse.StatusCode < 500 {
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
 			var v Error
 			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
 			if err != nil {
@@ -157,4 +182,170 @@ func (a *EditOrderAPIService) EditOrderExecute(r ApiEditOrderRequest) (*http.Res
 	}
 
 	return localVarHTTPResponse, nil
+}
+
+type ApiEditOrderV2Request struct {
+	ctx context.Context
+	ApiService *EditOrderAPIService
+	contentType *string
+	authorization *string
+	orderID string
+	editOrderRequest *EditOrderRequest
+}
+
+// The content type of the request body. You must use &#x60;application/json&#x60; for this header as GrabFood API currently does not support other formats.
+func (r ApiEditOrderV2Request) ContentType(contentType string) ApiEditOrderV2Request {
+	r.contentType = &contentType
+	return r
+}
+
+// Specify the generated authorization token of the bearer type.
+func (r ApiEditOrderV2Request) Authorization(authorization string) ApiEditOrderV2Request {
+	r.authorization = &authorization
+	return r
+}
+
+func (r ApiEditOrderV2Request) EditOrderRequest(editOrderRequest EditOrderRequest) ApiEditOrderV2Request {
+	r.editOrderRequest = &editOrderRequest
+	return r
+}
+
+func (r ApiEditOrderV2Request) Execute() (*EditOrderV2Response, *http.Response, error) {
+	return r.ApiService.EditOrderV2Execute(r)
+}
+
+/*
+EditOrderV2 Edit Order V2
+
+ @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
+ @param orderID
+ @return ApiEditOrderV2Request
+*/
+func (a *EditOrderAPIService) EditOrderV2(ctx context.Context, orderID string) ApiEditOrderV2Request {
+	return ApiEditOrderV2Request{
+		ApiService: a,
+		ctx: ctx,
+		orderID: orderID,
+	}
+}
+
+// Execute executes the request
+//  @return EditOrderV2Response
+func (a *EditOrderAPIService) EditOrderV2Execute(r ApiEditOrderV2Request) (*EditOrderV2Response, *http.Response, error) {
+	var (
+		localVarHTTPMethod   = http.MethodPut
+		localVarPostBody     interface{}
+		formFiles            []formFile
+		localVarReturnValue  *EditOrderV2Response
+	)
+
+	localBasePath, err := a.client.cfg.ServerURLWithContext(r.ctx, "EditOrderAPIService.EditOrderV2")
+	if err != nil {
+		return localVarReturnValue, nil, &GenericOpenAPIError{error: err.Error()}
+	}
+
+	localVarPath := localBasePath + "/partner/v2/orders/{orderID}"
+	localVarPath = strings.Replace(localVarPath, "{"+"orderID"+"}", url.PathEscape(parameterValueToString(r.orderID, "orderID")), -1)
+
+	localVarHeaderParams := make(map[string]string)
+	localVarQueryParams := url.Values{}
+	localVarFormParams := url.Values{}
+	if r.contentType == nil {
+		return localVarReturnValue, nil, reportError("contentType is required and must be specified")
+	}
+	if r.authorization == nil {
+		return localVarReturnValue, nil, reportError("authorization is required and must be specified")
+	}
+	if r.editOrderRequest == nil {
+		return localVarReturnValue, nil, reportError("editOrderRequest is required and must be specified")
+	}
+
+	// to determine the Content-Type header
+	localVarHTTPContentTypes := []string{"application/json"}
+
+	// set Content-Type header
+	localVarHTTPContentType := selectHeaderContentType(localVarHTTPContentTypes)
+	if localVarHTTPContentType != "" {
+		localVarHeaderParams["Content-Type"] = localVarHTTPContentType
+	}
+
+	// to determine the Accept header
+	localVarHTTPHeaderAccepts := []string{"application/json"}
+
+	// set Accept header
+	localVarHTTPHeaderAccept := selectHeaderAccept(localVarHTTPHeaderAccepts)
+	if localVarHTTPHeaderAccept != "" {
+		localVarHeaderParams["Accept"] = localVarHTTPHeaderAccept
+	}
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "Content-Type", r.contentType, "simple", "")
+	parameterAddToHeaderOrQuery(localVarHeaderParams, "Authorization", r.authorization, "simple", "")
+	// body params
+	localVarPostBody = r.editOrderRequest
+	req, err := a.client.prepareRequest(r.ctx, localVarPath, localVarHTTPMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, formFiles)
+	if err != nil {
+		return localVarReturnValue, nil, err
+	}
+
+	localVarHTTPResponse, err := a.client.callAPI(req)
+	if err != nil || localVarHTTPResponse == nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	localVarBody, err := io.ReadAll(localVarHTTPResponse.Body)
+	localVarHTTPResponse.Body.Close()
+	localVarHTTPResponse.Body = io.NopCloser(bytes.NewBuffer(localVarBody))
+	if err != nil {
+		return localVarReturnValue, localVarHTTPResponse, err
+	}
+
+	if localVarHTTPResponse.StatusCode >= 300 {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: localVarHTTPResponse.Status,
+		}
+		if localVarHTTPResponse.StatusCode == 400 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 403 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+			return localVarReturnValue, localVarHTTPResponse, newErr
+		}
+		if localVarHTTPResponse.StatusCode == 404 {
+			var v Error
+			err = a.client.decode(&v, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+			if err != nil {
+				newErr.error = err.Error()
+				return localVarReturnValue, localVarHTTPResponse, newErr
+			}
+					newErr.error = formatErrorMessage(localVarHTTPResponse.Status, &v)
+					newErr.model = v
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	err = a.client.decode(&localVarReturnValue, localVarBody, localVarHTTPResponse.Header.Get("Content-Type"))
+	if err != nil {
+		newErr := &GenericOpenAPIError{
+			body:  localVarBody,
+			error: err.Error(),
+		}
+		return localVarReturnValue, localVarHTTPResponse, newErr
+	}
+
+	return localVarReturnValue, localVarHTTPResponse, nil
 }

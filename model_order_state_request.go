@@ -37,6 +37,7 @@ type OrderStateRequest struct {
 	Code *string `json:"code,omitempty"`
 	// Additional information to explain the current order state. May be system status or human entered message.
 	Message *string `json:"message,omitempty"`
+	Order *Order `json:"order,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -272,6 +273,38 @@ func (o *OrderStateRequest) SetMessage(v string) {
 	o.Message = &v
 }
 
+// GetOrder returns the Order field value if set, zero value otherwise.
+func (o *OrderStateRequest) GetOrder() Order {
+	if o == nil || IsNil(o.Order) {
+		var ret Order
+		return ret
+	}
+	return *o.Order
+}
+
+// GetOrderOk returns a tuple with the Order field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderStateRequest) GetOrderOk() (*Order, bool) {
+	if o == nil || IsNil(o.Order) {
+		return nil, false
+	}
+	return o.Order, true
+}
+
+// HasOrder returns a boolean if a field has been set.
+func (o *OrderStateRequest) HasOrder() bool {
+	if o != nil && !IsNil(o.Order) {
+		return true
+	}
+
+	return false
+}
+
+// SetOrder gets a reference to the given Order and assigns it to the Order field.
+func (o *OrderStateRequest) SetOrder(v Order) {
+	o.Order = &v
+}
+
 func (o OrderStateRequest) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -296,6 +329,9 @@ func (o OrderStateRequest) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Message) {
 		toSerialize["message"] = o.Message
+	}
+	if !IsNil(o.Order) {
+		toSerialize["order"] = o.Order
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -349,6 +385,7 @@ func (o *OrderStateRequest) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "driverETA")
 		delete(additionalProperties, "code")
 		delete(additionalProperties, "message")
+		delete(additionalProperties, "order")
 		o.AdditionalProperties = additionalProperties
 	}
 

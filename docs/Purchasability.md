@@ -4,13 +4,13 @@
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**DeliveryOnDemandGrabApp** | Pointer to **bool** |  | [optional] 
-**DeliveryScheduledGrabApp** | Pointer to **bool** |  | [optional] 
-**SelfPickUpOnDemandGrabApp** | Pointer to **bool** |  | [optional] 
-**DineInOnDemandGrabApp** | Pointer to **bool** |  | [optional] 
-**DeliveryOnDemandStoreFront** | Pointer to **bool** |  | [optional] 
-**DeliveryScheduledStoreFront** | Pointer to **bool** |  | [optional] 
-**SelfPickUpOnDemandStoreFront** | Pointer to **bool** |  | [optional] 
+**DeliveryOnDemandGrabApp** | Pointer to **bool** | **Case-sensitive**.  | [optional] 
+**DeliveryScheduledGrabApp** | Pointer to **bool** | **Case-sensitive**.  | [optional] 
+**SelfPickUpOnDemandGrabApp** | Pointer to **bool** | **Case-sensitive**.  | [optional] 
+**DineInOnDemandGrabApp** | Pointer to **bool** | **Case-sensitive**.  | [optional] 
+**DeliveryOnDemandStoreFront** | Pointer to **bool** | **Case-sensitive**.  | [optional] 
+**DeliveryScheduledStoreFront** | Pointer to **bool** | **Case-sensitive**.  | [optional] 
+**SelfPickUpOnDemandStoreFront** | Pointer to **bool** | **Case-sensitive**. | [optional] 
 
 ## Methods
 

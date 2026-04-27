@@ -30,7 +30,7 @@ import (
 func main() {
 	contentType := "application/json" // string | The content type of the request body. You must use `application/json` for this header as GrabFood API currently does not support other formats.
 	authorization := "Bearer <ACCESS_TOKEN_HERE>" // string | Specify the generated authorization token of the bearer type.
-	createCampaignRequest := *grabfood.NewCreateCampaignRequest("1-CYNGRUNGSBCCC", "$4 off with min $10 order for all users within weekday", *grabfood.NewCampaignConditions(time.Now(), time.Now(), "EaterType_example"), *grabfood.NewCampaignDiscount("percentage", *grabfood.NewCampaignScope("items"))) // CreateCampaignRequest | 
+	createCampaignRequest := *grabfood.NewCreateCampaignRequest("1-CYNGRUNGSBCCC", "$4 off with min $10 order for all users within weekday", *grabfood.NewCampaignConditions(time.Now(), time.Now(), "EaterType_example", *grabfood.NewWorkingHour()), *grabfood.NewCampaignDiscount("percentage", *grabfood.NewCampaignScope("items"))) // CreateCampaignRequest | 
 
 	configuration := grabfood.NewConfiguration()
 	apiClient := grabfood.NewAPIClient(configuration)

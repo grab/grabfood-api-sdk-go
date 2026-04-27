@@ -69,7 +69,9 @@ Class | Method | HTTP request | Description
 *CreateCampaignAPI* | [**CreateCampaign**](docs/CreateCampaignAPI.md#createcampaign) | **Post** /partner/v1/campaigns | Create campaign
 *CreateSelfServeJourneyAPI* | [**CreateSelfServeJourney**](docs/CreateSelfServeJourneyAPI.md#createselfservejourney) | **Post** /partner/v1/self-serve/activation | Create self serve journey
 *DeleteCampaignAPI* | [**DeleteCampaign**](docs/DeleteCampaignAPI.md#deletecampaign) | **Delete** /partner/v1/campaigns/{campaign_id} | Delete campaigns
-*EditOrderAPI* | [**EditOrder**](docs/EditOrderAPI.md#editorder) | **Put** /partner/v1/orders/{orderID} | Edit Order
+*EditOrderAPI* | [**EditOrderV1**](docs/EditOrderAPI.md#editorderv1) | **Put** /partner/v1/orders/{orderID} | Edit Order V1
+*EditOrderAPI* | [**EditOrderV2**](docs/EditOrderAPI.md#editorderv2) | **Put** /partner/v2/orders/{orderID} | Edit Order V2
+*GenerateStoQrCodeAPI* | [**GenerateStoQrCode**](docs/GenerateStoQrCodeAPI.md#generatestoqrcode) | **Get** /partner/v1/dinein/sto/qrcode | Generate STO QR code
 *GetDineinVoucherAPI* | [**GetDineinVoucher**](docs/GetDineinVoucherAPI.md#getdineinvoucher) | **Get** /partner/v1/dinein/voucher | Get Dine In Voucher
 *GetOauthGrabAPI* | [**GetOauthGrab**](docs/GetOauthGrabAPI.md#getoauthgrab) | **Post** /grabid/v1/oauth2/token | Get Oauth access token
 *GetStoreHourAPI* | [**GetStoreHour**](docs/GetStoreHourAPI.md#getstorehour) | **Get** /partner/v2/merchants/{merchantID}/store/hours | Get Store Hours
@@ -80,6 +82,8 @@ Class | Method | HTTP request | Description
 *NotifyMembershipWebviewAPI* | [**NotifyMembershipWebview**](docs/NotifyMembershipWebviewAPI.md#notifymembershipwebview) | **Post** /partner/v1/membership/notify | Notify Membership
 *PauseStoreAPI* | [**PauseStore**](docs/PauseStoreAPI.md#pausestore) | **Put** /partner/v1/merchant/pause | Pause store
 *RedeemDineinVoucherAPI* | [**RedeemDineinVoucher**](docs/RedeemDineinVoucherAPI.md#redeemdineinvoucher) | **Post** /partner/v1/dinein/voucher/redeem | Redeem Dine In Voucher
+*RefundOrderAPI* | [**RefundOrder**](docs/RefundOrderAPI.md#refundorder) | **Post** /partner/v1/orders/refund | Refund Order
+*SyncPosOrderAPI* | [**SyncPosOrder**](docs/SyncPosOrderAPI.md#syncposorder) | **Post** /partner/v1/pos/order | Sync POS order
 *TraceMenuSyncAPI* | [**TraceMenuSync**](docs/TraceMenuSyncAPI.md#tracemenusync) | **Get** /partner/v1/merchant/menu/trace | Trace menu sync
 *UpdateCampaignAPI* | [**UpdateCampaign**](docs/UpdateCampaignAPI.md#updatecampaign) | **Put** /partner/v1/campaigns/{campaign_id} | Update campaign
 *UpdateDeliveryStateAPI* | [**UpdateDeliveryState**](docs/UpdateDeliveryStateAPI.md#updatedeliverystate) | **Post** /partner/v1/order/delivery | Update delivery state
@@ -121,8 +125,11 @@ Class | Method | HTTP request | Description
  - [Currency](docs/Currency.md)
  - [DineIn](docs/DineIn.md)
  - [EditOrderItem](docs/EditOrderItem.md)
+ - [EditOrderItemModifier](docs/EditOrderItemModifier.md)
  - [EditOrderRequest](docs/EditOrderRequest.md)
+ - [EditOrderV2Response](docs/EditOrderV2Response.md)
  - [Error](docs/Error.md)
+ - [GenerateSTOQRCodeResponse](docs/GenerateSTOQRCodeResponse.md)
  - [GetDineInVoucherResponse](docs/GetDineInVoucherResponse.md)
  - [GetMembershipNativeResponse](docs/GetMembershipNativeResponse.md)
  - [GetMembershipNativeResponsePointInfo](docs/GetMembershipNativeResponsePointInfo.md)
@@ -132,6 +139,7 @@ Class | Method | HTTP request | Description
  - [GetMenuOldResponse](docs/GetMenuOldResponse.md)
  - [GetRewardNativeRequest](docs/GetRewardNativeRequest.md)
  - [GetRewardNativeResponse](docs/GetRewardNativeResponse.md)
+ - [GrabDiscount1](docs/GrabDiscount1.md)
  - [GrabOauthRequest](docs/GrabOauthRequest.md)
  - [GrabOauthResponse](docs/GrabOauthResponse.md)
  - [ListCampaignResponse](docs/ListCampaignResponse.md)
@@ -153,6 +161,7 @@ Class | Method | HTTP request | Description
  - [MenuSyncFailServiceHours](docs/MenuSyncFailServiceHours.md)
  - [MenuSyncResponse](docs/MenuSyncResponse.md)
  - [MenuSyncWebhookRequest](docs/MenuSyncWebhookRequest.md)
+ - [MerchantEarning](docs/MerchantEarning.md)
  - [ModifierGroup](docs/ModifierGroup.md)
  - [NewOrderTimeRequest](docs/NewOrderTimeRequest.md)
  - [NotifyMembershipWebviewRequest](docs/NotifyMembershipWebviewRequest.md)
@@ -169,15 +178,21 @@ Class | Method | HTTP request | Description
  - [OrderReadyEstimation](docs/OrderReadyEstimation.md)
  - [OrderStateRequest](docs/OrderStateRequest.md)
  - [OutOfStockInstruction](docs/OutOfStockInstruction.md)
+ - [POSItem](docs/POSItem.md)
  - [PartnerOauthRequest](docs/PartnerOauthRequest.md)
  - [PartnerOauthResponse](docs/PartnerOauthResponse.md)
  - [PauseStoreRequest](docs/PauseStoreRequest.md)
+ - [Payment](docs/Payment.md)
+ - [PosItemModifier](docs/PosItemModifier.md)
+ - [PosOrder](docs/PosOrder.md)
+ - [PosPriceDetails](docs/PosPriceDetails.md)
  - [Purchasability](docs/Purchasability.md)
  - [PushIntegrationStatusWebhookRequest](docs/PushIntegrationStatusWebhookRequest.md)
  - [Receiver](docs/Receiver.md)
  - [RedeemDineInVoucherRequest](docs/RedeemDineInVoucherRequest.md)
  - [RedeemDineInVoucherResponse](docs/RedeemDineInVoucherResponse.md)
  - [RedeemResult](docs/RedeemResult.md)
+ - [RefundOrderRequest](docs/RefundOrderRequest.md)
  - [RegisterMembershipNativeRequest](docs/RegisterMembershipNativeRequest.md)
  - [RegisterMembershipNativeResponse](docs/RegisterMembershipNativeResponse.md)
  - [RewardItem](docs/RewardItem.md)
@@ -191,6 +206,8 @@ Class | Method | HTTP request | Description
  - [StoreHourResponse](docs/StoreHourResponse.md)
  - [StoreStatusResponse](docs/StoreStatusResponse.md)
  - [SubmitOrderRequest](docs/SubmitOrderRequest.md)
+ - [SyncPOSOrderRequest](docs/SyncPOSOrderRequest.md)
+ - [SyncPOSOrderResponse](docs/SyncPOSOrderResponse.md)
  - [UnbindMembershipNativeRequest](docs/UnbindMembershipNativeRequest.md)
  - [UnlinkMembershipWebviewRequest](docs/UnlinkMembershipWebviewRequest.md)
  - [UpdateAdvancedPricing](docs/UpdateAdvancedPricing.md)
@@ -206,6 +223,7 @@ Class | Method | HTTP request | Description
  - [UpdatePurchasability](docs/UpdatePurchasability.md)
  - [UpdateSpecialHourRequest](docs/UpdateSpecialHourRequest.md)
  - [UpdateSpecialHourResponse](docs/UpdateSpecialHourResponse.md)
+ - [VirtualContact](docs/VirtualContact.md)
  - [Voucher](docs/Voucher.md)
  - [VoucherDescriptionInfo](docs/VoucherDescriptionInfo.md)
  - [WorkingHour](docs/WorkingHour.md)

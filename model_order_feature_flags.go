@@ -27,7 +27,7 @@ type OrderFeatureFlags struct {
 	OrderAcceptedType string `json:"orderAcceptedType"`
 	// The type of order. 
 	OrderType string `json:"orderType"`
-	// A boolean value that indicates if the order is edited. 
+	// A boolean value that indicates if the order is edited or recalculated. It does not necessarily mean the order was edited by the merchant. The changes could have been made by Grab, the Merchant, or the Customer. 
 	IsMexEditOrder *bool `json:"isMexEditOrder,omitempty"`
 	AdditionalProperties map[string]interface{}
 }

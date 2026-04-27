@@ -29,7 +29,7 @@ type ModifierGroup struct {
 	Name string `json:"name"`
 	// Translation of the modifier group name. Only support up to 1 translated language. Refer [Menu Translation](#section/Menu-Translation).
 	NameTranslation *map[string]string `json:"nameTranslation,omitempty"`
-	// The status for the modifier group.   > The item may be marked as `\"UNAVAILABLE\"` if no available modifier to be selected within the required modifier group where `\"selectionRangeMin\": 1`. 
+	// The status for the modifier group.   Note: `HIDE` will only update the modifier group to unavailable, remove the modifier group from the menu if you want to hide it entirely. > The item may be marked as `\"UNAVAILABLE\"` if no available modifier to be selected within the required modifier group where `\"selectionRangeMin\": 1`. 
 	AvailableStatus string `json:"availableStatus"`
 	// The minimum quantity of the modifiers to be selected. Refer to FAQs for more details about [selection range](#section/Menu/What-does-the-selection-range-do).
 	SelectionRangeMin *int32 `json:"selectionRangeMin,omitempty"`

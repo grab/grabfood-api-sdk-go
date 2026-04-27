@@ -9,6 +9,20 @@ servers:
 - description: Production Environment
   url: https://partner-api.grab.com/grabfood
 tags:
+- name: scopes
+  x-displayName: Scopes
+- name: api-env
+  x-displayName: API Environments
+- name: api-endpoints
+  x-displayName: API Endpoints
+- name: api-best-practices
+  x-displayName: |
+    Best Practices: API
+- name: integration-requirements
+  x-displayName: Integration Requirements
+- name: http-resp-codes
+  x-displayName: |
+    HTTP response codes
 - name: self-serve-activation-intro
   x-displayName: Introduction
 - name: create-self-serve-journey
@@ -95,10 +109,6 @@ tags:
   x-displayName: Update Store Dine-in Hours
 - name: update-store-special-hour
   x-displayName: Update Store Special Hours
-- name: get-dinein-voucher
-  x-displayName: Get Dine In Voucher
-- name: redeem-dinein-voucher
-  x-displayName: Redeem Dine In Voucher
 - name: partner-loyalty-native
   x-displayName: Partner Loyalty Program (Native)
 - name: partner-loyalty-webview
@@ -119,6 +129,34 @@ tags:
   x-displayName: Get membership detail
 - name: get-reward-native
   x-displayName: Calculate reward points
+- name: activation-best-practices
+  x-displayName: |
+    Best Practices: Activation
+- name: menu-best-practices
+  x-displayName: |
+    Best Practices: Menu
+- name: order-best-practices
+  x-displayName: |
+    Best Practices: Order
+- name: campaign-best-practices
+  x-displayName: |
+    Best Practices: Campaign
+- name: pay-bill
+  x-displayName: Pay Bill
+- name: scan-to-order
+  x-displayName: Scan To Order
+- name: scan-to-order-best-practices
+  x-displayName: |
+    Best Practices: Scan To Order
+- name: loyalty-webview-best-practices
+  x-displayName: |
+    Best Practices: Loyalty (Webview)
+- name: sync-pos-order
+  x-displayName: Sync POS Order
+- name: refund-order
+  x-displayName: Refund Order
+- name: generate-sto-qr-code
+  x-displayName: Generate STO QR Code
 paths:
   /partner/v1/self-serve/activation:
     post:
@@ -996,7 +1034,8 @@ paths:
           -H 'Authorization: Bearer <BEARER_TOKEN_HERE>'
   /partner/v1/orders/{orderID}:
     put:
-      operationId: edit-order
+      deprecated: true
+      operationId: edit-order-v1
       parameters:
       - description: The content type of the request body. You must use `application/json`
           for this header as GrabFood API currently does not support other formats.
@@ -1033,25 +1072,91 @@ paths:
       responses:
         "204":
           description: Successful. No content returned.
-        "4XX":
+        "400":
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
-          description: "invalid_argument Fail example with code and reason.\n| Code\
-            \ | Reason | Message |\n| ------| ------| ------ |\n| 400 | invalid_argument\
-            \ | nothing changed |\n| 400 | invalid_argument | can't remove all items\
-            \ |\n| 404 | not_found | order detail abnormal |\n| 403 | forbidden |\
-            \ not editable |\n| 400 | invalid_argument | recalculate failed |\n| 400\t\
-            | invalid_argument|\tsubmit edit failed |\n| 404\t| not_found\t| get merchant\
-            \ failed |\n| 400\t| invalid_argument | exceed basket limit |\n| 400\t\
-            | invalid_argument | exceed price increase limit |\n| 400\t| invalid_argument\
-            \ | negative weight |\n| 400\t| invalid_argument | parameters must include\
-            \ all items |\n| 400\t| invalid_argument | fraud check error |\n| 400\
-            \  | invalid_argument | externalItemID not supported for this status |\n\
-            | 400 | invalid_argument | externalItemID inactive or out of selling time\
-            \ |\n| 400 | invalid_argument | added item invalid |\n"
-      summary: Edit Order
+          description: "invalid_argument\n| Code | Reason           | Message    \
+            \                                | Description                       \
+            \                                                                    \
+            \    | \n| ---- | ---------------- | ------------------------------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 400  | invalid_argument | nothing changed                    \
+            \        | The items struct is empty                                 \
+            \                                               |\n| 400  | invalid_argument\
+            \ | can't remove all items                     | we don't allow clean\
+            \ all the items                                                      \
+            \                |\n| 400  | invalid_argument | externalItemID not supported\
+            \ for this status | externalItemID not supported for this status     \
+            \                                                     |\n| 400  | invalid_argument\
+            \ | externalItemID only allowed for ADDED item status | externalItemID\
+            \ only allowed for ADDED item status                                 \
+            \                |\n| 400  | invalid_argument | invalid price, price can't\
+            \ be negative     | DepositAmountInMin is negative, OfflinePOSDiscountInMin\
+            \ is negative                                     |\n| 400  | invalid_argument\
+            \ | params must include all items              | params must include all\
+            \ items in the order                                                 \
+            \             |\n| 400  | invalid_argument | exceed basket limit     \
+            \                   | Total price exceed basket limit                \
+            \                                                          |\n| 400  |\
+            \ invalid_argument | exceed max price amount limit              | Total\
+            \ price exceed limit:<br/>• SG: S$1000<br/>• ID: Rp10,000,000<br/>• PH:\
+            \ ₱15,000<br/>• VN: ₫15,000,000<br/>• TH: ฿300,000<br/>• MY: RM1,500 |\n\
+            | 400  | invalid_argument | recalculate failed                       \
+            \  | recalculate failed                                              \
+            \                                         |\n| 400  | invalid_argument\
+            \ | submit edit failed                         | submit edit failed  \
+            \                                                                    \
+            \                 |\n| 400  | invalid_argument | exceed price increase\
+            \ limit                | exceed price increase limit                 \
+            \                                                             |\n| 400\
+            \  | invalid_argument | negative weight                            | negative\
+            \ weight                                                             \
+            \                             |\n| 400  | invalid_argument | fraud check\
+            \ error                          | fraud check error                 \
+            \                                                                    \
+            \   |\n| 400  | invalid_argument | externalItemID inactive or out of selling\
+            \ time | externalItemID inactive or out of selling time              \
+            \                                        |\n| 400  | invalid_argument\
+            \ | added item invalid                         | added item invalid  \
+            \                                                                    \
+            \                 |\n"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "forbidden\n| Code | Reason    | Message      | Description\
+            \                                                                    \
+            \                           | \n| ---- | --------- | ------------ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 403  | forbidden | not editable | not editable               \
+            \                                                                    \
+            \           |\n"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "not_found\n| Code | Reason    | Message              | Description\
+            \                                                                    \
+            \                           | \n| ---- | --------- | --------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 404  | not_found | not found order      | The orderID is not found\
+            \ grab status.                                                       \
+            \            |\n| 404  | not_found | invalid order        | The order\
+            \ status is wrong for edit action.                                   \
+            \                           |\n| 404  | not_found | not found item   \
+            \    | The itemID doesn't match with isExternalItemID and can't be found\
+            \ from grab system.                     |\n| 404  | not_found | Invalid\
+            \ item status  | The item status isn't correct. Eg, there is no item in\
+            \ the order but want to delete it.                |\n| 404  | not_found\
+            \ | order detail abnormal | order detail abnormal                    \
+            \                                                               |\n| 404\
+            \  | not_found | get merchant failed  | get merchant failed          \
+            \                                                                    \
+            \        |\n"
+      summary: Edit Order V1
       tags:
       - edit-order
       x-codeSamples:
@@ -1059,6 +1164,173 @@ paths:
         label: CLI
         source: |
           curl --location --request PUT 'https://partner-api.grab.com/grabfood/partner/v1/orders/91725890-C25KME4ZVP2FLX' \
+          --header 'Content-Type: application/json' \
+          --header 'Authorization: Bearer <BEARER_TOKEN_HERE>'
+          --data-raw '{
+            "orderID":"91725890-C25KME4ZVP2FLX",
+            "items":[
+              {
+                "itemID":"IDGFSTI000004qy1490868132306763533#0",
+                "status":"DELETED",
+                "quantity": 3,
+                "isExternalItemID": false
+              },
+              {
+                "itemID":"IDGFSTI000004qy1490868121450639138#0",
+                "status":"UPDATED",
+                "quantity": 2,
+                "isExternalItemID": false
+              },
+              {
+                "itemID":"Burger_2",
+                "status":"ADDED",
+                "quantity": 3,
+                "isExternalItemID": true,
+                "modifiers": [
+                  {
+                    "id": "MOD_A",
+                    "quantity": 1
+                  }
+                ]
+              }
+            ],
+            "onlyRecalculate": false
+          }'
+  /partner/v2/orders/{orderID}:
+    put:
+      operationId: edit-order-v2
+      parameters:
+      - description: The content type of the request body. You must use `application/json`
+          for this header as GrabFood API currently does not support other formats.
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          example: application/json
+          type: string
+        style: simple
+      - description: Specify the generated authorization token of the bearer type.
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          example: Bearer <ACCESS_TOKEN_HERE>
+          type: string
+        style: simple
+      - explode: false
+        in: path
+        name: orderID
+        required: true
+        schema:
+          $ref: '#/components/schemas/orderID'
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EditOrderRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditOrderV2Response'
+          description: The API request is successfully processed.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "invalid_argument\n| Code | Reason           | Message    \
+            \                                | Description                       \
+            \                                                                    \
+            \    | \n| ---- | ---------------- | ------------------------------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 400  | invalid_argument | nothing changed                    \
+            \        | The items struct is empty                                 \
+            \                                               |\n| 400  | invalid_argument\
+            \ | can't remove all items                     | we don't allow clean\
+            \ all the items                                                      \
+            \                |\n| 400  | invalid_argument | externalItemID not supported\
+            \ for this status | externalItemID not supported for this status     \
+            \                                                     |\n| 400  | invalid_argument\
+            \ | externalItemID only allowed for ADDED item status | externalItemID\
+            \ only allowed for ADDED item status                                 \
+            \                |\n| 400  | invalid_argument | invalid price, price can't\
+            \ be negative     | DepositAmountInMin is negative, OfflinePOSDiscountInMin\
+            \ is negative                                     |\n| 400  | invalid_argument\
+            \ | params must include all items              | params must include all\
+            \ items in the order                                                 \
+            \             |\n| 400  | invalid_argument | exceed basket limit     \
+            \                   | Total price exceed basket limit                \
+            \                                                          |\n| 400  |\
+            \ invalid_argument | exceed max price amount limit              | Total\
+            \ price exceed limit:<br/>• SG: S$1000<br/>• ID: Rp10,000,000<br/>• PH:\
+            \ ₱15,000<br/>• VN: ₫15,000,000<br/>• TH: ฿300,000<br/>• MY: RM1,500 |\n\
+            | 400  | invalid_argument | recalculate failed                       \
+            \  | recalculate failed                                              \
+            \                                         |\n| 400  | invalid_argument\
+            \ | submit edit failed                         | submit edit failed  \
+            \                                                                    \
+            \                 |\n| 400  | invalid_argument | exceed price increase\
+            \ limit                | exceed price increase limit                 \
+            \                                                             |\n| 400\
+            \  | invalid_argument | negative weight                            | negative\
+            \ weight                                                             \
+            \                             |\n| 400  | invalid_argument | fraud check\
+            \ error                          | fraud check error                 \
+            \                                                                    \
+            \   |\n| 400  | invalid_argument | externalItemID inactive or out of selling\
+            \ time | externalItemID inactive or out of selling time              \
+            \                                        |\n| 400  | invalid_argument\
+            \ | added item invalid                         | added item invalid  \
+            \                                                                    \
+            \                 |\n"
+        "403":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "forbidden\n| Code | Reason    | Message      | Description\
+            \                                                                    \
+            \                           | \n| ---- | --------- | ------------ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 403  | forbidden | not editable | not editable               \
+            \                                                                    \
+            \           |\n"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "not_found\n| Code | Reason    | Message              | Description\
+            \                                                                    \
+            \                           | \n| ---- | --------- | --------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 404  | not_found | not found order      | The orderID is not found\
+            \ grab status.                                                       \
+            \            |\n| 404  | not_found | invalid order        | The order\
+            \ status is wrong for edit action.                                   \
+            \                           |\n| 404  | not_found | not found item   \
+            \    | The itemID doesn't match with isExternalItemID and can't be found\
+            \ from grab system.                     |\n| 404  | not_found | Invalid\
+            \ item status  | The item status isn't correct. Eg, there is no item in\
+            \ the order but want to delete it.                |\n| 404  | not_found\
+            \ | order detail abnormal | order detail abnormal                    \
+            \                                                               |\n| 404\
+            \  | not_found | get merchant failed  | get merchant failed          \
+            \                                                                    \
+            \        |\n"
+      summary: Edit Order V2
+      tags:
+      - edit-order
+      x-codeSamples:
+      - lang: cURL
+        label: CLI
+        source: |
+          curl --location --request PUT 'https://partner-api.grab.com/grabfood/partner/v2/orders/91725890-C25KME4ZVP2FLX' \
           --header 'Content-Type: application/json' \
           --header 'Authorization: Bearer <BEARER_TOKEN_HERE>'
           --data-raw '{
@@ -1786,6 +2058,394 @@ paths:
               "certificateID": "PPD%23-lQi823X7Te-MCXUW1ynhA7PEpXjeml2xqB2KTIvNdXzu3M_R8mLtA==",
               "merchantID": "1-C3VEJY6CMEEGUE"
           }'
+  /partner/v1/pos/order:
+    post:
+      operationId: sync-pos-order
+      parameters:
+      - description: Specify the generated authorization token of the bearer type.
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          example: Bearer <ACCESS_TOKEN_HERE>
+          type: string
+        style: simple
+      - description: The content type of the request body. You must use `application/json`
+          for this header as GrabFood API currently does not support other formats.
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          example: application/json
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SyncPOSOrderRequest'
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SyncPOSOrderResponse'
+          description: The API request is successfully processed.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "invalid_argument\n| Code | Reason           | Message    \
+            \                                | Description                       \
+            \                                                                    \
+            \    | \n| ---- | ---------------- | ------------------------------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 400  | invalid_argument | misconfiguration for oauth partnerID\
+            \      | oauth partnerID is matched with the one in grab system      \
+            \                                           |\n| 400  | invalid_argument\
+            \ | invalid request                            | The request body is empty\
+            \                                                                    \
+            \           |\n| 400  | invalid_argument | invalid order             \
+            \                 | The order is wrong. Please check:<br/>• order struct\
+            \ is empty<br/>• orderID is not found in grab system          |\n| 400\
+            \  | invalid_argument | invalid currency                           | Please\
+            \ check: The currency struct is empty                                \
+            \                             |\n| 400  | invalid_argument | invalid action\
+            \                             | The action is wrong                  \
+            \                                                                   |\n\
+            | 400  | invalid_argument | merchantID is required                   \
+            \  | No merchantID in the request                                    \
+            \                                        |\n| 400  | invalid_argument\
+            \ | failed to get store info                   | The merchant is not found\
+            \ in the grab system                                                 \
+            \          |\n| 400  | invalid_argument | invalid merchant           \
+            \                | The merchant is wrong. Please check:<br/>• The merchant\
+            \ is not found in the grab system<br/>• This order not belong to this\
+            \ merchant |\n| 400  | invalid_argument | invalid order state        \
+            \                | Invalid order state to trigger complete           \
+            \                                                     |\n| 400  | invalid_argument\
+            \ | order already completed                    | order already completed,\
+            \ no further action needed                                           \
+            \           |\n| 400  | invalid_argument | invalid pos orderID       \
+            \                 | The partnerOrderID is empty                      \
+            \                                                       |\n| 400  | invalid_argument\
+            \ | invalid items                              | The items size is empty,\
+            \ invalid item value, missing required fields. Please check:<br/>• For\
+            \ POS synced order, the item name is empty<br/>• Both itemID and grabItemID\
+            \ is empty<br/>• Item quantity is zero<br/>• Item quantity is negative\
+            \ |\n| 400  | invalid_argument | Invalid item price                  \
+            \       | Please check:<br/>• The item price is negative<br/>• The item\
+            \ tax is negative                                     |\n| 400  | invalid_argument\
+            \ | invalid modifiers                          | Please check:<br/>• Modifier\
+            \ ID is empty<br/>• Modifier name is empty<br/>• Modifier quantity is\
+            \ zero<br/>• Modifier quantity is negative |\n| 400  | invalid_argument\
+            \ | invalid modifier price                     | Please check:<br/>• Modifier\
+            \ price is negative<br/>• Modifier tax is negative                   \
+            \                  |\n| 400  | invalid_argument | invalid price      \
+            \                        | The price-related info is wrong. Please check:<br/>•\
+            \ price struct is empty<br/>• total = 0<br/>• eaterPayment = 0    |\n\
+            | 400  | invalid_argument | invalid price, price can't be negative   \
+            \  | Please check:<br/>• eaterPayment is negative<br/>• Subtotal is negative<br/>•\
+            \ Tax is negative<br/>• depositAmountInMin is negative<br/>• merchantChargeFeeInMin\
+            \ is negative<br/>• OfflinePosDiscountInMin is negative |\n| 400  | invalid_argument\
+            \ | invalid price value, can't match with calculation | Subtotal + merchantChargeFeeInMin\
+            \ - OfflinePosDiscountInMin - depositAmountInMin Is NOT equal to eaterPayment\
+            \ |\n| 400  | invalid_argument | invalid exceed max price            \
+            \       | eaterPayment exceed limit:<br/>• SG: S$1000<br/>• ID: Rp10,000,000<br/>•\
+            \ PH: ₱15,000<br/>• VN: ₫15,000,000<br/>• TH: ฿300,000<br/>• MY: RM1,500\
+            \ |\n| 400  | invalid_argument | invalid dine in info                \
+            \       | dineInInfo is empty                                        \
+            \                                             |\n| 400  | invalid_argument\
+            \ | invalid eater count                        | Please check:<br/>• eater\
+            \ count is negative<br/>• eater count is zero<br/>• eater count > 100\
+            \                         |\n| 400  | invalid_argument | invalid table\
+            \ id                           | tableID length > 100                \
+            \                                                                    |\n\
+            | 400  | invalid_argument | invalid too many payments                \
+            \  | Total payments cannot above than 5                              \
+            \                                        |\n| 400  | invalid_argument\
+            \ | invalid payment method name                | Please check:<br/>• Payment\
+            \ method is empty<br/>• Payment method length > 20                   \
+            \                   |\n| 400  | invalid_argument | invalid payment method\
+            \ amount              | Payment amount is negative                   \
+            \                                                           |\n"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "not_found\n| Code | Reason      | Message                \
+            \      | Description                                                 \
+            \                                    | \n| -----| ----------- | ----------------------------\
+            \ | -----------------------------------------------------------------------------------------------\
+            \ | \n| 404  | not_found   | failed to get store info     | The store\
+            \ is not found for the specified merchantID.                         \
+            \                   |\n"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "internal\n| Code | Reason      | Message                 \
+            \     | Description                                                  \
+            \                                   | \n| -----| ----------- | ----------------------------\
+            \ | -----------------------------------------------------------------------------------------------\
+            \ | \n| 500  | internal    | sync pos order failed        | sync pos order\
+            \ failed, please try again later.                                    \
+            \                  |\n"
+      summary: Sync POS order
+      tags:
+      - sync-pos-order
+      x-codeSamples:
+      - lang: cURL
+        label: CLI
+        source: |
+          curl -X POST 'https://partner-api.grab.com/grabfood/partner/v1/pos/order' \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer <BEARER_TOKEN_HERE>' \
+          -d '{
+                "action": "BILL_GENERATED",
+                "order": {
+                  "orderID": "123-CYNKLPCVRN5",
+                  "partnerOrderID": "partner-order-id",
+                  "merchantID": "1-CYNGRUNGSBCCC",
+                  "partnerMerchantID": "Partner-ABECU",
+                  "orderTime": "2019-05-24T05:06:00Z",
+                  "orderState": "COMPLETED",
+                  "currency": {
+                    "code": "SGD",
+                    "symbol": "S$",
+                    "exponent": 2
+                  },
+                  "items": [
+                    {
+                      "id": "item-1",
+                      "grabItemID": "IDGFSTI000004qy1490868132306763533#0",
+                      "quantity": 1,
+                      "price": 2750,
+                      "tax": 250,
+                      "modifiers": [
+                        {
+                          "id": "modifier-1",
+                          "price": 175,
+                          "tax": 50,
+                          "quantity": 1
+                        }
+                      ]
+                    },
+                    {
+                      "id": "item-2",
+                      "grabItemID": "IDGFSTI000004qy149ewes32312421412123#0",
+                      "quantity": 1,
+                      "price": 1100,
+                      "tax": 100,
+                      "modifiers": [
+                        {
+                          "id": "modifier-2",
+                          "price": 200,
+                          "tax": 50,
+                          "quantity": 1
+                        }
+                      ]
+                    }
+                  ],
+                  "price": {
+                    "subtotal": 3850,
+                    "tax": 300,
+                    "merchantChargeFeeInMin": 100,
+                    "depositAmountInMin": 200,
+                    "offlinePOSDiscountInMin": 550,
+                    "eaterPayment": 3200
+                  },
+                  "payments": [
+                    {
+                      "method": "Visa",
+                      "fundingType": "credit",
+                      "amountInMin": 1000
+                    }
+                  ],
+                  "dineIn": {
+                    "tableID": "1",
+                    "dinerCount": 2
+                  }
+                }
+            }'
+  /partner/v1/dinein/sto/qrcode:
+    get:
+      operationId: generate-sto-qr-code
+      parameters:
+      - description: Specify the generated authorization token of the bearer type.
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          example: Bearer <ACCESS_TOKEN_HERE>
+          type: string
+        style: simple
+      - description: The content type of the request body. You must use `application/json`
+          for this header as GrabFood API currently does not support other formats.
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          example: application/json
+          type: string
+        style: simple
+      - explode: true
+        in: query
+        name: merchantID
+        required: true
+        schema:
+          $ref: '#/components/schemas/merchantID'
+        style: form
+      - explode: true
+        in: query
+        name: qrType
+        required: true
+        schema:
+          $ref: '#/components/schemas/qrType'
+        style: form
+      - explode: true
+        in: query
+        name: tableNumber
+        required: true
+        schema:
+          $ref: '#/components/schemas/tableNumber'
+        style: form
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GenerateSTOQRCodeResponse'
+          description: The API request is successfully processed.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "invalid_argument\n| Code | Reason           | Message    \
+            \                                | Description                       \
+            \                                                                    \
+            \    | \n| ---- | ---------------- | ------------------------------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 400  | invalid_argument | not enabled                        \
+            \        | The generate STO QR code feature is not enabled for the merchant,\
+            \ please reach out to the integration manager    |\n"
+        "404":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "not_found\n| Code | Reason      | Message                \
+            \      | Description                                                 \
+            \                                    | \n| -----| ----------- | ----------------------------\
+            \ | -----------------------------------------------------------------------------------------------\
+            \ | \n| 404  | not_found   | failed to get store info     | The store\
+            \ is not found for the specified merchantID.                         \
+            \                   |\n"
+        "500":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "internal\n| Code | Reason      | Message                 \
+            \     | Description                                                  \
+            \                                   | \n| -----| ----------- | ----------------------------\
+            \ | -----------------------------------------------------------------------------------------------\
+            \ | \n| 500  | internal    | generate QR failed        | generate QR failed,\
+            \ please try again later.                                            \
+            \          |\n"
+      summary: Generate STO QR code
+      tags:
+      - generate-sto-qr-code
+      x-codeSamples:
+      - lang: cURL
+        label: CLI
+        source: |
+          curl -X POST 'https://partner-api.grab.com/grabfood/partner/v1/pos/order' \
+          -H 'Content-Type: application/json' \
+          -H 'Authorization: Bearer <BEARER_TOKEN_HERE>' \
+          -d '{
+                "merchantID": "1-CYNGRUNGSBCCC",
+                "qrType": "dynamic",
+                "tableNumber": "B06"
+            }'
+  /partner/v1/orders/refund:
+    post:
+      operationId: refund-order
+      parameters:
+      - description: Specify the generated authorization token of the bearer type.
+        explode: false
+        in: header
+        name: Authorization
+        required: true
+        schema:
+          example: Bearer <ACCESS_TOKEN_HERE>
+          type: string
+        style: simple
+      - description: The content type of the request body. You must use `application/json`
+          for this header as GrabFood API currently does not support other formats.
+        explode: false
+        in: header
+        name: Content-Type
+        required: true
+        schema:
+          example: application/json
+          type: string
+        style: simple
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefundOrderRequest'
+        required: true
+      responses:
+        "204":
+          description: Success. No content returned.
+        "400":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: "invalid_argument\n| Code | Reason           | Message    \
+            \                                | Description                       \
+            \                                                                    \
+            \    | \n| ---- | ---------------- | ------------------------------------------\
+            \ | ---------------------------------------------------------------------------------------------------------\
+            \ | \n| 400  | invalid_argument | INVALID_ORDER                      \
+            \        | The orderID is not found in grab, or the order is not a ScanToOrder\
+            \ or offline POS order               |\n| 400  | invalid_argument | ORDER_ALREADY_REFUND\
+            \                       | The order already been refunded            \
+            \                                                              |\n| 400\
+            \  | invalid_argument | ORDER_WRONG_STATUS_FOR_REFUND              | The\
+            \ order is not in COMPLETED status, can't be refunded                \
+            \                                 |\n| 400  | invalid_argument | REACH_DAILY_THROTTLE\
+            \                       | Reached daily refund limit                 \
+            \                                                              |\n| 400\
+            \  | invalid_argument | TIME_OUT_REFUND_PERIOD                     | Exceed\
+            \ the refund time window                                             \
+            \                               |\n"
+        "404":
+          description: Not Found. Order doesn't exist.
+        "500":
+          description: Internal Server Error. Server encountered an unexpected error
+            that prevented it from serving the API request.
+      summary: Refund Order
+      tags:
+      - refund-order
+      x-codeSamples:
+      - lang: cURL
+        label: CLI
+        source: "curl -X POST 'https://partner-api.grab.com/grabfood/partner/v1/pos/order'\
+          \ \\\n-H 'Content-Type: application/json' \\\n-H 'Authorization: Bearer\
+          \ <BEARER_TOKEN_HERE>' \\\n-d '{\n      \n  }'\n"
   /partner/v1/membership/notify:
     post:
       operationId: notify-membership-webview
@@ -2035,8 +2695,7 @@ components:
           - FAILED
           type: string
         errors:
-          description: A string array of errors that occurred during processing. This
-            array is empty if the status is not `FAILED`.
+          description: A string array of errors that occurred during processing.
           items:
             type: string
             example: null
@@ -2045,7 +2704,7 @@ components:
       type: object
     SubmitOrderRequest:
       description: |
-        A JSON object containing the order information.
+        A JSON object containing the order information. This is only applicable for STO order in Push Order State Webhook
       example:
         scheduledTime: 2019-05-24T08:26:00Z
         receiver:
@@ -2059,11 +2718,23 @@ components:
             unitNumber: 3-45
             deliveryInstruction: turn left in 2 floor.
             poiID: poiID
+          virtualContact:
+            expiredAt: 2025-03-14T12:35:00Z
+            phoneNumber: "+6591234567"
+            PIN: "1234"
+            status: ACTIVE
           name: Prashanth
           phones: "60122234704"
         orderID: 123-CYNKLPCVRN5
         partnerMerchantID: Partner-ABECU
         cutlery: true
+        payments:
+        - method: visa
+          fundingType: credit
+          amountInMin: 100
+        - method: visa
+          fundingType: credit
+          amountInMin: 100
         completeTime: 2019-05-24T05:26:00Z
         membershipID: 12345678Z
         paymentType: CASH
@@ -2106,11 +2777,39 @@ components:
           campaignNameForMex: DEAL_20%_BURGER_OCT
           usageCount: 1
           mexFundedRatio: 100
+        discounts:
+        - code: GV-RRR32DS
+          level: order
+          mexFundedAmountInMin: 50
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: $30 order level voucher
+          deductAmountInMin: 200
+          id: "8937388127"
+          type: DineOutVoucher
+        - code: GV-RRR32DS
+          level: order
+          mexFundedAmountInMin: 50
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: $30 order level voucher
+          deductAmountInMin: 200
+          id: "8937388127"
+          type: DineOutVoucher
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          merchantEarning:
+            revenue: 200
+            netEarning: 150
+            commission: 10
+            mexFundDiscount: 40
           smallOrderFee: 0
+          total: 2075
           deliveryFee: 400
           subtotal: 2550
+          serviceChargeFee: 0
           merchantChargeFee: 0
           grabFundPromo: 300
           basketPromo: 775
@@ -2128,7 +2827,7 @@ components:
           exponent: 2
         items:
         - quantity: 1
-          grabItemID: IDGFSTI000004qy1490868132306763533
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
           tax: 144
           id: item-1
@@ -2148,7 +2847,7 @@ components:
             replacementGrabItemID: IDGFSTI000004qy1490868132303452210
             title: Replace item
         - quantity: 1
-          grabItemID: IDGFSTI000004qy1490868132306763533
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
           tax: 144
           id: item-1
@@ -2292,6 +2991,22 @@ components:
             program partners. Empty if not applicable.
           example: 12345678Z
           type: string
+        discounts:
+          description: |
+            The discounts that are applicable for the paybill order in dineout STO case. `null` when there is no discount applied. This is only applicable for STO order
+          items:
+            $ref: '#/components/schemas/grabDiscount_1'
+          nullable: true
+          title: discounts
+          type: array
+        payments:
+          description: An array of payment objects. `null` when there is no payment
+            info from pos. This is only applicable for STO order
+          items:
+            $ref: '#/components/schemas/payment'
+          nullable: true
+          title: payments
+          type: array
       required:
       - currency
       - cutlery
@@ -2334,6 +3049,9 @@ components:
           - DRIVER_ARRIVED
           - COLLECTED
           - DELIVERED
+          - BILL_PAID
+          - COMPLETED
+          - REFUNDED
           - FAILED
           - CANCELLED
           example: CANCELLED
@@ -2355,6 +3073,8 @@ components:
             May be system status or human entered message.
           example: We're too busy right now.
           type: string
+        order:
+          $ref: '#/components/schemas/order'
       required:
       - merchantID
       - orderID
@@ -3077,7 +3797,7 @@ components:
           type: string
         maxStock:
           description: |
-            Available stocks under inventory for this item. Auto reduce when there is order placed for this item.
+            Available stocks under inventory for this item. Auto reduce when there is order placed for this item. The value **must not exceed** `9999999`.
 
             Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is "UNAVAILABLE". Item will be set to "AVAILABLE" if `maxStock` > 0.
           example: 10
@@ -3648,11 +4368,23 @@ components:
               unitNumber: 3-45
               deliveryInstruction: turn left in 2 floor.
               poiID: poiID
+            virtualContact:
+              expiredAt: 2025-03-14T12:35:00Z
+              phoneNumber: "+6591234567"
+              PIN: "1234"
+              status: ACTIVE
             name: Prashanth
             phones: "60122234704"
           orderID: 123-CYNKLPCVRN5
           partnerMerchantID: Partner-ABECU
           cutlery: true
+          payments:
+          - method: visa
+            fundingType: credit
+            amountInMin: 100
+          - method: visa
+            fundingType: credit
+            amountInMin: 100
           completeTime: 2019-05-24T05:26:00Z
           membershipID: 12345678Z
           paymentType: CASH
@@ -3695,11 +4427,39 @@ components:
             campaignNameForMex: DEAL_20%_BURGER_OCT
             usageCount: 1
             mexFundedRatio: 100
+          discounts:
+          - code: GV-RRR32DS
+            level: order
+            mexFundedAmountInMin: 50
+            appliedItemIDs:
+            - item-1
+            - item-1
+            name: $30 order level voucher
+            deductAmountInMin: 200
+            id: "8937388127"
+            type: DineOutVoucher
+          - code: GV-RRR32DS
+            level: order
+            mexFundedAmountInMin: 50
+            appliedItemIDs:
+            - item-1
+            - item-1
+            name: $30 order level voucher
+            deductAmountInMin: 200
+            id: "8937388127"
+            type: DineOutVoucher
           merchantID: 1-CYNGRUNGSBCCC
           price:
+            merchantEarning:
+              revenue: 200
+              netEarning: 150
+              commission: 10
+              mexFundDiscount: 40
             smallOrderFee: 0
+            total: 2075
             deliveryFee: 400
             subtotal: 2550
+            serviceChargeFee: 0
             merchantChargeFee: 0
             grabFundPromo: 300
             basketPromo: 775
@@ -3717,7 +4477,7 @@ components:
             exponent: 2
           items:
           - quantity: 1
-            grabItemID: IDGFSTI000004qy1490868132306763533
+            grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
             tax: 144
             id: item-1
@@ -3737,7 +4497,7 @@ components:
               replacementGrabItemID: IDGFSTI000004qy1490868132303452210
               title: Replace item
           - quantity: 1
-            grabItemID: IDGFSTI000004qy1490868132306763533
+            grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
             tax: 144
             id: item-1
@@ -3792,11 +4552,23 @@ components:
               unitNumber: 3-45
               deliveryInstruction: turn left in 2 floor.
               poiID: poiID
+            virtualContact:
+              expiredAt: 2025-03-14T12:35:00Z
+              phoneNumber: "+6591234567"
+              PIN: "1234"
+              status: ACTIVE
             name: Prashanth
             phones: "60122234704"
           orderID: 123-CYNKLPCVRN5
           partnerMerchantID: Partner-ABECU
           cutlery: true
+          payments:
+          - method: visa
+            fundingType: credit
+            amountInMin: 100
+          - method: visa
+            fundingType: credit
+            amountInMin: 100
           completeTime: 2019-05-24T05:26:00Z
           membershipID: 12345678Z
           paymentType: CASH
@@ -3839,11 +4611,39 @@ components:
             campaignNameForMex: DEAL_20%_BURGER_OCT
             usageCount: 1
             mexFundedRatio: 100
+          discounts:
+          - code: GV-RRR32DS
+            level: order
+            mexFundedAmountInMin: 50
+            appliedItemIDs:
+            - item-1
+            - item-1
+            name: $30 order level voucher
+            deductAmountInMin: 200
+            id: "8937388127"
+            type: DineOutVoucher
+          - code: GV-RRR32DS
+            level: order
+            mexFundedAmountInMin: 50
+            appliedItemIDs:
+            - item-1
+            - item-1
+            name: $30 order level voucher
+            deductAmountInMin: 200
+            id: "8937388127"
+            type: DineOutVoucher
           merchantID: 1-CYNGRUNGSBCCC
           price:
+            merchantEarning:
+              revenue: 200
+              netEarning: 150
+              commission: 10
+              mexFundDiscount: 40
             smallOrderFee: 0
+            total: 2075
             deliveryFee: 400
             subtotal: 2550
+            serviceChargeFee: 0
             merchantChargeFee: 0
             grabFundPromo: 300
             basketPromo: 775
@@ -3861,7 +4661,7 @@ components:
             exponent: 2
           items:
           - quantity: 1
-            grabItemID: IDGFSTI000004qy1490868132306763533
+            grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
             tax: 144
             id: item-1
@@ -3881,7 +4681,7 @@ components:
               replacementGrabItemID: IDGFSTI000004qy1490868132303452210
               title: Replace item
           - quantity: 1
-            grabItemID: IDGFSTI000004qy1490868132306763533
+            grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
             tax: 144
             id: item-1
@@ -3945,17 +4745,29 @@ components:
       description: |
         Information about editing an existing order on GrabFood.
       example:
+        depositAmountInMin: 100
         onlyRecalculate: false
         orderID: 123-CYNKLPCVRN5
         items:
         - isExternalItemID: false
-          itemID: IDGFSTI000004qy1490868132306763533
+          itemID: IDGFSTI000004qy1490868132306763533#0
           quantity: 1
+          modifiers:
+          - quantity: 1
+            id: MOD_A
+          - quantity: 1
+            id: MOD_A
           status: UPDATED
         - isExternalItemID: false
-          itemID: IDGFSTI000004qy1490868132306763533
+          itemID: IDGFSTI000004qy1490868132306763533#0
           quantity: 1
+          modifiers:
+          - quantity: 1
+            id: MOD_A
+          - quantity: 1
+            id: MOD_A
           status: UPDATED
+        offlinePOSDiscountInMin: 200
       properties:
         orderID:
           description: "The order's ID that is returned from GrabFood. Refer to FAQs\
@@ -3974,10 +4786,310 @@ components:
             This parameter specifies whether to recalculate the edited order without submitting it. It is intended for testing purposes only. This parameter is set to false by default, which means the edited order will be recalculated and re-submitted to partners.
           example: false
           type: boolean
+        depositAmountInMin:
+          description: The deposit amount in minor unit in POS system. This is only
+            applicable for STO order
+          example: 100
+          format: int64
+          type: integer
+        offlinePOSDiscountInMin:
+          description: The POS side discount amount in minor unit. This is only applicable
+            for STO order
+          example: 200
+          format: int64
+          type: integer
       required:
       - items
       - orderID
       title: EditOrderRequest
+      type: object
+    EditOrderV2Response:
+      description: ""
+      example:
+        scheduledTime: 2019-05-24T08:26:00Z
+        receiver: "{}"
+        orderID: 123-CYNKLPCVRN5
+        partnerMerchantID: Partner-ABECU
+        cutlery: true
+        payments:
+        - payments
+        - payments
+        completeTime: 2019-05-24T05:26:00Z
+        membershipID: 12345678Z
+        paymentType: CASH
+        orderState: DELIVERED
+        shortOrderNumber: GF-123
+        orderTime: 2019-05-24T05:06:00Z
+        submitTime: 2019-05-24T05:16:00Z
+        campaigns:
+        - level: item
+          deductedAmount: 475
+          freeItem:
+            quantity: 1
+            price: 10
+            name: Free tote bag
+            id: item-2
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: 20% off Deal Of the day
+          deductedPart: basket_amount
+          id: id
+          type: percentage
+          campaignNameForMex: DEAL_20%_BURGER_OCT
+          usageCount: 1
+          mexFundedRatio: 100
+        - level: item
+          deductedAmount: 475
+          freeItem:
+            quantity: 1
+            price: 10
+            name: Free tote bag
+            id: item-2
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: 20% off Deal Of the day
+          deductedPart: basket_amount
+          id: id
+          type: percentage
+          campaignNameForMex: DEAL_20%_BURGER_OCT
+          usageCount: 1
+          mexFundedRatio: 100
+        discounts:
+        - code: GV-RRR32DS
+          level: order
+          mexFundedAmountInMin: 50
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: $30 order level voucher
+          deductAmountInMin: 200
+          id: "8937388127"
+          type: DineOutVoucher
+        - code: GV-RRR32DS
+          level: order
+          mexFundedAmountInMin: 50
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: $30 order level voucher
+          deductAmountInMin: 200
+          id: "8937388127"
+          type: DineOutVoucher
+        merchantID: 1-CYNGRUNGSBCCC
+        price:
+          merchantEarning:
+            revenue: 200
+            netEarning: 150
+            commission: 10
+            mexFundDiscount: 40
+          smallOrderFee: 0
+          total: 2075
+          deliveryFee: 400
+          subtotal: 2550
+          serviceChargeFee: 0
+          merchantChargeFee: 0
+          grabFundPromo: 300
+          basketPromo: 775
+          tax: 117
+          merchantFundPromo: 475
+          eaterPayment: 2175
+        orderReadyEstimation:
+          maxOrderReadyTime: 2019-05-24T05:16:00Z
+          newOrderReadyTime: 2019-05-24T05:26:00Z
+          estimatedOrderReadyTime: 2019-05-24T05:16:00Z
+          allowChange: true
+        currency:
+          symbol: S$
+          code: SGD
+          exponent: 2
+        items:
+        - quantity: 1
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
+          price: 2550
+          tax: 144
+          id: item-1
+          modifiers:
+          - quantity: 0
+            price: 175
+            tax: 10
+            id: modifier-1
+          - quantity: 0
+            price: 175
+            tax: 10
+            id: modifier-1
+          specifications: less sugar and chili
+          outOfStockInstruction:
+            replacementItemID: ITEM-2
+            instructionType: SPECIFIC_ITEM
+            replacementGrabItemID: IDGFSTI000004qy1490868132303452210
+            title: Replace item
+        - quantity: 1
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
+          price: 2550
+          tax: 144
+          id: item-1
+          modifiers:
+          - quantity: 0
+            price: 175
+            tax: 10
+            id: modifier-1
+          - quantity: 0
+            price: 175
+            tax: 10
+            id: modifier-1
+          specifications: less sugar and chili
+          outOfStockInstruction:
+            replacementItemID: ITEM-2
+            instructionType: SPECIFIC_ITEM
+            replacementGrabItemID: IDGFSTI000004qy1490868132303452210
+            title: Replace item
+        promos:
+        - promoAmountInMin: 300
+          code: promo_code
+          mexFundedAmount: 0
+          promoAmount: 3
+          name: Order now!
+          targetedPrice: 2550
+          description: $3 off for entire order!
+          mexFundedRatio: 0
+        - promoAmountInMin: 300
+          code: promo_code
+          mexFundedAmount: 0
+          promoAmount: 3
+          name: Order now!
+          targetedPrice: 2550
+          description: $3 off for entire order!
+          mexFundedRatio: 0
+        dineIn:
+          eaterCount: 2
+          tableID: "1"
+        featureFlags:
+          orderType: DeliveredByGrab
+          orderAcceptedType: AUTO
+          isMexEditOrder: false
+      properties:
+        orderID:
+          description: "The order's ID that is returned from GrabFood. Refer to FAQs\
+            \ for more details about [orderID and shortOrderNumber](#section/Order/What's-the-difference-between-orderID-and-shortOrderNumber)."
+          example: 123-CYNKLPCVRN5
+          title: orderID
+          type: string
+        shortOrderNumber:
+          description: "The GrabFood short order number. This is unique for each merchant\
+            \ per day. Refer to FAQs for more details about [orderID and shortOrderNumber](#section/Order/What's-the-difference-between-orderID-and-shortOrderNumber)."
+          example: GF-123
+          type: string
+        merchantID:
+          description: The merchant's ID that is in GrabFood's database.
+          example: 1-CYNGRUNGSBCCC
+          title: merchantID
+          type: string
+        partnerMerchantID:
+          description: The merchant's ID that is on the partner's database.
+          example: Partner-ABECU
+          title: partnerMerchantID
+          type: string
+        paymentType:
+          description: "The payment method used. Refer to FAQs for more details about\
+            \ [paymentType](#section/Order/Does-the-paymentType-affect-partners)."
+          enum:
+          - CASH
+          - CASHLESS
+          type: string
+        cutlery:
+          description: "The boolean value to indicate whether cutlery are needed or\
+            \ not. Refer to FAQs for more details about [cutlery](#section/Order/What-do-the-true-or-false-values-mean-for-cutlery)."
+          type: boolean
+        orderTime:
+          description: "The UTC time that a consumer places the order, based on ISO_8601/RFC3339."
+          example: 2019-05-24T05:06:00Z
+          type: string
+        submitTime:
+          description: "The order submit time, based on ISO_8601/RFC3339. `null` in\
+            \ EditOrder V2 response. Only present in the [List Orders](#tag/list-order)\
+            \ response."
+          example: 2019-05-24T05:16:00Z
+          format: date-time
+          type: string
+        completeTime:
+          description: "The order complete time, based on ISO_8601/RFC3339. `null`\
+            \ in EditOrder V2 response. Only present in the [List Orders](#tag/list-order)\
+            \ response."
+          example: 2019-05-24T05:26:00Z
+          format: date-time
+          type: string
+        scheduledTime:
+          description: "The order scheduled time, based on ISO_8601/RFC3339. Empty\
+            \ for non-scheduled orders."
+          example: 2019-05-24T08:26:00Z
+          type: string
+        orderState:
+          description: "The state of the order. Empty in EditOrder V2 response. Only\
+            \ present in the [List Orders](#tag/list-order) response. Refer to [Order\
+            \ States](#section/Order-states)."
+          example: DELIVERED
+          type: string
+        currency:
+          $ref: '#/components/schemas/currency'
+        featureFlags:
+          $ref: '#/components/schemas/orderFeatureFlags'
+        items:
+          description: 'The ordered items in an array of JSON Object. '
+          items:
+            $ref: '#/components/schemas/OrderItem'
+          title: orderItems
+          type: array
+        campaigns:
+          description: |
+            The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent.
+          items:
+            $ref: '#/components/schemas/OrderCampaign'
+          nullable: true
+          title: campaigns
+          type: array
+        promos:
+          description: An array of promotion objects. `null` when there is no promo
+            code applied. Only promotions that are funded by merchants will be sent.
+          items:
+            $ref: '#/components/schemas/OrderPromo'
+          nullable: true
+          title: promos
+          type: array
+        price:
+          $ref: '#/components/schemas/orderPrice'
+        dineIn:
+          $ref: '#/components/schemas/dineIn'
+        receiver:
+          description: "This field is set to `null` in the EditOrder V2 response.\
+            \ Refer to the [Submit Order](#tag/submit-order-webhook/operation/submit-order-webhook)\
+            \ payload for the complete receiver information."
+          type: object
+        orderReadyEstimation:
+          $ref: '#/components/schemas/orderReadyEstimation'
+        membershipID:
+          description: Membership ID for loyalty project. Only present for loyalty
+            program partners. Empty if not applicable.
+          example: 12345678Z
+          type: string
+        discounts:
+          description: |
+            The discounts that are applicable for the paybill order in dineout STO case. `null` when there is no discount applied. This is only applicable for STO order
+          items:
+            $ref: '#/components/schemas/grabDiscount_1'
+          nullable: true
+          title: discounts
+          type: array
+        payments:
+          description: "This field is set to `null` in the EditOrder V2 response.\
+            \ Refer to the [Submit Order](#tag/submit-order-webhook/operation/submit-order-webhook)\
+            \ payload for the complete payment details."
+          items:
+            description: TODO default missing array inner type to string
+            type: string
+          type: array
+      title: EditOrderV2Response
       type: object
     MarkOrderRequest:
       description: |
@@ -4544,6 +5656,7 @@ components:
         name:
           description: The campaign's name.
           example: $4 off with min $10 order for all users within weekday
+          maxLength: 256
           title: name
           type: string
         quotas:
@@ -4660,6 +5773,7 @@ components:
         name:
           description: The campaign's name.
           example: $4 off with min $10 order for all users within weekday
+          maxLength: 256
           title: name
           type: string
         quotas:
@@ -4815,6 +5929,159 @@ components:
           type: string
       title: RedeemDineInVoucherResponse
       type: object
+    SyncPOSOrderRequest:
+      description: The syncPOSOrder API allows POS to sync its order data with Grab
+        and generate a PayBill QR.
+      example:
+        action: BILL_GENERATED
+        order:
+          orderTime: 2019-05-24T05:06:00Z
+          orderID: 106351684-C7LYVB6WGBDUV2
+          partnerOrderID: POS-123
+          merchantID: 5-XVGDSSTR34D
+          partnerMerchantID: POS-SVCDGDTA
+          price:
+            depositAmountInMin: 5
+            subtotal: 0
+            tax: 6
+            offlinePOSDiscountInMin: 5
+            billRoundingInMin: 2
+            eaterPayment: 7
+            merchantChargeFeeInMin: 1
+          payments:
+          - method: visa
+            fundingType: credit
+            amountInMin: 100
+          - method: visa
+            fundingType: credit
+            amountInMin: 100
+          currency:
+            symbol: S$
+            code: SGD
+            exponent: 2
+          items:
+          - quantity: 1
+            grabItemID: IDGFSTI000004qy1490868132306763533#0
+            price: 2550
+            name: name
+            tax: 144
+            id: item-1
+            modifiers:
+            - quantity: 1
+              price: 2550
+              name: name
+              tax: 144
+              id: id
+            - quantity: 1
+              price: 2550
+              name: name
+              tax: 144
+              id: id
+          - quantity: 1
+            grabItemID: IDGFSTI000004qy1490868132306763533#0
+            price: 2550
+            name: name
+            tax: 144
+            id: item-1
+            modifiers:
+            - quantity: 1
+              price: 2550
+              name: name
+              tax: 144
+              id: id
+            - quantity: 1
+              price: 2550
+              name: name
+              tax: 144
+              id: id
+          dineIn:
+            eaterCount: 2
+            tableID: "1"
+          orderState: COMPLETED
+      properties:
+        action:
+          description: "This action indicates the target action POS wants to do, eg,\
+            \ BILL_GENERATED, COMPLETED."
+          enum:
+          - BILL_GENERATED
+          - COMPLETED
+          example: BILL_GENERATED
+          type: string
+        order:
+          $ref: '#/components/schemas/posOrder'
+      required:
+      - action
+      - order
+      title: SyncPOSOrderRequest
+      type: object
+    SyncPOSOrderResponse:
+      description: "The Sync POS Order response, include grab order ID and paybill\
+        \ QR deeplink"
+      example:
+        orderID: 4234234-GSDFGSS54323D
+        paybillQRCode: https://grab.com?merchantID=xxx
+      properties:
+        orderID:
+          description: The orderID in grab system.
+          example: 4234234-GSDFGSS54323D
+          type: string
+        paybillQRCode:
+          description: The paybill QR Code.
+          example: https://grab.com?merchantID=xxx
+          type: string
+      title: SyncPOSOrderResponse
+      type: object
+    qrType:
+      description: "This qrType that POS wants to generate, eg, dynamic / static."
+      example: dynamic
+      title: qrType
+      type: string
+    tableNumber:
+      description: This table number the eater seats.
+      example: "01"
+      title: tableNumber
+      type: string
+    GenerateSTOQRCodeResponse:
+      description: The STO QR deeplink response
+      example:
+        qrCode: https://grab.com?merchantID=xxx
+      properties:
+        qrCode:
+          description: The deeplink of scan to order QR.
+          example: https://grab.com?merchantID=xxx
+          type: string
+      title: GenerateSTOQRCodeResponse
+      type: object
+    RefundOrderRequest:
+      description: The API is to refund a STO order in dineout flow.
+      example:
+        isFullRefund: true
+        refundAmountInMin: 100
+        orderID: 4325453-C7A2G3AYGKK3KA
+        merchantID: 4-VREVTMTME24DS
+      properties:
+        orderID:
+          description: This order ID in grab system.
+          example: 4325453-C7A2G3AYGKK3KA
+          type: string
+        merchantID:
+          description: This merchant ID in grab system.
+          example: 4-VREVTMTME24DS
+          type: string
+        isFullRefund:
+          description: currently we only support fully refund.
+          example: true
+          type: boolean
+        refundAmountInMin:
+          description: The total amount the POS want to refund for STO order.
+          example: 100
+          format: int64
+          type: integer
+      required:
+      - merchantID
+      - orderID
+      title: RefundOrderRequest
+      type: object
     NotifyMembershipWebviewRequest:
       description: |
         This request submits membership registration request to partner.
@@ -4848,7 +6115,7 @@ components:
       type: object
     order:
       description: |
-        A JSON object containing the order information.
+        A JSON object containing the order information. This is only applicable for STO order in Push Order State Webhook
       example:
         scheduledTime: 2019-05-24T08:26:00Z
         receiver:
@@ -4862,11 +6129,23 @@ components:
             unitNumber: 3-45
             deliveryInstruction: turn left in 2 floor.
             poiID: poiID
+          virtualContact:
+            expiredAt: 2025-03-14T12:35:00Z
+            phoneNumber: "+6591234567"
+            PIN: "1234"
+            status: ACTIVE
           name: Prashanth
           phones: "60122234704"
         orderID: 123-CYNKLPCVRN5
         partnerMerchantID: Partner-ABECU
         cutlery: true
+        payments:
+        - method: visa
+          fundingType: credit
+          amountInMin: 100
+        - method: visa
+          fundingType: credit
+          amountInMin: 100
         completeTime: 2019-05-24T05:26:00Z
         membershipID: 12345678Z
         paymentType: CASH
@@ -4909,11 +6188,39 @@ components:
           campaignNameForMex: DEAL_20%_BURGER_OCT
           usageCount: 1
           mexFundedRatio: 100
+        discounts:
+        - code: GV-RRR32DS
+          level: order
+          mexFundedAmountInMin: 50
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: $30 order level voucher
+          deductAmountInMin: 200
+          id: "8937388127"
+          type: DineOutVoucher
+        - code: GV-RRR32DS
+          level: order
+          mexFundedAmountInMin: 50
+          appliedItemIDs:
+          - item-1
+          - item-1
+          name: $30 order level voucher
+          deductAmountInMin: 200
+          id: "8937388127"
+          type: DineOutVoucher
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          merchantEarning:
+            revenue: 200
+            netEarning: 150
+            commission: 10
+            mexFundDiscount: 40
           smallOrderFee: 0
+          total: 2075
           deliveryFee: 400
           subtotal: 2550
+          serviceChargeFee: 0
           merchantChargeFee: 0
           grabFundPromo: 300
           basketPromo: 775
@@ -4931,7 +6238,7 @@ components:
           exponent: 2
         items:
         - quantity: 1
-          grabItemID: IDGFSTI000004qy1490868132306763533
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
           tax: 144
           id: item-1
@@ -4951,7 +6258,7 @@ components:
             replacementGrabItemID: IDGFSTI000004qy1490868132303452210
             title: Replace item
         - quantity: 1
-          grabItemID: IDGFSTI000004qy1490868132306763533
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
           tax: 144
           id: item-1
@@ -5095,6 +6402,22 @@ components:
             program partners. Empty if not applicable.
           example: 12345678Z
           type: string
+        discounts:
+          description: |
+            The discounts that are applicable for the paybill order in dineout STO case. `null` when there is no discount applied. This is only applicable for STO order
+          items:
+            $ref: '#/components/schemas/grabDiscount_1'
+          nullable: true
+          title: discounts
+          type: array
+        payments:
+          description: An array of payment objects. `null` when there is no payment
+            info from pos. This is only applicable for STO order
+          items:
+            $ref: '#/components/schemas/payment'
+          nullable: true
+          title: payments
+          type: array
       required:
       - currency
       - cutlery
@@ -5393,6 +6716,295 @@ components:
             $ref: '#/components/schemas/MenuSyncFailCategory'
           type: array
       type: object
+    currency:
+      description: "A JSON object containing code, symbol, and exponent for a given\
+        \ currency. Refer to [Country and Currency](#section/Getting-started/Country-and-currency)."
+      example:
+        symbol: S$
+        code: SGD
+        exponent: 2
+      properties:
+        code:
+          description: |
+            The three-letter ISO currency code. This is the currency that is associated with the payment amount.
+          enum:
+          - IDR
+          - MYR
+          - PHP
+          - SGD
+          - THB
+          - VND
+          - KHR
+          - MMK
+          example: SGD
+          maxLength: 3
+          type: string
+        symbol:
+          description: |
+            The currency symbol.
+          enum:
+          - Rp
+          - RM
+          - ₱
+          - S$
+          - ฿
+          - ₫
+          - ៛
+          - K
+          - IDR
+          - MYR
+          - PHP
+          - SGD
+          - THB
+          - VND
+          - KHR
+          - MMK
+          example: S$
+          maxLength: 3
+          type: string
+        exponent:
+          description: |
+            The log base 10 of the number of times we have to multiply the major unit to get the minor unit. Should be 0 for VN and 2 for other countries (`SG`/`MY`/`ID`/`TH`/`PH`/`KH`/`MM`).
+          example: 2
+          type: integer
+      required:
+      - code
+      - exponent
+      - symbol
+      title: currency
+      type: object
+    orderFeatureFlags:
+      description: The featureFlag JSON object containing an order's feature related
+        information.
+      example:
+        orderType: DeliveredByGrab
+        orderAcceptedType: AUTO
+        isMexEditOrder: false
+      properties:
+        orderAcceptedType:
+          description: |
+            The acceptance type for the order. Refer to FAQs for more details about [orderAcceptedType](#section/Order/How-do-I-identify-if-a-particular-order-is-auto-or-manual-acceptance).
+          enum:
+          - AUTO
+          - MANUAL
+          type: string
+        orderType:
+          description: |
+            The type of order.
+          enum:
+          - TakeAway
+          - DeliveredByGrab
+          - DeliveredByRestaurant
+          - DineIn
+          - ScanToOrder
+          - TakeAwayOrder
+          - PosDineOutOrder
+          example: DeliveredByGrab
+          type: string
+        isMexEditOrder:
+          description: |
+            A boolean value that indicates if the order is edited or recalculated. It does not necessarily mean the order was edited by the merchant. The changes could have been made by Grab, the Merchant, or the Customer.
+          example: false
+          type: boolean
+      required:
+      - orderAcceptedType
+      - orderType
+      title: orderFeatureFlags
+      type: object
+    orderItems:
+      description: 'The ordered items in an array of JSON Object. '
+      items:
+        $ref: '#/components/schemas/OrderItem'
+      title: orderItems
+      type: array
+    orderCampaigns:
+      description: |
+        The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent.
+      items:
+        $ref: '#/components/schemas/OrderCampaign'
+      nullable: true
+      title: campaigns
+      type: array
+    promos:
+      description: An array of promotion objects. `null` when there is no promo code
+        applied. Only promotions that are funded by merchants will be sent.
+      items:
+        $ref: '#/components/schemas/OrderPromo'
+      nullable: true
+      title: promos
+      type: array
+    orderPrice:
+      description: A JSON object containing order's price in the minor unit format.
+      example:
+        merchantEarning:
+          revenue: 200
+          netEarning: 150
+          commission: 10
+          mexFundDiscount: 40
+        smallOrderFee: 0
+        total: 2075
+        deliveryFee: 400
+        subtotal: 2550
+        serviceChargeFee: 0
+        merchantChargeFee: 0
+        grabFundPromo: 300
+        basketPromo: 775
+        tax: 117
+        merchantFundPromo: 475
+        eaterPayment: 2175
+      properties:
+        subtotal:
+          description: |
+            Total item and modifier price (tax-inclusive) in the minor unit.
+            ```
+            subtotal = Sum of all (item price * quantity) | 2550*1=2550
+          example: 2550
+          format: int64
+          type: integer
+        tax:
+          description: |
+            GrabFood's tax in the minor unit. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+            ```
+            tax = (subtotal + merchantChargeFee - merchantFundPromo) * Tax / (1+Tax) | (2550-475)*0.06/1.06=117
+          example: 117
+          format: int64
+          type: integer
+        merchantChargeFee:
+          description: |
+            Any additional fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant. Reach out to your integration support team for the configuration.
+            Eg. Takeaway, packaging costs, dine-in charge.
+          example: 0
+          format: int64
+          type: integer
+        serviceChargeFee:
+          description: |
+            Additional service charge fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant. Reach out to your integration support team for the configuration.
+          example: 0
+          format: int64
+          type: integer
+        grabFundPromo:
+          description: "GrabFood's promo fund in the minor unit. Calculated based\
+            \ on funded ratio. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`.\
+            \ Otherwise, it will be set to `0`."
+          example: 300
+          format: int64
+          type: integer
+        merchantFundPromo:
+          description: The merchant's promo fund in the minor unit. Calculated based
+            on funded ratio.
+          example: 475
+          format: int64
+          type: integer
+        basketPromo:
+          description: "The total amount promo applied to the basket items only (item\
+            \ level/order level) in the minor unit, excluding delivery fee. Only present\
+            \ when `paymentType: CASH` or `orderType: DeliveredByRestaurant`. Otherwise,\
+            \ it will be set to `0`. \n```\nbasketPromo = (grabFundPromo + merchantFundPromo)\
+            \ | 300 + 475 = 775\n"
+          example: 775
+          format: int64
+          type: integer
+        deliveryFee:
+          description: "The delivery fee in the minor unit. Only present when `paymentType:CASH`\
+            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`."
+          example: 400
+          format: int64
+          type: integer
+        smallOrderFee:
+          description: The fee charged by GrabFood for order that does not meet a
+            certain minimum order value. Only present when `paymentType:CASH` and
+            `orderType:DeliveredByRestaurant`.
+          example: 0
+          format: int64
+          type: integer
+        eaterPayment:
+          description: "The total amount paid by the consumer in the minor unit, excluding\
+            \ some additional fees charged by GrabFood. Only present when `paymentType:CASH`\
+            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.\
+            \ \n```\neaterPayment = (subtotal + merchantChargeFee + deliveryFee) -\
+            \ (sum of all promo) | (2550+400)-775=2175\n"
+          example: 2175
+          format: int64
+          type: integer
+        total:
+          description: "The total merchant-related amount calculated exclusive of\
+            \ commission charges. Formulae is the same for all delivery method. \n\
+            ```\ntotal = subtotal + merchantChargeFee - merchantFundPromo | 2550+0-475=2075\n"
+          example: 2075
+          format: int64
+          type: integer
+        merchantEarning:
+          $ref: '#/components/schemas/merchantEarning'
+      required:
+      - subtotal
+      title: price
+      type: object
+    dineIn:
+      description: "A JSON object containing order at table information. Only applicable\
+        \ for dine-in order. `null` if not applicable. Not present in [ListOrder](#tag/list-order/operation/list-orders)\
+        \ response."
+      example:
+        eaterCount: 2
+        tableID: "1"
+      nullable: true
+      properties:
+        tableID:
+          description: Table number.
+          example: "1"
+          type: string
+        eaterCount:
+          description: The number of eaters.
+          example: 2
+          format: int64
+          type: integer
+      title: dineIn
+      type: object
+    orderReadyEstimation:
+      description: Information related to the order ready time estimation.
+      example:
+        maxOrderReadyTime: 2019-05-24T05:16:00Z
+        newOrderReadyTime: 2019-05-24T05:26:00Z
+        estimatedOrderReadyTime: 2019-05-24T05:16:00Z
+        allowChange: true
+      nullable: true
+      properties:
+        allowChange:
+          description: A boolean value indicating if the order ready time can be changed.
+          example: true
+          type: boolean
+        estimatedOrderReadyTime:
+          description: "The order ready time for this order estimated by GrabFood,\
+            \ based on ISO_8601/RFC3339."
+          example: 2019-05-24T05:16:00Z
+          format: date-time
+          type: string
+        maxOrderReadyTime:
+          description: "The max allowed order ready time for this order, based on\
+            \ ISO_8601/RFC3339."
+          example: 2019-05-24T05:16:00Z
+          format: date-time
+          type: string
+        newOrderReadyTime:
+          description: "The new order ready time for this order. Only present after\
+            \ a new order ready time is set (default will be null), based on ISO_8601/RFC3339."
+          example: 2019-05-24T05:26:00Z
+          format: date-time
+          nullable: true
+          type: string
+      required:
+      - allowChange
+      - estimatedOrderReadyTime
+      - maxOrderReadyTime
+      title: orderReadyEstimation
+      type: object
+    grabDiscount:
+      description: |
+        The discounts that are applicable for the paybill order in dineout STO case. `null` when there is no discount applied. This is only applicable for STO order
+      items:
+        $ref: '#/components/schemas/grabDiscount_1'
+      nullable: true
+      title: discounts
+      type: array
     cancelOrderLimitType:
       description: The type of the order cancellation limit.
       enum:
@@ -5518,6 +7130,7 @@ components:
         name:
           description: The campaign's name.
           example: $4 off with min $10 order for all users within weekday
+          maxLength: 256
           title: name
           type: string
         quotas:
@@ -5543,6 +7156,7 @@ components:
     campaignName:
       description: The campaign's name.
       example: $4 off with min $10 order for all users within weekday
+      maxLength: 256
       title: name
       type: string
     campaignQuotas:
@@ -5654,6 +7268,7 @@ components:
       - eaterType
       - endTime
       - startTime
+      - workingHour
       title: campaignConditions
       type: object
     campaignDiscount:
@@ -5675,6 +7290,7 @@ components:
           enum:
           - net
           - percentage
+          - fixPrice
           - delivery
           - freeItem
           - bundleSameNet
@@ -5689,6 +7305,7 @@ components:
           description: |
             The maximum discount dollar amount. It is **not required** and will be ignored when the `discount.type` is:
             - `net`
+            - `fixPrice`
             - `delivery`
             - `freeItem`
             - `bundleSameNet`
@@ -5703,9 +7320,10 @@ components:
         value:
           description: |
             Specify the discount amount. Decimal number is not supported For VN, ID and TH. For example, `10.5` is not allowed and it should be `10.0`.
-            * Dollar amount value when `discount.type` is `net`, `delivery`, `bundleSameNet`, `bundleSameFixPrice`, `bundleDiffNet`, `bundleDiffFixPrice`.
+            * Dollar amount value when `discount.type` is `net`, `delivery`, `fixPrice`, `bundleSameNet`, `bundleSameFixPrice`, `bundleDiffNet`, `bundleDiffFixPrice`.
             * Percentage value (0-100) when `discount.type` is `percentage`, `bundleSamePercentage`, `bundleDiffPercentage`.
             * **Not required** when `discount.type` is `freeItem`.
+            * The order-level discount given **should not exceed 0.5 * the minimum basket amount**.
           example: 10
           format: double
           type: number
@@ -5790,54 +7408,119 @@ components:
           type: string
       title: voucher
       type: object
-    currency:
-      description: "A JSON object containing code, symbol, and exponent for a given\
-        \ currency. Refer to [Country and Currency](#section/Getting-started/Country-and-currency)."
+    posOrder:
+      description: The POSOrder indicates the detail order information from POS system.
       example:
-        symbol: S$
-        code: SGD
-        exponent: 2
+        orderTime: 2019-05-24T05:06:00Z
+        orderID: 106351684-C7LYVB6WGBDUV2
+        partnerOrderID: POS-123
+        merchantID: 5-XVGDSSTR34D
+        partnerMerchantID: POS-SVCDGDTA
+        price:
+          depositAmountInMin: 5
+          subtotal: 0
+          tax: 6
+          offlinePOSDiscountInMin: 5
+          billRoundingInMin: 2
+          eaterPayment: 7
+          merchantChargeFeeInMin: 1
+        payments:
+        - method: visa
+          fundingType: credit
+          amountInMin: 100
+        - method: visa
+          fundingType: credit
+          amountInMin: 100
+        currency:
+          symbol: S$
+          code: SGD
+          exponent: 2
+        items:
+        - quantity: 1
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
+          price: 2550
+          name: name
+          tax: 144
+          id: item-1
+          modifiers:
+          - quantity: 1
+            price: 2550
+            name: name
+            tax: 144
+            id: id
+          - quantity: 1
+            price: 2550
+            name: name
+            tax: 144
+            id: id
+        - quantity: 1
+          grabItemID: IDGFSTI000004qy1490868132306763533#0
+          price: 2550
+          name: name
+          tax: 144
+          id: item-1
+          modifiers:
+          - quantity: 1
+            price: 2550
+            name: name
+            tax: 144
+            id: id
+          - quantity: 1
+            price: 2550
+            name: name
+            tax: 144
+            id: id
+        dineIn:
+          eaterCount: 2
+          tableID: "1"
+        orderState: COMPLETED
       properties:
-        code:
-          description: |
-            The three-letter ISO currency code. This is the currency that is associated with the payment amount.
-          enum:
-          - IDR
-          - MYR
-          - PHP
-          - SGD
-          - THB
-          - VND
-          - KHR
-          - MMK
-          example: SGD
-          maxLength: 3
+        orderID:
+          description: The long orderID in grab system.
+          example: 106351684-C7LYVB6WGBDUV2
           type: string
-        symbol:
-          description: |
-            The currency symbol.
-          enum:
-          - Rp
-          - RM
-          - ₱
-          - S$
-          - ฿
-          - ₫
-          - ៛
-          - K
-          example: S$
-          maxLength: 3
+        partnerOrderID:
+          description: The orderID in pos system.
+          example: POS-123
           type: string
-        exponent:
-          description: |
-            The log base 10 of the number of times we have to multiply the major unit to get the minor unit. Should be 0 for VN and 2 for other countries (`SG`/`MY`/`ID`/`TH`/`PH`/`KH`/`MM`).
-          example: 2
-          type: integer
-      required:
-      - code
-      - exponent
-      - symbol
-      title: currency
+        merchantID:
+          description: The merchant's ID is the one in GrabFood's database.
+          example: 5-XVGDSSTR34D
+          type: string
+        partnerMerchantID:
+          description: The merchant ID in pos system.
+          example: POS-SVCDGDTA
+          type: string
+        orderTime:
+          description: "The UTC time that a consumer places the order, based on ISO_8601/RFC3339."
+          example: 2019-05-24T05:06:00Z
+          format: date-time
+          type: string
+        orderState:
+          description: "The order state in POS system, eg, COMPLETED."
+          example: COMPLETED
+          type: string
+        currency:
+          $ref: '#/components/schemas/currency'
+        items:
+          description: 'The ordered items in an array of JSON Object. '
+          items:
+            $ref: '#/components/schemas/POSItem'
+          title: posItems
+          type: array
+        price:
+          $ref: '#/components/schemas/posPriceDetails'
+        dineIn:
+          $ref: '#/components/schemas/dineIn'
+        payments:
+          description: An array of payment objects. `null` when there is no payment
+            info from pos. This is only applicable for STO order
+          items:
+            $ref: '#/components/schemas/payment'
+          nullable: true
+          title: payments
+          type: array
+      title: posOrder
       type: object
     sellingTimes:
       description: "An array of sellingTimes JSON objects. Max 20 allowed. Refer to\
@@ -5866,170 +7549,8 @@ components:
         $ref: '#/components/schemas/MenuSection'
       title: sections
       type: array
-    orderFeatureFlags:
-      description: The featureFlag JSON object containing an order's feature related
-        information.
-      example:
-        orderType: DeliveredByGrab
-        orderAcceptedType: AUTO
-        isMexEditOrder: false
-      properties:
-        orderAcceptedType:
-          description: |
-            The acceptance type for the order. Refer to FAQs for more details about [orderAcceptedType](#section/Order/How-do-I-identify-if-a-particular-order-is-auto-or-manual-acceptance).
-          enum:
-          - AUTO
-          - MANUAL
-          type: string
-        orderType:
-          description: |
-            The type of order.
-          enum:
-          - TakeAway
-          - DeliveredByGrab
-          - DeliveredByRestaurant
-          - DineIn
-          example: DeliveredByGrab
-          type: string
-        isMexEditOrder:
-          description: |
-            A boolean value that indicates if the order is edited.
-          example: false
-          type: boolean
-      required:
-      - orderAcceptedType
-      - orderType
-      title: orderFeatureFlags
-      type: object
-    orderItems:
-      description: 'The ordered items in an array of JSON Object. '
-      items:
-        $ref: '#/components/schemas/OrderItem'
-      title: orderItems
-      type: array
-    orderCampaigns:
-      description: |
-        The campaigns that are applicable for the order. `null` when there is no campaign applied. Only campaigns that are funded by merchants will be sent.
-      items:
-        $ref: '#/components/schemas/OrderCampaign'
-      nullable: true
-      title: campaigns
-      type: array
-    promos:
-      description: An array of promotion objects. `null` when there is no promo code
-        applied. Only promotions that are funded by merchants will be sent.
-      items:
-        $ref: '#/components/schemas/OrderPromo'
-      nullable: true
-      title: promos
-      type: array
-    orderPrice:
-      description: A JSON object containing order's price in the minor unit format.
-      example:
-        smallOrderFee: 0
-        deliveryFee: 400
-        subtotal: 2550
-        merchantChargeFee: 0
-        grabFundPromo: 300
-        basketPromo: 775
-        tax: 117
-        merchantFundPromo: 475
-        eaterPayment: 2175
-      properties:
-        subtotal:
-          description: |
-            Total item and modifier price (tax-inclusive) in the minor unit.
-            ```
-            subtotal = Sum of all (item price * quantity) | 2550*1=2550
-          example: 2550
-          format: int64
-          type: integer
-        tax:
-          description: |
-            GrabFood's tax in the minor unit. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
-            ```
-            tax = (subtotal + merchantChargeFee - merchantFundPromo) * Tax / (1+Tax) | (2550-475)*0.06/1.06=117
-          example: 117
-          format: int64
-          type: integer
-        merchantChargeFee:
-          description: |
-            Any additional fee charged by merchant (tax-inclusive), which is 100% paid out to the merchant.
-            Eg. Takeaway, packaging costs, dine-in charge.
-          example: 0
-          format: int64
-          type: integer
-        grabFundPromo:
-          description: "GrabFood's promo fund in the minor unit. Calculated based\
-            \ on funded ratio. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`.\
-            \ Otherwise, it will be set to `0`."
-          example: 300
-          format: int64
-          type: integer
-        merchantFundPromo:
-          description: The merchant's promo fund in the minor unit. Calculated based
-            on funded ratio.
-          example: 475
-          format: int64
-          type: integer
-        basketPromo:
-          description: "The total amount promo applied to the basket items only (item\
-            \ level/order level) in the minor unit, excluding delivery fee. Only present\
-            \ when `paymentType: CASH` or `orderType: DeliveredByRestaurant`. Otherwise,\
-            \ it will be set to `0`. \n```\nbasketPromo = (grabFundPromo + merchantFundPromo)\
-            \ | 300 + 475 = 775\n"
-          example: 775
-          format: int64
-          type: integer
-        deliveryFee:
-          description: "The delivery fee in the minor unit. Only present when `paymentType:CASH`\
-            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`."
-          example: 400
-          format: int64
-          type: integer
-        smallOrderFee:
-          description: The fee charged by GrabFood for order that does not meet a
-            certain minimum order value. Only present when `paymentType:CASH` and
-            `orderType:DeliveredByRestaurant`.
-          example: 0
-          format: int64
-          type: integer
-        eaterPayment:
-          description: "The total amount paid by the consumer in the minor unit, excluding\
-            \ some additional fees charged by GrabFood. Only present when `paymentType:CASH`\
-            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.\
-            \ \n```\neaterPayment = (subtotal + merchantChargeFee + deliveryFee) -\
-            \ (sum of all promo) | (2550+400)-775=2175\n"
-          example: 2175
-          format: int64
-          type: integer
-      required:
-      - subtotal
-      title: price
-      type: object
-    dineIn:
-      description: "A JSON object containing order at table information. Only applicable\
-        \ for dine-in order. `null` if not applicable. Not present in [ListOrder](#tag/list-order/operation/list-orders)\
-        \ response."
-      example:
-        eaterCount: 2
-        tableID: "1"
-      nullable: true
-      properties:
-        tableID:
-          description: Table number.
-          example: "1"
-          type: string
-        eaterCount:
-          description: The number of eaters.
-          example: 2
-          format: int64
-          type: integer
-      title: dineIn
-      type: object
     receiver:
-      description: A JSON object containing the receiver information. Only applicable
-        for orders that are delivered by the restaurant. `null` if not applicable.
+      description: A JSON object containing the receiver information.
       example:
         address:
           poiSource: GRAB
@@ -6041,6 +7562,11 @@ components:
           unitNumber: 3-45
           deliveryInstruction: turn left in 2 floor.
           poiID: poiID
+        virtualContact:
+          expiredAt: 2025-03-14T12:35:00Z
+          phoneNumber: "+6591234567"
+          PIN: "1234"
+          status: ACTIVE
         name: Prashanth
         phones: "60122234704"
       nullable: true
@@ -6051,50 +7577,26 @@ components:
           maxLength: 64
           type: string
         phones:
-          description: The receiver's phone number.
+          description: |
+            The receiver's phone number. Only applicable for orders that are delivered by the restaurant. `null` if not applicable.
+
+            > Note: The `phones` field will be deprecated once the virtualContact feature is fully rolled out.
           example: "60122234704"
           type: string
         address:
           $ref: '#/components/schemas/address'
+        virtualContact:
+          $ref: '#/components/schemas/virtualContact'
       title: receiver
       type: object
-    orderReadyEstimation:
-      description: Information related to the order ready time estimation.
-      example:
-        maxOrderReadyTime: 2019-05-24T05:16:00Z
-        newOrderReadyTime: 2019-05-24T05:26:00Z
-        estimatedOrderReadyTime: 2019-05-24T05:16:00Z
-        allowChange: true
-      properties:
-        allowChange:
-          description: A boolean value indicating if the order ready time can be changed.
-          example: true
-          type: boolean
-        estimatedOrderReadyTime:
-          description: "The order ready time for this order estimated by GrabFood,\
-            \ based on ISO_8601/RFC3339."
-          example: 2019-05-24T05:16:00Z
-          format: date-time
-          type: string
-        maxOrderReadyTime:
-          description: "The max allowed order ready time for this order, based on\
-            \ ISO_8601/RFC3339."
-          example: 2019-05-24T05:16:00Z
-          format: date-time
-          type: string
-        newOrderReadyTime:
-          description: "The new order ready time for this order. Only present after\
-            \ a new order ready time is set (default will be null), based on ISO_8601/RFC3339."
-          example: 2019-05-24T05:26:00Z
-          format: date-time
-          nullable: true
-          type: string
-      required:
-      - allowChange
-      - estimatedOrderReadyTime
-      - maxOrderReadyTime
-      title: orderReadyEstimation
-      type: object
+    posPayment:
+      description: An array of payment objects. `null` when there is no payment info
+        from pos. This is only applicable for STO order
+      items:
+        $ref: '#/components/schemas/payment'
+      nullable: true
+      title: payments
+      type: array
     openPeriod:
       example:
         startTime: 11:30
@@ -6111,6 +7613,121 @@ components:
       required:
       - endTime
       - startTime
+      type: object
+    outOfStockInstruction:
+      description: An JSON object that indicates the instructions to be taken by the
+        merchant when the item is out of stock.
+      example:
+        replacementItemID: ITEM-2
+        instructionType: SPECIFIC_ITEM
+        replacementGrabItemID: IDGFSTI000004qy1490868132303452210
+        title: Replace item
+      nullable: true
+      properties:
+        title:
+          description: The short instruction message.
+          example: Replace item
+          type: string
+        instructionType:
+          description: "Type of out-of-stock instruction chosen by customer. `CONTACT`\
+            \ is disabled by default, kindly reach out to your integration manager\
+            \ if you wish to receive this instruction."
+          enum:
+          - REMOVE
+          - CANCEL
+          - SPECIFIC_ITEM
+          - CONTACT
+          example: SPECIFIC_ITEM
+          type: string
+        replacementItemID:
+          description: The preferred item's ID in the partner system. Only applicable
+            when the instructionType is `SPECIFIC_ITEM`.
+          example: ITEM-2
+          type: string
+        replacementGrabItemID:
+          description: The preferred item's ID in the Grab system. Only applicable
+            when the instructionType is `SPECIFIC_ITEM`.
+          example: IDGFSTI000004qy1490868132303452210
+          type: string
+      title: outOfStockInstruction
+      type: object
+    orderModifiers:
+      description: An array of JSON objects modifiers.
+      items:
+        $ref: '#/components/schemas/OrderItemModifier'
+      required:
+      - id
+      - price
+      - quantity
+      - tax
+      title: modifiers
+      type: array
+    orderFreeItem:
+      description: Free item information for `freeItem` campaign.
+      example:
+        quantity: 1
+        price: 10
+        name: Free tote bag
+        id: item-2
+      properties:
+        id:
+          description: The free item's externalID in the partner system. Empty if
+            not applicable.
+          example: item-2
+          type: string
+        name:
+          description: |
+            The name of the free item. Empty if not applicable.
+          example: Free tote bag
+          type: string
+        quantity:
+          description: The item's quantity. Maximum is **1**.
+          example: 1
+          type: integer
+        price:
+          description: The item's price in minor unit format.
+          example: 10
+          format: int64
+          type: integer
+      title: orderFreeItem
+      type: object
+    merchantEarning:
+      description: "A JSON object reflects the real money the merchant receives. Only\
+        \ applicable for Dine out STO case. `null` if not applicable. Only present\
+        \ in submitOrder webhook. Not present in [ListOrder](#tag/list-order/operation/list-orders)\
+        \ response."
+      example:
+        revenue: 200
+        netEarning: 150
+        commission: 10
+        mexFundDiscount: 40
+      nullable: true
+      properties:
+        revenue:
+          description: The revenue of merchant should receive. revenue = price.eaterpayment
+            - mexfunddiscount
+          example: 200
+          format: int64
+          type: integer
+        netEarning:
+          description: The netEarning of merchant should receive. netEarning = revenue
+            - commission
+          example: 150
+          format: int64
+          type: integer
+        mexFundDiscount:
+          description: The mexFundDiscount that user applied from grab app in this
+            payment
+          example: 40
+          format: int64
+          type: integer
+        commission:
+          description: The commission that grab need charge from this pay merchant
+            transaction.
+          example: 10
+          format: int64
+          type: integer
+      title: merchantEarning
       type: object
     workingHour:
       description: A JSON object that describes the workingHour for each day.
@@ -6214,6 +7831,72 @@ components:
       - type
       title: campaignScope
       type: object
+    posItems:
+      description: 'The ordered items in an array of JSON Object. '
+      items:
+        $ref: '#/components/schemas/POSItem'
+      title: posItems
+      type: array
+    posPriceDetails:
+      description: A JSON object containing order's price in the minor unit format.
+      example:
+        depositAmountInMin: 5
+        subtotal: 0
+        tax: 6
+        offlinePOSDiscountInMin: 5
+        billRoundingInMin: 2
+        eaterPayment: 7
+        merchantChargeFeeInMin: 1
+      properties:
+        subtotal:
+          description: Total item and modifier price  in minor units and tax-inclusive.
+          format: int64
+          type: integer
+        tax:
+          description: |
+            Total tax in the minor unit.
+            ```
+            Formula
+            Tax = total item/modifier tax
+          format: int64
+          type: integer
+        merchantChargeFeeInMin:
+          description: "Any additional fee charged by the merchant  in minor units\
+            \ and tax-inclusive, which is 100% paid out to the merchant. Eg. service\
+            \ charge"
+          format: int64
+          type: integer
+        depositAmountInMin:
+          description: "This field represents the reservation depositAmount, which\
+            \ is the amount paid upfront by the diner during the reservation process.\
+            \ It can be applied towards the final payment when the order is completed.\
+            \ It’s in minor units and tax-inclusive."
+          format: int64
+          type: integer
+        offlinePOSDiscountInMin:
+          description: Offline discount that is provided to the diner in minor units
+            and tax-inclusive.
+          format: int64
+          type: integer
+        billRoundingInMin:
+          description: "The rounding amount in minor units. \n```\nRound down should\
+            \ be in negative value\nRound up should be in positive value\n```\n"
+          format: int64
+          type: integer
+        eaterPayment:
+          description: |
+            The total bill value in minor units and tax-inclusive.
+            ```
+            Formula:
+              eaterPayment =
+              + subtotal
+              + merchantChargeFeeInMin
+              - depositAmountInMin
+              - offlinePOSDiscountInMin
+          format: int64
+          type: integer
+      title: price
+      type: object
     serviceHours:
       description: A JSON object with serviceHours for each day of the week.
       properties:
@@ -6260,43 +7943,43 @@ components:
       properties:
         Delivery_OnDemand_GrabApp:
           description: |
-            Service type: `Delivery`, Order type: `Instant`, Channel: `Grab App`
+            **Case-sensitive**. Service type: `Delivery`, Order type: `Instant`, Channel: `Grab App`
           example: 30
           format: int64
           type: integer
         Delivery_Scheduled_GrabApp:
           description: |
-            Service type: `Delivery`, Order type: `Scheduled`, Channel: `Grab App`
+            **Case-sensitive**. Service type: `Delivery`, Order type: `Scheduled`, Channel: `Grab App`
           example: 25
           format: int64
           type: integer
         SelfPickUp_OnDemand_GrabApp:
           description: |
-            Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Grab App`
+            **Case-sensitive**. Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Grab App`
           example: 25
           format: int64
           type: integer
         DineIn_OnDemand_GrabApp:
           description: |
-            Service type: `Dine In`, Order type: `Instant`, Channel: `Grab App`
+            **Case-sensitive**. Service type: `Dine In`, Order type: `Instant`, Channel: `Grab App`
           example: 25
           format: int64
           type: integer
         Delivery_OnDemand_StoreFront:
           description: |
-            Service type: `Delivery`, Order type: `Instant`, Channel: `Store Front`
+            **Case-sensitive**. Service type: `Delivery`, Order type: `Instant`, Channel: `Store Front`
           example: 25
           format: int64
           type: integer
         Delivery_Scheduled_StoreFront:
           description: |
-            Service type: `Delivery`, Order type: `Scheduled`, Channel: `Store Front`
+            **Case-sensitive**. Service type: `Delivery`, Order type: `Scheduled`, Channel: `Store Front`
           example: 25
           format: int64
           type: integer
         SelfPickUp_OnDemand_StoreFront:
           description: |
-            Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Store Front`
+            **Case-sensitive**. Service type: `Self Pick Up`, Order type: `Instant`, Channel: `Store Front`
           example: 25
           format: int64
           type: integer
@@ -6307,18 +7990,31 @@ components:
         Purchasability is set to true by default for all service type, unless it is explicitly set to false. Modifier will reuse it’s item’s purchasability. Refer [Service Based Menu](#section/Service-Based-Menu).
       properties:
         Delivery_OnDemand_GrabApp:
+          description: |
+            **Case-sensitive**.
           type: boolean
         Delivery_Scheduled_GrabApp:
+          description: |
+            **Case-sensitive**.
           type: boolean
         SelfPickUp_OnDemand_GrabApp:
+          description: |
+            **Case-sensitive**.
           type: boolean
         DineIn_OnDemand_GrabApp:
+          description: |
+            **Case-sensitive**.
           type: boolean
         Delivery_OnDemand_StoreFront:
+          description: |
+            **Case-sensitive**.
           type: boolean
         Delivery_Scheduled_StoreFront:
+          description: |
+            **Case-sensitive**.
           type: boolean
         SelfPickUp_OnDemand_StoreFront:
+          description: '**Case-sensitive**.'
           type: boolean
       type: object
     modifierGroups:
@@ -6328,85 +8024,10 @@ components:
         $ref: '#/components/schemas/ModifierGroup'
       title: modifierGroups
       type: array
-    outOfStockInstruction:
-      description: An JSON object that indicates the instructions to be taken by the
-        merchant when the item is out of stock.
-      example:
-        replacementItemID: ITEM-2
-        instructionType: SPECIFIC_ITEM
-        replacementGrabItemID: IDGFSTI000004qy1490868132303452210
-        title: Replace item
-      nullable: true
-      properties:
-        title:
-          description: The short instruction message.
-          example: Replace item
-          type: string
-        instructionType:
-          description: "Type of out-of-stock instruction chosen by customer. `CONTACT`\
-            \ is disabled by default, kindly reach out to your integration manager\
-            \ if you wish to receive this instruction."
-          enum:
-          - REMOVE
-          - CANCEL
-          - SPECIFIC_ITEM
-          - CONTACT
-          example: SPECIFIC_ITEM
-          type: string
-        replacementItemID:
-          description: The preferred item's ID in the partner system. Only applicable
-            when the instructionType is `SPECIFIC_ITEM`.
-          example: ITEM-2
-          type: string
-        replacementGrabItemID:
-          description: The preferred item's ID in the Grab system. Only applicable
-            when the instructionType is `SPECIFIC_ITEM`.
-          example: IDGFSTI000004qy1490868132303452210
-          type: string
-      title: outOfStockInstruction
-      type: object
-    orderModifiers:
-      description: An array of JSON objects modifiers.
-      items:
-        $ref: '#/components/schemas/OrderItemModifier'
-      required:
-      - id
-      - price
-      - quantity
-      - tax
-      title: modifiers
-      type: array
-    orderFreeItem:
-      description: Free item information for `freeItem` campaign.
-      example:
-        quantity: 1
-        price: 10
-        name: Free tote bag
-        id: item-2
-      properties:
-        id:
-          description: The free item's externalID in the partner system. Empty if
-            not applicable.
-          example: item-2
-          type: string
-        name:
-          description: |
-            The name of the free item. Empty if not applicable.
-          example: Free tote bag
-          type: string
-        quantity:
-          description: The item's quantity. Maximum is **1**.
-          example: 1
-          type: integer
-        price:
-          description: The item's price in minor unit format.
-          example: 10
-          format: int64
-          type: integer
-      title: orderFreeItem
-      type: object
     address:
-      description: A JSON object containing the receiver’s location information.
+      description: A JSON object containing the receiver’s location information. Only
+        applicable for orders that are delivered by the restaurant. `null` if not
+        applicable.
       example:
         poiSource: GRAB
         address: "123, Jalan Eater street, Batu Caves, 12345, Selangor"
@@ -6449,6 +8070,48 @@ components:
           $ref: '#/components/schemas/coordinates'
       title: address
       type: object
+    virtualContact:
+      description: "A JSON object containing the virtual contact information, where\
+        \ the validity period is 6 hours. Refer [FAQ](#section/Order/How-to-contact-customer-using-the-virtual-contact)\
+        \ on how the virtual contact works."
+      example:
+        expiredAt: 2025-03-14T12:35:00Z
+        phoneNumber: "+6591234567"
+        PIN: "1234"
+        status: ACTIVE
+      properties:
+        phoneNumber:
+          description: The generated virtual phone number that will forward calls
+            to the customer's actual phone number. Will be omitted if the `status`
+            is not `ACTIVE`.
+          example: "+6591234567"
+          maxLength: 30
+          type: string
+        PIN:
+          description: A unique PIN required when forwarding calls to the customer
+            for verification and security. Will be omitted if the `status` is not
+            `ACTIVE`.
+          example: "1234"
+          maxLength: 10
+          type: string
+        expiredAt:
+          description: The expiry time of the virtual contact in UTC based on ISO_8601/RFC3339.
+            Will be omitted if the `status` is not `ACTIVE`.
+          example: 2025-03-14T12:35:00Z
+          type: string
+        status:
+          description: |
+            Indicates the current status and validity of the virtual contact.
+            * `ACTIVE` - The virtual contact is valid.
+            * `EXPIRED` - The virtual contact has expired and is no longer valid.
+            * `UNAVAILABLE` - An internal error occurred while generating or retrieving the virtual contact.
+          enum:
+          - ACTIVE
+          - EXPIRED
+          - UNAVAILABLE
+          type: string
+      title: virtualContact
+      type: object
     workingHourDay:
       description: A JSON object for workingHour for a day.
       example:
@@ -6467,6 +8130,12 @@ components:
           title: periods
           type: array
       type: object
+    posItemModifiers:
+      description: 'The ordered items in an array of JSON Object. '
+      items:
+        $ref: '#/components/schemas/posItemModifier'
+      title: posItemModifiers
+      type: array
     serviceHour:
       description: A JSON object serviceHour for each day. An empty JSON object indicates
         the menu item is not available on the day.
@@ -6671,7 +8340,7 @@ components:
           type: string
         maxStock:
           description: |
-            Available stocks under inventory for this item. Auto reduce when there is order placed for this item.
+            Available stocks under inventory for this item. Auto reduce when there is order placed for this item. The value **must not exceed** `9999999`.
 
             Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is "UNAVAILABLE". Item will be set to "AVAILABLE" if `maxStock` > 0.
           example: 10
@@ -6706,11 +8375,33 @@ components:
           type: string
       title: MenuEntityError
       type: object
+    EditOrderItemModifier:
+      example:
+        quantity: 1
+        id: MOD_A
+      properties:
+        id:
+          description: The modifier's external ID in partner system.
+          example: MOD_A
+          type: string
+        quantity:
+          description: "The modifier's quantity. 0 to remove the modifier, 1 to add\
+            \ or keep the modifier."
+          example: 1
+          format: int32
+          type: integer
+      title: EditOrderItemModifier
+      type: object
     EditOrderItem:
       example:
         isExternalItemID: false
-        itemID: IDGFSTI000004qy1490868132306763533
+        itemID: IDGFSTI000004qy1490868132306763533#0
         quantity: 1
+        modifiers:
+        - quantity: 1
+          id: MOD_A
+        - quantity: 1
+          id: MOD_A
         status: UPDATED
       properties:
         itemID:
@@ -6719,7 +8410,7 @@ components:
             \ request payload parameters under `items[].grabItemID`, or `items[].outOfStockInstruction.replacementGrabItemID`\
             \ for item replacement. External item ID from Partner system is only supported\
             \ when `ADDED` status and `isExternalItemID: true`."
-          example: IDGFSTI000004qy1490868132306763533
+          example: IDGFSTI000004qy1490868132306763533#0
           type: string
         status:
           description: The item's edited status. Leave empty string if there is no
@@ -6747,6 +8438,13 @@ components:
             \ external item ID cannot be edited."
           example: false
           type: boolean
+        modifiers:
+          description: "The modifiers of the item. Only required when you want to\
+            \ update the modifiers of the item. Refer [Edit Order](#section/Edit-Order)\
+            \ for more use cases."
+          items:
+            $ref: '#/components/schemas/EditOrderItemModifier'
+          type: array
       required:
       - itemID
       - status
@@ -6990,6 +8688,297 @@ components:
           title: syncFailCategoryItems
           type: array
       title: MenuSyncFailCategory
+      type: object
+    OrderItem:
+      example:
+        quantity: 1
+        grabItemID: IDGFSTI000004qy1490868132306763533#0
+        price: 2550
+        tax: 144
+        id: item-1
+        modifiers:
+        - quantity: 0
+          price: 175
+          tax: 10
+          id: modifier-1
+        - quantity: 0
+          price: 175
+          tax: 10
+          id: modifier-1
+        specifications: less sugar and chili
+        outOfStockInstruction:
+          replacementItemID: ITEM-2
+          instructionType: SPECIFIC_ITEM
+          replacementGrabItemID: IDGFSTI000004qy1490868132303452210
+          title: Replace item
+      properties:
+        id:
+          description: |
+            The item's externalID in the partner system.
+          example: item-1
+          type: string
+        grabItemID:
+          description: |
+            The item's ID in Grab system. Partner can use this field in the `EditOrder` endpoint.
+            Note: The index number (after `#`) is different for the same item with different modifiers. This helps identify items when editing complex orders. This is currently controlled by feature flag until full rollout, for non whitelisted partners, the '#' and index number will not be included.
+          example: IDGFSTI000004qy1490868132306763533#0
+          type: string
+        quantity:
+          description: The number of the item ordered.
+          example: 1
+          type: integer
+        price:
+          description: "The price for a single item along with its associated modifiers\
+            \ in minor unit and tax-inclusive. \n```\nprice = Item price(tax inclusive)\
+            \ + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)=2550\n"
+          example: 2550
+          format: int64
+          type: integer
+        tax:
+          description: |
+            Tax in minor format for ~~a single item~~ total items along with its associated modifiers (multiply by quantity) . `0` if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+
+            Note: Currently in Staging environment, the tax is calculated based on the single item. In Production environment, the tax is calculated based on the total items (multiply by quantity). There will be a change in the future to match the logic in Staging environment.
+            ```
+            tax = Item tax + Modifier tax | (2241*0.06)+(165*0.06) * 1 =144
+          example: 144
+          format: int64
+          type: integer
+        specifications:
+          description: |
+            An extra note for the merchant. Empty if no note from consumer.
+          example: less sugar and chili
+          maxLength: 300
+          type: string
+        outOfStockInstruction:
+          $ref: '#/components/schemas/outOfStockInstruction'
+        modifiers:
+          description: An array of JSON objects modifiers.
+          items:
+            $ref: '#/components/schemas/OrderItemModifier'
+          required:
+          - id
+          - price
+          - quantity
+          - tax
+          title: modifiers
+          type: array
+      required:
+      - grabItemID
+      - id
+      - price
+      - quantity
+      title: OrderItem
+      type: object
+    OrderCampaign:
+      example:
+        level: item
+        deductedAmount: 475
+        freeItem:
+          quantity: 1
+          price: 10
+          name: Free tote bag
+          id: item-2
+        appliedItemIDs:
+        - item-1
+        - item-1
+        name: 20% off Deal Of the day
+        deductedPart: basket_amount
+        id: id
+        type: percentage
+        campaignNameForMex: DEAL_20%_BURGER_OCT
+        usageCount: 1
+        mexFundedRatio: 100
+      properties:
+        id:
+          description: The campaign's ID returned by GrabFood upon campaign creation.
+          maxLength: 64
+          type: string
+        name:
+          description: The name of the campaign. This campaign name has been automatically
+            generated by Grab for display in the customer app.
+          example: 20% off Deal Of the day
+          maxLength: 60
+          type: string
+        campaignNameForMex:
+          description: "The campaign name provided by the merchant in [Create Campaign](#tag/create-campaign).\
+            \ Whitelist required, reach out to your integration manager."
+          example: DEAL_20%_BURGER_OCT
+          type: string
+        level:
+          description: The campaign level.
+          enum:
+          - item
+          - category
+          - order
+          - delivery_fee
+          - bundle
+          example: item
+          type: string
+        type:
+          description: The type of campaign.
+          enum:
+          - percentage
+          - net
+          - delivery
+          - freeItem
+          - bundleSameNet
+          - bundleSamePercentage
+          - bundleSameFixPrice
+          example: percentage
+          type: string
+        usageCount:
+          description: The redemption count of same campaign in this order.
+          example: 1
+          format: int64
+          type: integer
+        mexFundedRatio:
+          description: The ratio funded by the merchant in percentage.
+          example: 100
+          type: integer
+        deductedAmount:
+          description: "The total discount amount in minor unit format applied to\
+            \ the order based on the campaign's usage count. The amount is rounded\
+            \ to the nearest value for `VND`, `IDR`, and `THB`, as decimals are not\
+            \ supported. \n```\ndeductedAmount = Item price(tax inclusive) * 20% discount\
+            \ | 2375*0.2=475\n"
+          example: 475
+          format: int64
+          type: integer
+        deductedPart:
+          description: The part that the campaign is applied.
+          enum:
+          - basket_amount
+          - delivery_fee
+          example: basket_amount
+          type: string
+        appliedItemIDs:
+          description: An array of item IDs that get discount under this campaign.
+            `null` if no item applied in this campaign.
+          items:
+            example: item-1
+            type: string
+          nullable: true
+          type: array
+        freeItem:
+          $ref: '#/components/schemas/orderFreeItem'
+      title: OrderCampaign
+      type: object
+    OrderPromo:
+      example:
+        promoAmountInMin: 300
+        code: promo_code
+        mexFundedAmount: 0
+        promoAmount: 3
+        name: Order now!
+        targetedPrice: 2550
+        description: $3 off for entire order!
+        mexFundedRatio: 0
+      properties:
+        code:
+          description: Promo code applied in the order.
+          example: promo_code
+          type: string
+        description:
+          description: Promo description.
+          example: $3 off for entire order!
+          type: string
+        name:
+          description: Name of the promotion.
+          example: Order now!
+          type: string
+        promoAmount:
+          description: "Promo amount applied in the order, in local currency. This\
+            \ amount is rounded into whole number."
+          example: 3
+          format: int64
+          type: integer
+        mexFundedRatio:
+          description: The merchant's funded ratio of the promo in percentage.
+          example: 0
+          type: integer
+        mexFundedAmount:
+          description: The merchant's promo fund in the minor unit. Calculated based
+            on merchant funded ratio.
+          example: 0
+          format: int64
+          type: integer
+        targetedPrice:
+          description: The subtotal of the order basket in minor unit.
+          example: 2550
+          format: int64
+          type: integer
+        promoAmountInMin:
+          description: Promo amount applied in the order in minor unit.
+          example: 300
+          format: int64
+          type: integer
+      title: OrderPromo
+      type: object
+    grabDiscount_1:
+      description: "A JSON object reflects the discount in grab app paybill flow that\
+        \ eater has used. Only applicable for Dine out STO case. `null` if not applicable.\
+        \ Only present in submitOrder webhook. Not present in [ListOrder](#tag/list-order/operation/list-orders)\
+        \ response."
+      example:
+        code: GV-RRR32DS
+        level: order
+        mexFundedAmountInMin: 50
+        appliedItemIDs:
+        - item-1
+        - item-1
+        name: $30 order level voucher
+        deductAmountInMin: 200
+        id: "8937388127"
+        type: DineOutVoucher
+      nullable: true
+      properties:
+        code:
+          description: discount code.
+          example: GV-RRR32DS
+          type: string
+        id:
+          description: discount id.
+          example: "8937388127"
+          type: string
+        name:
+          description: discount name.
+          example: $30 order level voucher
+          type: string
+        deductAmountInMin:
+          description: The total discount amount in minor unit.
+          example: 200
+          format: int64
+          type: integer
+        level:
+          description: "discount level, eg, order / item level."
+          enum:
+          - order
+          - item
+          example: order
+          type: string
+        type:
+          description: "discount type, eg, Promo / DineOutVoucher / DineOutDiscount."
+          enum:
+          - Promo
+          - DineOutVoucher
+          - DineOutDiscount
+          example: DineOutVoucher
+          type: string
+        mexFundedAmountInMin:
+          description: The mexFundDiscount in minor unit.
+          example: 50
+          format: int64
+          type: integer
+        appliedItemIDs:
+          description: An array of item IDs that get discount under this grabDiscount.
+            `null` if no item applied in this grabDiscount.
+          items:
+            example: item-1
+            type: string
+          nullable: true
+          type: array
+      title: grabDiscount
       type: object
     CancelReason:
       example:
@@ -7269,28 +9258,79 @@ components:
       - serviceHours
       title: MenuSection
       type: object
-    OrderItem:
+    payment:
+      example:
+        method: visa
+        fundingType: credit
+        amountInMin: 100
+      properties:
+        method:
+          description: "payment name, eg, visa, masterCard."
+          example: visa
+          type: string
+        fundingType:
+          description: "fundingType name, eg, credit, debit."
+          example: credit
+          type: string
+        amountInMin:
+          description: amount paid by this payment method.
+          example: 100
+          format: int64
+          type: integer
+      title: payment
+      type: object
+    OrderItemModifier:
+      example:
+        quantity: 0
+        price: 175
+        tax: 10
+        id: modifier-1
+      properties:
+        id:
+          description: The modifier's ID that is on the partner's system.
+          example: modifier-1
+          maxLength: 64
+          type: string
+        price:
+          description: "The modifier's price (tax-inclusive) in minor format. \n```\n\
+            price = round(165 * (1 + 0.06)) = 175\n"
+          example: 175
+          format: int64
+          type: integer
+        tax:
+          description: |
+            Tax in minor format for 1 modifier. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+            ```
+            tax = 165*0.06=10
+          example: 10
+          format: int64
+          type: integer
+        quantity:
+          description: The number of modifiers present. The value is always 1.
+          enum:
+          - 1
+          type: integer
+      title: OrderItemModifier
+      type: object
+    POSItem:
       example:
         quantity: 1
-        grabItemID: IDGFSTI000004qy1490868132306763533
+        grabItemID: IDGFSTI000004qy1490868132306763533#0
         price: 2550
+        name: name
         tax: 144
         id: item-1
         modifiers:
-        - quantity: 0
-          price: 175
-          tax: 10
-          id: modifier-1
-        - quantity: 0
-          price: 175
-          tax: 10
-          id: modifier-1
-        specifications: less sugar and chili
-        outOfStockInstruction:
-          replacementItemID: ITEM-2
-          instructionType: SPECIFIC_ITEM
-          replacementGrabItemID: IDGFSTI000004qy1490868132303452210
-          title: Replace item
+        - quantity: 1
+          price: 2550
+          name: name
+          tax: 144
+          id: id
+        - quantity: 1
+          price: 2550
+          name: name
+          tax: 144
+          id: id
       properties:
         id:
           description: |
@@ -7298,14 +9338,24 @@ components:
           example: item-1
           type: string
         grabItemID:
-          description: The item's ID in Grab system. Partner can use this field in
-            the `EditOrder` endpoint.
-          example: IDGFSTI000004qy1490868132306763533
+          description: |
+            The item's ID in Grab system. Partner can use this field in the `EditOrder` endpoint.
+            Note: The index number (after `#`) is different for the same item with different modifiers. This helps identify items when editing complex orders. This is currently controlled by feature flag until full rollout, for non whitelisted partners, the '#' and index number will not be included.
+          example: IDGFSTI000004qy1490868132306763533#0
+          type: string
+        name:
+          description: The name of the item.
           type: string
         quantity:
           description: The number of the item ordered.
           example: 1
           type: integer
+        modifiers:
+          description: 'The ordered items in an array of JSON Object. '
+          items:
+            $ref: '#/components/schemas/posItemModifier'
+          title: posItemModifiers
+          type: array
         price:
           description: "The price for a single item along with its associated modifiers\
             \ in minor unit and tax-inclusive. \n```\nprice = Item price(tax inclusive)\
@@ -7321,176 +9371,7 @@ components:
           example: 144
           format: int64
           type: integer
-        specifications:
-          description: |
-            An extra note for the merchant. Empty if no note from consumer.
-          example: less sugar and chili
-          maxLength: 300
-          type: string
-        outOfStockInstruction:
-          $ref: '#/components/schemas/outOfStockInstruction'
-        modifiers:
-          description: An array of JSON objects modifiers.
-          items:
-            $ref: '#/components/schemas/OrderItemModifier'
-          required:
-          - id
-          - price
-          - quantity
-          - tax
-          title: modifiers
-          type: array
-      required:
-      - grabItemID
-      - id
-      - price
-      - quantity
-      title: OrderItem
-      type: object
-    OrderCampaign:
-      example:
-        level: item
-        deductedAmount: 475
-        freeItem:
-          quantity: 1
-          price: 10
-          name: Free tote bag
-          id: item-2
-        appliedItemIDs:
-        - item-1
-        - item-1
-        name: 20% off Deal Of the day
-        deductedPart: basket_amount
-        id: id
-        type: percentage
-        campaignNameForMex: DEAL_20%_BURGER_OCT
-        usageCount: 1
-        mexFundedRatio: 100
-      properties:
-        id:
-          description: The campaign's ID returned by GrabFood upon campaign creation.
-          maxLength: 64
-          type: string
-        name:
-          description: The name of the campaign. This campaign name has been automatically
-            generated by Grab for display in the customer app.
-          example: 20% off Deal Of the day
-          maxLength: 60
-          type: string
-        campaignNameForMex:
-          description: "The campaign name provided by the merchant in [Create Campaign](#tag/create-campaign).\
-            \ Whitelist required, reach out to your integration manager."
-          example: DEAL_20%_BURGER_OCT
-          type: string
-        level:
-          description: The campaign level.
-          enum:
-          - item
-          - category
-          - order
-          - delivery_fee
-          - bundle
-          example: item
-          type: string
-        type:
-          description: The type of campaign.
-          enum:
-          - percentage
-          - net
-          - delivery
-          - freeItem
-          - bundleSameNet
-          - bundleSamePercentage
-          - bundleSameFixPrice
-          example: percentage
-          type: string
-        usageCount:
-          description: The redemption count of same campaign in this order.
-          example: 1
-          format: int64
-          type: integer
-        mexFundedRatio:
-          description: The ratio funded by the merchant in percentage.
-          example: 100
-          type: integer
-        deductedAmount:
-          description: "The total discount amount in minor unit format applied to\
-            \ the order based on the campaign's usage count. The amount is rounded\
-            \ to the nearest value for `VND`, `IDR`, and `THB`, as decimals are not\
-            \ supported. \n```\ndeductedAmount = Item price(tax inclusive) * 20% discount\
-            \ | 2375*0.2=475\n"
-          example: 475
-          format: int64
-          type: integer
-        deductedPart:
-          description: The part that the campaign is applied.
-          enum:
-          - basket_amount
-          - delivery_fee
-          example: basket_amount
-          type: string
-        appliedItemIDs:
-          description: An array of item IDs that get discount under this campaign.
-            `null` if no item applied in this campaign.
-          items:
-            example: item-1
-            type: string
-          nullable: true
-          type: array
-        freeItem:
-          $ref: '#/components/schemas/orderFreeItem'
-      title: OrderCampaign
-      type: object
-    OrderPromo:
-      example:
-        promoAmountInMin: 300
-        code: promo_code
-        mexFundedAmount: 0
-        promoAmount: 3
-        name: Order now!
-        targetedPrice: 2550
-        description: $3 off for entire order!
-        mexFundedRatio: 0
-      properties:
-        code:
-          description: Promo code applied in the order.
-          example: promo_code
-          type: string
-        description:
-          description: Promo description.
-          example: $3 off for entire order!
-          type: string
-        name:
-          description: Name of the promotion.
-          example: Order now!
-          type: string
-        promoAmount:
-          description: "Promo amount applied in the order, in local currency. This\
-            \ amount is rounded into whole number."
-          example: 3
-          format: int64
-          type: integer
-        mexFundedRatio:
-          description: The merchant's funded ratio of the promo in percentage.
-          example: 0
-          type: integer
-        mexFundedAmount:
-          description: The merchant's promo fund in the minor unit. Calculated based
-            on merchant funded ratio.
-          example: 0
-          format: int64
-          type: integer
-        targetedPrice:
-          description: The subtotal of the order basket in minor unit.
-          example: 2550
-          format: int64
-          type: integer
-        promoAmountInMin:
-          description: Promo amount applied in the order in minor unit.
-          example: 300
-          format: int64
-          type: integer
-      title: OrderPromo
+      title: POSItem
       type: object
     MenuItem:
       properties:
@@ -7551,9 +9432,11 @@ components:
           type: array
         specialType:
           description: |
-            The item's special Tag. Refer to FAQs for more details about [specialType](#section/Menu/What's-specialType).
+            The special tag of an item. For implementation details and behavior specific to each value, refer to: **Alcohol & Tobacco** [FAQ](#section/Menu/What-happens-when-an-item-is-tagged-with-specialType-alcohol-or-tobacco) and **Meal for One** [documentation](#section/Meal-for-One).
           enum:
           - alcohol
+          - tobacco
+          - meal_for_one
           - ""
           type: string
           example: null
@@ -7575,7 +9458,7 @@ components:
           type: string
         maxStock:
           description: |
-            Available stocks under inventory for this item. Auto reduce when there is order placed for this item. Empty value implies no limit.
+            Available stocks under inventory for this item. Auto reduce when there is order placed for this item. The value **must not exceed** `9999999`. Empty value implies no limit.
 
             > Note: It is necessary to set `maxStock` to 0 if the `availableStatus` of the item is `"UNAVAILABLE"`. Item will be set to `"AVAILABLE"` if `maxStock` > 0.
           example: 15
@@ -7623,7 +9506,9 @@ components:
             \ 1 translated language. Refer [Menu Translation](#section/Menu-Translation)."
           type: object
         availableStatus:
-          description: "The status for the modifier group. \n\n> The item may be marked\
+          description: "The status for the modifier group. \n\nNote: `HIDE` will only\
+            \ update the modifier group to unavailable, remove the modifier group\
+            \ from the menu if you want to hide it entirely.\n> The item may be marked\
             \ as `\"UNAVAILABLE\"` if no available modifier to be selected within\
             \ the required modifier group where `\"selectionRangeMin\": 1`.\n"
           enum:
@@ -7661,38 +9546,41 @@ components:
       - selectionRangeMax
       title: ModifierGroup
       type: object
-    OrderItemModifier:
+    posItemModifier:
       example:
-        quantity: 0
-        price: 175
-        tax: 10
-        id: modifier-1
+        quantity: 1
+        price: 2550
+        name: name
+        tax: 144
+        id: id
       properties:
         id:
-          description: The modifier's ID that is on the partner's system.
-          example: modifier-1
-          maxLength: 64
+          description: |
+            The modifier’s ID in the partner system.
           type: string
+        name:
+          description: The name of the modifier.
+          type: string
+        quantity:
+          description: The number of the modifier ordered.
+          example: 1
+          type: integer
         price:
-          description: "The modifier's price (tax-inclusive) in minor format. \n```\n\
-            price = round(165 * (1 + 0.06)) = 175\n"
-          example: 175
+          description: |
+            The modifier’s price in minor units and tax-inclusive in the partner system.
+          example: 2550
           format: int64
           type: integer
         tax:
           description: |
-            Tax in minor format for 1 modifier. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).
+            This is the tax amount on the modifier.
+            If grab needs to show modifier excl-tax price, we’ll use this value to calculate.
             ```
-            tax = 165*0.06=10
-          example: 10
+            Price excl-tax = price - tax
+          example: 144
           format: int64
           type: integer
-        quantity:
-          description: The number of modifiers present. The value is always 1.
-          enum:
-          - 1
-          type: integer
-      title: OrderItemModifier
+      title: posItemModifier
       type: object
     MenuModifier:
       properties:
@@ -7715,7 +9603,9 @@ components:
           type: object
         availableStatus:
           description: "The status for the modifier. Refer to FAQs for more details\
-            \ about [availableStatus](#section/Menu/What-is-availableStatus)."
+            \ about [availableStatus](#section/Menu/What-is-availableStatus). \n\n\
+            Note: `HIDE` will only update the modifier to unavailable, remove the\
+            \ modifier from the menu if you want to hide it entirely.\n"
           enum:
           - AVAILABLE
           - UNAVAILABLE
@@ -7747,6 +9637,14 @@ components:
       title: MenuModifier
       type: object
 x-tagGroups:
+- name: API Overview
+  tags:
+  - scopes
+  - api-env
+  - api-endpoints
+  - api-best-practices
+  - integration-requirements
+  - http-resp-codes
 - name: SDK library
   tags:
   - sdk-intro
@@ -7762,12 +9660,14 @@ x-tagGroups:
 - name: Self-serve activation
   tags:
   - self-serve-activation-intro
+  - activation-best-practices
   - create-self-serve-journey
   - push-grab-menu-webhook
   - push-integration-status-webhook
 - name: Menu sync
   tags:
   - sync-flow
+  - menu-best-practices
   - get-menu-webhook
   - update-menu-notification
   - update-menu-record
@@ -7776,6 +9676,7 @@ x-tagGroups:
 - name: Order sync
   tags:
   - order-types
+  - order-best-practices
   - submit-order-webhook
   - accept-reject-order
   - list-orders
@@ -7786,6 +9687,14 @@ x-tagGroups:
   - update-order-ready-time
   - check-order-cancelable
   - cancel-order
+- name: Scan To Order
+  tags:
+  - scan-to-order
+  - pay-bill
+  - scan-to-order-best-practices
+  - sync-pos-order
+  - refund-order
+  - generate-sto-qr-code
 - name: Store
   tags:
   - pause-store
@@ -7797,14 +9706,11 @@ x-tagGroups:
 - name: Campaigns
   tags:
   - campaign-type
+  - campaign-best-practices
   - create-campaign
   - update-campaign
   - list-campaign
   - delete-campaign
-- name: Vouchers
-  tags:
-  - get-dinein-voucher
-  - redeem-dinein-voucher
 - name: Partner Loyalty (Native)
   tags:
   - partner-loyalty-native
@@ -7816,6 +9722,7 @@ x-tagGroups:
 - name: Partner Loyalty (Webview)
   tags:
   - partner-loyalty-webview
+  - loyalty-webview-best-practices
   - notify-membership-webview
   - unlink-membership-webview
   - get-membership-webview

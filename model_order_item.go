@@ -25,13 +25,13 @@ var _ MappedNullable = &OrderItem{}
 type OrderItem struct {
 	// The item's externalID in the partner system. 
 	Id string `json:"id"`
-	// The item's ID in Grab system. Partner can use this field in the `EditOrder` endpoint.
+	// The item's ID in Grab system. Partner can use this field in the `EditOrder` endpoint. Note: The index number (after `#`) is different for the same item with different modifiers. This helps identify items when editing complex orders. This is currently controlled by feature flag until full rollout, for non whitelisted partners, the '#' and index number will not be included. 
 	GrabItemID string `json:"grabItemID"`
 	// The number of the item ordered.
 	Quantity int32 `json:"quantity"`
 	// The price for a single item along with its associated modifiers in minor unit and tax-inclusive.  ``` price = Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)=2550 
 	Price int64 `json:"price"`
-	// Tax in minor format for a single item along with its associated modifiers. `0` if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). ``` tax = Item tax + Modifier tax | (2241*0.06)+(165*0.06)=144 
+	// Tax in minor format for ~~a single item~~ total items along with its associated modifiers (multiply by quantity) . `0` if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).  Note: Currently in Staging environment, the tax is calculated based on the single item. In Production environment, the tax is calculated based on the total items (multiply by quantity). There will be a change in the future to match the logic in Staging environment. ``` tax = Item tax + Modifier tax | (2241*0.06)+(165*0.06) * 1 =144 
 	Tax *int64 `json:"tax,omitempty"`
 	// An extra note for the merchant. Empty if no note from consumer. 
 	Specifications *string `json:"specifications,omitempty"`
