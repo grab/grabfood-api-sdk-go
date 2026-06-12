@@ -11,6 +11,8 @@
 ### Deprecated
 - Edit Order V1
 
+[1.0.3]: https://github.com/grab/grabfood-api-sdk-go/releases/tag/v1.0.3
+
 ## [1.0.2] - 2025-03-04
 
 ### Added
