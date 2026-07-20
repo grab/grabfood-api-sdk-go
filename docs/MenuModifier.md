@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **Barcode** | Pointer to **string** | The barcode Number (GTIN). GTIN must be 8, 12, 13, 14 numeric digits. | [optional] 
 **Sequence** | Pointer to **int32** | The sort or display order of the modifier within the menu. | [optional] 
 **AdvancedPricing** | Pointer to [**AdvancedPricing**](AdvancedPricing.md) |  | [optional] 
+**BCRSUnit** | Pointer to **int32** | **For Singapore only.** Specifies the number of BCRS (Beverage Container Return Scheme) containers for this modifier. Only valid when value is greater than 0. If set to 0 or omitted, existing BCRS value will be removed. Refer to [FAQ](#section/Menu/How-do-I-set-up-BCRS-for-items-and-modifiers) for more details.  | [optional] 
 
 ## Methods
 
@@ -216,6 +217,31 @@ SetAdvancedPricing sets AdvancedPricing field to given value.
 `func (o *MenuModifier) HasAdvancedPricing() bool`
 
 HasAdvancedPricing returns a boolean if a field has been set.
+
+### GetBCRSUnit
+
+`func (o *MenuModifier) GetBCRSUnit() int32`
+
+GetBCRSUnit returns the BCRSUnit field if non-nil, zero value otherwise.
+
+### GetBCRSUnitOk
+
+`func (o *MenuModifier) GetBCRSUnitOk() (*int32, bool)`
+
+GetBCRSUnitOk returns a tuple with the BCRSUnit field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBCRSUnit
+
+`func (o *MenuModifier) SetBCRSUnit(v int32)`
+
+SetBCRSUnit sets BCRSUnit field to given value.
+
+### HasBCRSUnit
+
+`func (o *MenuModifier) HasBCRSUnit() bool`
+
+HasBCRSUnit returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

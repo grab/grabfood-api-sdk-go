@@ -41,7 +41,9 @@ type OrderPrice struct {
 	DeliveryFee *int64 `json:"deliveryFee,omitempty"`
 	// The fee charged by GrabFood for order that does not meet a certain minimum order value. Only present when `paymentType:CASH` and `orderType:DeliveredByRestaurant`.
 	SmallOrderFee *int64 `json:"smallOrderFee,omitempty"`
-	// The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.  ``` eaterPayment = (subtotal + merchantChargeFee + deliveryFee) - (sum of all promo) | (2550+400)-775=2175 
+	// The total BCRS (Beverage Container Return Scheme) deposit in the minor unit. A Singapore government-mandated refundable deposit charged to the consumer for eligible beverage containers (plastic bottles and metal cans). This is a non-taxable, non-commissionable pass-through — collected from consumers and not part of net sales. Only present when the order contains BCRS-eligible items; omitted otherwise. 
+	BcrsDepositFeeInMin *int64 `json:"bcrsDepositFeeInMin,omitempty"`
+	// The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`. ``` eaterPayment = (subtotal + merchantChargeFee + deliveryFee + bcrsDepositFeeInMin) - (sum of all promo) | (2550+0+400+0)-775=2175 
 	EaterPayment *int64 `json:"eaterPayment,omitempty"`
 	// The total merchant-related amount calculated exclusive of commission charges. Formulae is the same for all delivery method.  ``` total = subtotal + merchantChargeFee - merchantFundPromo | 2550+0-475=2075 
 	Total *int64 `json:"total,omitempty"`
@@ -349,6 +351,38 @@ func (o *OrderPrice) SetSmallOrderFee(v int64) {
 	o.SmallOrderFee = &v
 }
 
+// GetBcrsDepositFeeInMin returns the BcrsDepositFeeInMin field value if set, zero value otherwise.
+func (o *OrderPrice) GetBcrsDepositFeeInMin() int64 {
+	if o == nil || IsNil(o.BcrsDepositFeeInMin) {
+		var ret int64
+		return ret
+	}
+	return *o.BcrsDepositFeeInMin
+}
+
+// GetBcrsDepositFeeInMinOk returns a tuple with the BcrsDepositFeeInMin field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderPrice) GetBcrsDepositFeeInMinOk() (*int64, bool) {
+	if o == nil || IsNil(o.BcrsDepositFeeInMin) {
+		return nil, false
+	}
+	return o.BcrsDepositFeeInMin, true
+}
+
+// HasBcrsDepositFeeInMin returns a boolean if a field has been set.
+func (o *OrderPrice) HasBcrsDepositFeeInMin() bool {
+	if o != nil && !IsNil(o.BcrsDepositFeeInMin) {
+		return true
+	}
+
+	return false
+}
+
+// SetBcrsDepositFeeInMin gets a reference to the given int64 and assigns it to the BcrsDepositFeeInMin field.
+func (o *OrderPrice) SetBcrsDepositFeeInMin(v int64) {
+	o.BcrsDepositFeeInMin = &v
+}
+
 // GetEaterPayment returns the EaterPayment field value if set, zero value otherwise.
 func (o *OrderPrice) GetEaterPayment() int64 {
 	if o == nil || IsNil(o.EaterPayment) {
@@ -490,6 +524,9 @@ func (o OrderPrice) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.SmallOrderFee) {
 		toSerialize["smallOrderFee"] = o.SmallOrderFee
 	}
+	if !IsNil(o.BcrsDepositFeeInMin) {
+		toSerialize["bcrsDepositFeeInMin"] = o.BcrsDepositFeeInMin
+	}
 	if !IsNil(o.EaterPayment) {
 		toSerialize["eaterPayment"] = o.EaterPayment
 	}
@@ -551,6 +588,7 @@ func (o *OrderPrice) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "basketPromo")
 		delete(additionalProperties, "deliveryFee")
 		delete(additionalProperties, "smallOrderFee")
+		delete(additionalProperties, "bcrsDepositFeeInMin")
 		delete(additionalProperties, "eaterPayment")
 		delete(additionalProperties, "total")
 		delete(additionalProperties, "merchantEarning")

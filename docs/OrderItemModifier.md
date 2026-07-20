@@ -8,6 +8,7 @@ Name | Type | Description | Notes
 **Price** | Pointer to **int64** | The modifier&#39;s price (tax-inclusive) in minor format.  &#x60;&#x60;&#x60; price &#x3D; round(165 * (1 + 0.06)) &#x3D; 175  | [optional] 
 **Tax** | Pointer to **int64** | Tax in minor format for 1 modifier. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated). &#x60;&#x60;&#x60; tax &#x3D; 165*0.06&#x3D;10  | [optional] 
 **Quantity** | Pointer to **int32** | The number of modifiers present. The value is always 1. | [optional] 
+**BcrsUnitCount** | Pointer to **int32** | **For Singapore only.** The number of BCRS (Beverage Container Return Scheme) eligible containers for this modifier. Only present when the modifier is BCRS-eligible and the merchant has BCRS enabled; omitted otherwise.  | [optional] 
 
 ## Methods
 
@@ -127,6 +128,31 @@ SetQuantity sets Quantity field to given value.
 `func (o *OrderItemModifier) HasQuantity() bool`
 
 HasQuantity returns a boolean if a field has been set.
+
+### GetBcrsUnitCount
+
+`func (o *OrderItemModifier) GetBcrsUnitCount() int32`
+
+GetBcrsUnitCount returns the BcrsUnitCount field if non-nil, zero value otherwise.
+
+### GetBcrsUnitCountOk
+
+`func (o *OrderItemModifier) GetBcrsUnitCountOk() (*int32, bool)`
+
+GetBcrsUnitCountOk returns a tuple with the BcrsUnitCount field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBcrsUnitCount
+
+`func (o *OrderItemModifier) SetBcrsUnitCount(v int32)`
+
+SetBcrsUnitCount sets BcrsUnitCount field to given value.
+
+### HasBcrsUnitCount
+
+`func (o *OrderItemModifier) HasBcrsUnitCount() bool`
+
+HasBcrsUnitCount returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

@@ -35,6 +35,8 @@ type OrderItem struct {
 	Tax *int64 `json:"tax,omitempty"`
 	// An extra note for the merchant. Empty if no note from consumer. 
 	Specifications *string `json:"specifications,omitempty"`
+	// **For Singapore only.** The number of BCRS (Beverage Container Return Scheme) eligible containers for this item. Only present when the item is BCRS-eligible and the merchant has BCRS enabled; omitted otherwise. This represents how many beverage containers (plastic bottles or metal cans) the item contributes towards the BCRS deposit charge. 
+	BcrsUnitCount *int32 `json:"bcrsUnitCount,omitempty"`
 	OutOfStockInstruction NullableOutOfStockInstruction `json:"outOfStockInstruction,omitempty"`
 	// An array of JSON objects modifiers.
 	Modifiers []OrderItemModifier `json:"modifiers,omitempty"`
@@ -224,6 +226,38 @@ func (o *OrderItem) SetSpecifications(v string) {
 	o.Specifications = &v
 }
 
+// GetBcrsUnitCount returns the BcrsUnitCount field value if set, zero value otherwise.
+func (o *OrderItem) GetBcrsUnitCount() int32 {
+	if o == nil || IsNil(o.BcrsUnitCount) {
+		var ret int32
+		return ret
+	}
+	return *o.BcrsUnitCount
+}
+
+// GetBcrsUnitCountOk returns a tuple with the BcrsUnitCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderItem) GetBcrsUnitCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.BcrsUnitCount) {
+		return nil, false
+	}
+	return o.BcrsUnitCount, true
+}
+
+// HasBcrsUnitCount returns a boolean if a field has been set.
+func (o *OrderItem) HasBcrsUnitCount() bool {
+	if o != nil && !IsNil(o.BcrsUnitCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetBcrsUnitCount gets a reference to the given int32 and assigns it to the BcrsUnitCount field.
+func (o *OrderItem) SetBcrsUnitCount(v int32) {
+	o.BcrsUnitCount = &v
+}
+
 // GetOutOfStockInstruction returns the OutOfStockInstruction field value if set, zero value otherwise (both if not set or set to explicit null).
 func (o *OrderItem) GetOutOfStockInstruction() OutOfStockInstruction {
 	if o == nil || IsNil(o.OutOfStockInstruction.Get()) {
@@ -318,6 +352,9 @@ func (o OrderItem) ToMap() (map[string]interface{}, error) {
 	if !IsNil(o.Specifications) {
 		toSerialize["specifications"] = o.Specifications
 	}
+	if !IsNil(o.BcrsUnitCount) {
+		toSerialize["bcrsUnitCount"] = o.BcrsUnitCount
+	}
 	if o.OutOfStockInstruction.IsSet() {
 		toSerialize["outOfStockInstruction"] = o.OutOfStockInstruction.Get()
 	}
@@ -376,6 +413,7 @@ func (o *OrderItem) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "price")
 		delete(additionalProperties, "tax")
 		delete(additionalProperties, "specifications")
+		delete(additionalProperties, "bcrsUnitCount")
 		delete(additionalProperties, "outOfStockInstruction")
 		delete(additionalProperties, "modifiers")
 		o.AdditionalProperties = additionalProperties

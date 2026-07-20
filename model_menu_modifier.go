@@ -38,6 +38,8 @@ type MenuModifier struct {
 	// The sort or display order of the modifier within the menu.
 	Sequence *int32 `json:"sequence,omitempty"`
 	AdvancedPricing *AdvancedPricing `json:"advancedPricing,omitempty"`
+	// **For Singapore only.** Specifies the number of BCRS (Beverage Container Return Scheme) containers for this modifier. Only valid when value is greater than 0. If set to 0 or omitted, existing BCRS value will be removed. Refer to [FAQ](#section/Menu/How-do-I-set-up-BCRS-for-items-and-modifiers) for more details. 
+	BCRSUnit *int32 `json:"BCRSUnit,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -295,6 +297,38 @@ func (o *MenuModifier) SetAdvancedPricing(v AdvancedPricing) {
 	o.AdvancedPricing = &v
 }
 
+// GetBCRSUnit returns the BCRSUnit field value if set, zero value otherwise.
+func (o *MenuModifier) GetBCRSUnit() int32 {
+	if o == nil || IsNil(o.BCRSUnit) {
+		var ret int32
+		return ret
+	}
+	return *o.BCRSUnit
+}
+
+// GetBCRSUnitOk returns a tuple with the BCRSUnit field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MenuModifier) GetBCRSUnitOk() (*int32, bool) {
+	if o == nil || IsNil(o.BCRSUnit) {
+		return nil, false
+	}
+	return o.BCRSUnit, true
+}
+
+// HasBCRSUnit returns a boolean if a field has been set.
+func (o *MenuModifier) HasBCRSUnit() bool {
+	if o != nil && !IsNil(o.BCRSUnit) {
+		return true
+	}
+
+	return false
+}
+
+// SetBCRSUnit gets a reference to the given int32 and assigns it to the BCRSUnit field.
+func (o *MenuModifier) SetBCRSUnit(v int32) {
+	o.BCRSUnit = &v
+}
+
 func (o MenuModifier) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -322,6 +356,9 @@ func (o MenuModifier) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.AdvancedPricing) {
 		toSerialize["advancedPricing"] = o.AdvancedPricing
+	}
+	if !IsNil(o.BCRSUnit) {
+		toSerialize["BCRSUnit"] = o.BCRSUnit
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -376,6 +413,7 @@ func (o *MenuModifier) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "barcode")
 		delete(additionalProperties, "sequence")
 		delete(additionalProperties, "advancedPricing")
+		delete(additionalProperties, "BCRSUnit")
 		o.AdditionalProperties = additionalProperties
 	}
 

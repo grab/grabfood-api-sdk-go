@@ -21,6 +21,7 @@ Name | Type | Description | Notes
 **AdvancedPricing** | Pointer to [**AdvancedPricing**](AdvancedPricing.md) |  | [optional] 
 **Purchasability** | Pointer to [**Purchasability**](Purchasability.md) |  | [optional] 
 **ModifierGroups** | Pointer to [**[]ModifierGroup**](ModifierGroup.md) | An array of the modifierGroup JSON objects. Max 30 allowed per item. Refer to [Modifier groups](#modifier-groups) for more information. | [optional] 
+**BCRSUnit** | Pointer to **int32** | **For Singapore only.** Specifies the number of BCRS (Beverage Container Return Scheme) containers for this item. Only valid when value is greater than 0. If set to 0 or omitted, existing BCRS value will be removed. Refer to [FAQ](#section/Menu/How-do-I-set-up-BCRS-for-items-and-modifiers) for more details.  | [optional] 
 
 ## Methods
 
@@ -445,6 +446,31 @@ SetModifierGroups sets ModifierGroups field to given value.
 `func (o *MenuItem) HasModifierGroups() bool`
 
 HasModifierGroups returns a boolean if a field has been set.
+
+### GetBCRSUnit
+
+`func (o *MenuItem) GetBCRSUnit() int32`
+
+GetBCRSUnit returns the BCRSUnit field if non-nil, zero value otherwise.
+
+### GetBCRSUnitOk
+
+`func (o *MenuItem) GetBCRSUnitOk() (*int32, bool)`
+
+GetBCRSUnitOk returns a tuple with the BCRSUnit field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBCRSUnit
+
+`func (o *MenuItem) SetBCRSUnit(v int32)`
+
+SetBCRSUnit sets BCRSUnit field to given value.
+
+### HasBCRSUnit
+
+`func (o *MenuItem) HasBCRSUnit() bool`
+
+HasBCRSUnit returns a boolean if a field has been set.
 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

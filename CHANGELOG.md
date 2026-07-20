@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4] - 2026-07-20
+
+### Added
+- BCRS (Beverage Container Return Scheme) optional fields to `OrderItem`, `OrderItemModifier`, `OrderPrice`, `MenuItem`, and `MenuModifier`
+
+[1.0.4]: https://github.com/grab/grabfood-api-sdk-go/releases/tag/v1.0.4
+
 ## [1.0.3] - 2026-04-30
 
 ### Added

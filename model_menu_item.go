@@ -55,6 +55,8 @@ type MenuItem struct {
 	Purchasability *Purchasability `json:"purchasability,omitempty"`
 	// An array of the modifierGroup JSON objects. Max 30 allowed per item. Refer to [Modifier groups](#modifier-groups) for more information.
 	ModifierGroups []ModifierGroup `json:"modifierGroups,omitempty"`
+	// **For Singapore only.** Specifies the number of BCRS (Beverage Container Return Scheme) containers for this item. Only valid when value is greater than 0. If set to 0 or omitted, existing BCRS value will be removed. Refer to [FAQ](#section/Menu/How-do-I-set-up-BCRS-for-items-and-modifiers) for more details. 
+	BCRSUnit *int32 `json:"BCRSUnit,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -593,6 +595,38 @@ func (o *MenuItem) SetModifierGroups(v []ModifierGroup) {
 	o.ModifierGroups = v
 }
 
+// GetBCRSUnit returns the BCRSUnit field value if set, zero value otherwise.
+func (o *MenuItem) GetBCRSUnit() int32 {
+	if o == nil || IsNil(o.BCRSUnit) {
+		var ret int32
+		return ret
+	}
+	return *o.BCRSUnit
+}
+
+// GetBCRSUnitOk returns a tuple with the BCRSUnit field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *MenuItem) GetBCRSUnitOk() (*int32, bool) {
+	if o == nil || IsNil(o.BCRSUnit) {
+		return nil, false
+	}
+	return o.BCRSUnit, true
+}
+
+// HasBCRSUnit returns a boolean if a field has been set.
+func (o *MenuItem) HasBCRSUnit() bool {
+	if o != nil && !IsNil(o.BCRSUnit) {
+		return true
+	}
+
+	return false
+}
+
+// SetBCRSUnit gets a reference to the given int32 and assigns it to the BCRSUnit field.
+func (o *MenuItem) SetBCRSUnit(v int32) {
+	o.BCRSUnit = &v
+}
+
 func (o MenuItem) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -645,6 +679,9 @@ func (o MenuItem) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.ModifierGroups) {
 		toSerialize["modifierGroups"] = o.ModifierGroups
+	}
+	if !IsNil(o.BCRSUnit) {
+		toSerialize["BCRSUnit"] = o.BCRSUnit
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -709,6 +746,7 @@ func (o *MenuItem) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "advancedPricing")
 		delete(additionalProperties, "purchasability")
 		delete(additionalProperties, "modifierGroups")
+		delete(additionalProperties, "BCRSUnit")
 		o.AdditionalProperties = additionalProperties
 	}
 

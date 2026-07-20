@@ -13,7 +13,8 @@ Name | Type | Description | Notes
 **BasketPromo** | Pointer to **int64** | The total amount promo applied to the basket items only (item level/order level) in the minor unit, excluding delivery fee. Only present when &#x60;paymentType: CASH&#x60; or &#x60;orderType: DeliveredByRestaurant&#x60;. Otherwise, it will be set to &#x60;0&#x60;.  &#x60;&#x60;&#x60; basketPromo &#x3D; (grabFundPromo + merchantFundPromo) | 300 + 475 &#x3D; 775  | [optional] 
 **DeliveryFee** | Pointer to **int64** | The delivery fee in the minor unit. Only present when &#x60;paymentType:CASH&#x60; or &#x60;orderType:DeliveredByRestaurant&#x60;. Otherwise, it will be set to &#x60;0&#x60;. | [optional] 
 **SmallOrderFee** | Pointer to **int64** | The fee charged by GrabFood for order that does not meet a certain minimum order value. Only present when &#x60;paymentType:CASH&#x60; and &#x60;orderType:DeliveredByRestaurant&#x60;. | [optional] 
-**EaterPayment** | Pointer to **int64** | The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when &#x60;paymentType:CASH&#x60; or &#x60;orderType:DeliveredByRestaurant&#x60;. Otherwise, it will be set to &#x60;0&#x60;.  &#x60;&#x60;&#x60; eaterPayment &#x3D; (subtotal + merchantChargeFee + deliveryFee) - (sum of all promo) | (2550+400)-775&#x3D;2175  | [optional] 
+**BcrsDepositFeeInMin** | Pointer to **int64** | The total BCRS (Beverage Container Return Scheme) deposit in the minor unit. A Singapore government-mandated refundable deposit charged to the consumer for eligible beverage containers (plastic bottles and metal cans). This is a non-taxable, non-commissionable pass-through — collected from consumers and not part of net sales. Only present when the order contains BCRS-eligible items; omitted otherwise.  | [optional] 
+**EaterPayment** | Pointer to **int64** | The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when &#x60;paymentType:CASH&#x60; or &#x60;orderType:DeliveredByRestaurant&#x60;. Otherwise, it will be set to &#x60;0&#x60;. &#x60;&#x60;&#x60; eaterPayment &#x3D; (subtotal + merchantChargeFee + deliveryFee + bcrsDepositFeeInMin) - (sum of all promo) | (2550+0+400+0)-775&#x3D;2175  | [optional] 
 **Total** | Pointer to **int64** | The total merchant-related amount calculated exclusive of commission charges. Formulae is the same for all delivery method.  &#x60;&#x60;&#x60; total &#x3D; subtotal + merchantChargeFee - merchantFundPromo | 2550+0-475&#x3D;2075  | [optional] 
 **MerchantEarning** | Pointer to [**NullableMerchantEarning**](MerchantEarning.md) |  | [optional] 
 
@@ -255,6 +256,31 @@ SetSmallOrderFee sets SmallOrderFee field to given value.
 `func (o *OrderPrice) HasSmallOrderFee() bool`
 
 HasSmallOrderFee returns a boolean if a field has been set.
+
+### GetBcrsDepositFeeInMin
+
+`func (o *OrderPrice) GetBcrsDepositFeeInMin() int64`
+
+GetBcrsDepositFeeInMin returns the BcrsDepositFeeInMin field if non-nil, zero value otherwise.
+
+### GetBcrsDepositFeeInMinOk
+
+`func (o *OrderPrice) GetBcrsDepositFeeInMinOk() (*int64, bool)`
+
+GetBcrsDepositFeeInMinOk returns a tuple with the BcrsDepositFeeInMin field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBcrsDepositFeeInMin
+
+`func (o *OrderPrice) SetBcrsDepositFeeInMin(v int64)`
+
+SetBcrsDepositFeeInMin sets BcrsDepositFeeInMin field to given value.
+
+### HasBcrsDepositFeeInMin
+
+`func (o *OrderPrice) HasBcrsDepositFeeInMin() bool`
+
+HasBcrsDepositFeeInMin returns a boolean if a field has been set.
 
 ### GetEaterPayment
 
