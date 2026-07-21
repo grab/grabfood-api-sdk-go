@@ -2800,6 +2800,9 @@ components:
           type: DineOutVoucher
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          basketPromo: 775
+          tax: 117
+          bcrsDepositFeeInMin: 20
           merchantEarning:
             revenue: 200
             netEarning: 150
@@ -2812,8 +2815,6 @@ components:
           serviceChargeFee: 0
           merchantChargeFee: 0
           grabFundPromo: 300
-          basketPromo: 775
-          tax: 117
           merchantFundPromo: 475
           eaterPayment: 2175
         orderReadyEstimation:
@@ -2829,15 +2830,18 @@ components:
         - quantity: 1
           grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
+          bcrsUnitCount: 1
           tax: 144
           id: item-1
           modifiers:
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           specifications: less sugar and chili
@@ -2849,15 +2853,18 @@ components:
         - quantity: 1
           grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
+          bcrsUnitCount: 1
           tax: 144
           id: item-1
           modifiers:
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           specifications: less sugar and chili
@@ -4450,6 +4457,9 @@ components:
             type: DineOutVoucher
           merchantID: 1-CYNGRUNGSBCCC
           price:
+            basketPromo: 775
+            tax: 117
+            bcrsDepositFeeInMin: 20
             merchantEarning:
               revenue: 200
               netEarning: 150
@@ -4462,8 +4472,6 @@ components:
             serviceChargeFee: 0
             merchantChargeFee: 0
             grabFundPromo: 300
-            basketPromo: 775
-            tax: 117
             merchantFundPromo: 475
             eaterPayment: 2175
           orderReadyEstimation:
@@ -4479,15 +4487,18 @@ components:
           - quantity: 1
             grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
+            bcrsUnitCount: 1
             tax: 144
             id: item-1
             modifiers:
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             specifications: less sugar and chili
@@ -4499,15 +4510,18 @@ components:
           - quantity: 1
             grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
+            bcrsUnitCount: 1
             tax: 144
             id: item-1
             modifiers:
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             specifications: less sugar and chili
@@ -4634,6 +4648,9 @@ components:
             type: DineOutVoucher
           merchantID: 1-CYNGRUNGSBCCC
           price:
+            basketPromo: 775
+            tax: 117
+            bcrsDepositFeeInMin: 20
             merchantEarning:
               revenue: 200
               netEarning: 150
@@ -4646,8 +4663,6 @@ components:
             serviceChargeFee: 0
             merchantChargeFee: 0
             grabFundPromo: 300
-            basketPromo: 775
-            tax: 117
             merchantFundPromo: 475
             eaterPayment: 2175
           orderReadyEstimation:
@@ -4663,15 +4678,18 @@ components:
           - quantity: 1
             grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
+            bcrsUnitCount: 1
             tax: 144
             id: item-1
             modifiers:
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             specifications: less sugar and chili
@@ -4683,15 +4701,18 @@ components:
           - quantity: 1
             grabItemID: IDGFSTI000004qy1490868132306763533#0
             price: 2550
+            bcrsUnitCount: 1
             tax: 144
             id: item-1
             modifiers:
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             - quantity: 0
               price: 175
+              bcrsUnitCount: 1
               tax: 10
               id: modifier-1
             specifications: less sugar and chili
@@ -4879,6 +4900,9 @@ components:
           type: DineOutVoucher
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          basketPromo: 775
+          tax: 117
+          bcrsDepositFeeInMin: 20
           merchantEarning:
             revenue: 200
             netEarning: 150
@@ -4891,8 +4915,6 @@ components:
           serviceChargeFee: 0
           merchantChargeFee: 0
           grabFundPromo: 300
-          basketPromo: 775
-          tax: 117
           merchantFundPromo: 475
           eaterPayment: 2175
         orderReadyEstimation:
@@ -4908,15 +4930,18 @@ components:
         - quantity: 1
           grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
+          bcrsUnitCount: 1
           tax: 144
           id: item-1
           modifiers:
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           specifications: less sugar and chili
@@ -4928,15 +4953,18 @@ components:
         - quantity: 1
           grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
+          bcrsUnitCount: 1
           tax: 144
           id: item-1
           modifiers:
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           specifications: less sugar and chili
@@ -6211,6 +6239,9 @@ components:
           type: DineOutVoucher
         merchantID: 1-CYNGRUNGSBCCC
         price:
+          basketPromo: 775
+          tax: 117
+          bcrsDepositFeeInMin: 20
           merchantEarning:
             revenue: 200
             netEarning: 150
@@ -6223,8 +6254,6 @@ components:
           serviceChargeFee: 0
           merchantChargeFee: 0
           grabFundPromo: 300
-          basketPromo: 775
-          tax: 117
           merchantFundPromo: 475
           eaterPayment: 2175
         orderReadyEstimation:
@@ -6240,15 +6269,18 @@ components:
         - quantity: 1
           grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
+          bcrsUnitCount: 1
           tax: 144
           id: item-1
           modifiers:
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           specifications: less sugar and chili
@@ -6260,15 +6292,18 @@ components:
         - quantity: 1
           grabItemID: IDGFSTI000004qy1490868132306763533#0
           price: 2550
+          bcrsUnitCount: 1
           tax: 144
           id: item-1
           modifiers:
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           - quantity: 0
             price: 175
+            bcrsUnitCount: 1
             tax: 10
             id: modifier-1
           specifications: less sugar and chili
@@ -6836,6 +6871,9 @@ components:
     orderPrice:
       description: A JSON object containing order's price in the minor unit format.
       example:
+        basketPromo: 775
+        tax: 117
+        bcrsDepositFeeInMin: 20
         merchantEarning:
           revenue: 200
           netEarning: 150
@@ -6848,8 +6886,6 @@ components:
         serviceChargeFee: 0
         merchantChargeFee: 0
         grabFundPromo: 300
-        basketPromo: 775
-        tax: 117
         merchantFundPromo: 475
         eaterPayment: 2175
       properties:
@@ -6917,12 +6953,17 @@ components:
           example: 0
           format: int64
           type: integer
+        bcrsDepositFeeInMin:
+          description: |
+            The total BCRS (Beverage Container Return Scheme) deposit in the minor unit. A Singapore government-mandated refundable deposit charged to the consumer for eligible beverage containers (plastic bottles and metal cans). This is a non-taxable, non-commissionable pass-through — collected from consumers and not part of net sales. Only present when the order contains BCRS-eligible items; omitted otherwise.
+          example: 20
+          format: int64
+          type: integer
         eaterPayment:
-          description: "The total amount paid by the consumer in the minor unit, excluding\
-            \ some additional fees charged by GrabFood. Only present when `paymentType:CASH`\
-            \ or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.\
-            \ \n```\neaterPayment = (subtotal + merchantChargeFee + deliveryFee) -\
-            \ (sum of all promo) | (2550+400)-775=2175\n"
+          description: |
+            The total amount paid by the consumer in the minor unit, excluding some additional fees charged by GrabFood. Only present when `paymentType:CASH` or `orderType:DeliveredByRestaurant`. Otherwise, it will be set to `0`.
+            ```
+            eaterPayment = (subtotal + merchantChargeFee + deliveryFee + bcrsDepositFeeInMin) - (sum of all promo) | (2550+0+400+0)-775=2175
           example: 2175
           format: int64
           type: integer
@@ -8694,15 +8735,18 @@ components:
         quantity: 1
         grabItemID: IDGFSTI000004qy1490868132306763533#0
         price: 2550
+        bcrsUnitCount: 1
         tax: 144
         id: item-1
         modifiers:
         - quantity: 0
           price: 175
+          bcrsUnitCount: 1
           tax: 10
           id: modifier-1
         - quantity: 0
           price: 175
+          bcrsUnitCount: 1
           tax: 10
           id: modifier-1
         specifications: less sugar and chili
@@ -8750,6 +8794,12 @@ components:
           example: less sugar and chili
           maxLength: 300
           type: string
+        bcrsUnitCount:
+          description: |
+            **For Singapore only.** The number of BCRS (Beverage Container Return Scheme) eligible containers for this item. Only present when the item is BCRS-eligible and the merchant has BCRS enabled; omitted otherwise. This represents how many beverage containers (plastic bottles or metal cans) the item contributes towards the BCRS deposit charge.
+          example: 1
+          format: int32
+          type: integer
         outOfStockInstruction:
           $ref: '#/components/schemas/outOfStockInstruction'
         modifiers:
@@ -9283,6 +9333,7 @@ components:
       example:
         quantity: 0
         price: 175
+        bcrsUnitCount: 1
         tax: 10
         id: modifier-1
       properties:
@@ -9309,6 +9360,12 @@ components:
           description: The number of modifiers present. The value is always 1.
           enum:
           - 1
+          type: integer
+        bcrsUnitCount:
+          description: |
+            **For Singapore only.** The number of BCRS (Beverage Container Return Scheme) eligible containers for this modifier. Only present when the modifier is BCRS-eligible and the merchant has BCRS enabled; omitted otherwise.
+          example: 1
+          format: int32
           type: integer
       title: OrderItemModifier
       type: object
@@ -9479,6 +9536,12 @@ components:
             $ref: '#/components/schemas/ModifierGroup'
           title: modifierGroups
           type: array
+        BCRSUnit:
+          description: |
+            **For Singapore only.** Specifies the number of BCRS (Beverage Container Return Scheme) containers for this item. Only valid when value is greater than 0. If set to 0 or omitted, existing BCRS value will be removed. Refer to [FAQ](#section/Menu/How-do-I-set-up-BCRS-for-items-and-modifiers) for more details.
+          example: 2
+          format: int32
+          type: integer
       required:
       - availableStatus
       - id
@@ -9630,6 +9693,12 @@ components:
           type: integer
         advancedPricing:
           $ref: '#/components/schemas/advancedPricing'
+        BCRSUnit:
+          description: |
+            **For Singapore only.** Specifies the number of BCRS (Beverage Container Return Scheme) containers for this modifier. Only valid when value is greater than 0. If set to 0 or omitted, existing BCRS value will be removed. Refer to [FAQ](#section/Menu/How-do-I-set-up-BCRS-for-items-and-modifiers) for more details.
+          example: 1
+          format: int32
+          type: integer
       required:
       - availableStatus
       - id

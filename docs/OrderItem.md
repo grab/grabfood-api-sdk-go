@@ -10,6 +10,7 @@ Name | Type | Description | Notes
 **Price** | **int64** | The price for a single item along with its associated modifiers in minor unit and tax-inclusive.  &#x60;&#x60;&#x60; price &#x3D; Item price(tax inclusive) + Modifier price(tax inclusive) | (2241*1.06)+(165*1.06)&#x3D;2550  | 
 **Tax** | Pointer to **int64** | Tax in minor format for ~~a single item~~ total items along with its associated modifiers (multiply by quantity) . &#x60;0&#x60; if tax configuration is absent. Refer to FAQs for more details about [tax](#section/Order/How-is-tax-calculated).  Note: Currently in Staging environment, the tax is calculated based on the single item. In Production environment, the tax is calculated based on the total items (multiply by quantity). There will be a change in the future to match the logic in Staging environment. &#x60;&#x60;&#x60; tax &#x3D; Item tax + Modifier tax | (2241*0.06)+(165*0.06) * 1 &#x3D;144  | [optional] 
 **Specifications** | Pointer to **string** | An extra note for the merchant. Empty if no note from consumer.  | [optional] 
+**BcrsUnitCount** | Pointer to **int32** | **For Singapore only.** The number of BCRS (Beverage Container Return Scheme) eligible containers for this item. Only present when the item is BCRS-eligible and the merchant has BCRS enabled; omitted otherwise. This represents how many beverage containers (plastic bottles or metal cans) the item contributes towards the BCRS deposit charge.  | [optional] 
 **OutOfStockInstruction** | Pointer to [**NullableOutOfStockInstruction**](OutOfStockInstruction.md) |  | [optional] 
 **Modifiers** | Pointer to [**[]OrderItemModifier**](OrderItemModifier.md) | An array of JSON objects modifiers. | [optional] 
 
@@ -161,6 +162,31 @@ SetSpecifications sets Specifications field to given value.
 `func (o *OrderItem) HasSpecifications() bool`
 
 HasSpecifications returns a boolean if a field has been set.
+
+### GetBcrsUnitCount
+
+`func (o *OrderItem) GetBcrsUnitCount() int32`
+
+GetBcrsUnitCount returns the BcrsUnitCount field if non-nil, zero value otherwise.
+
+### GetBcrsUnitCountOk
+
+`func (o *OrderItem) GetBcrsUnitCountOk() (*int32, bool)`
+
+GetBcrsUnitCountOk returns a tuple with the BcrsUnitCount field if it's non-nil, zero value otherwise
+and a boolean to check if the value has been set.
+
+### SetBcrsUnitCount
+
+`func (o *OrderItem) SetBcrsUnitCount(v int32)`
+
+SetBcrsUnitCount sets BcrsUnitCount field to given value.
+
+### HasBcrsUnitCount
+
+`func (o *OrderItem) HasBcrsUnitCount() bool`
+
+HasBcrsUnitCount returns a boolean if a field has been set.
 
 ### GetOutOfStockInstruction
 

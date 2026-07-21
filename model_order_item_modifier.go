@@ -30,6 +30,8 @@ type OrderItemModifier struct {
 	Tax *int64 `json:"tax,omitempty"`
 	// The number of modifiers present. The value is always 1.
 	Quantity *int32 `json:"quantity,omitempty"`
+	// **For Singapore only.** The number of BCRS (Beverage Container Return Scheme) eligible containers for this modifier. Only present when the modifier is BCRS-eligible and the merchant has BCRS enabled; omitted otherwise. 
+	BcrsUnitCount *int32 `json:"bcrsUnitCount,omitempty"`
 	AdditionalProperties map[string]interface{}
 }
 
@@ -180,6 +182,38 @@ func (o *OrderItemModifier) SetQuantity(v int32) {
 	o.Quantity = &v
 }
 
+// GetBcrsUnitCount returns the BcrsUnitCount field value if set, zero value otherwise.
+func (o *OrderItemModifier) GetBcrsUnitCount() int32 {
+	if o == nil || IsNil(o.BcrsUnitCount) {
+		var ret int32
+		return ret
+	}
+	return *o.BcrsUnitCount
+}
+
+// GetBcrsUnitCountOk returns a tuple with the BcrsUnitCount field value if set, nil otherwise
+// and a boolean to check if the value has been set.
+func (o *OrderItemModifier) GetBcrsUnitCountOk() (*int32, bool) {
+	if o == nil || IsNil(o.BcrsUnitCount) {
+		return nil, false
+	}
+	return o.BcrsUnitCount, true
+}
+
+// HasBcrsUnitCount returns a boolean if a field has been set.
+func (o *OrderItemModifier) HasBcrsUnitCount() bool {
+	if o != nil && !IsNil(o.BcrsUnitCount) {
+		return true
+	}
+
+	return false
+}
+
+// SetBcrsUnitCount gets a reference to the given int32 and assigns it to the BcrsUnitCount field.
+func (o *OrderItemModifier) SetBcrsUnitCount(v int32) {
+	o.BcrsUnitCount = &v
+}
+
 func (o OrderItemModifier) MarshalJSON() ([]byte, error) {
 	toSerialize,err := o.ToMap()
 	if err != nil {
@@ -201,6 +235,9 @@ func (o OrderItemModifier) ToMap() (map[string]interface{}, error) {
 	}
 	if !IsNil(o.Quantity) {
 		toSerialize["quantity"] = o.Quantity
+	}
+	if !IsNil(o.BcrsUnitCount) {
+		toSerialize["bcrsUnitCount"] = o.BcrsUnitCount
 	}
 
 	for key, value := range o.AdditionalProperties {
@@ -228,6 +265,7 @@ func (o *OrderItemModifier) UnmarshalJSON(data []byte) (err error) {
 		delete(additionalProperties, "price")
 		delete(additionalProperties, "tax")
 		delete(additionalProperties, "quantity")
+		delete(additionalProperties, "bcrsUnitCount")
 		o.AdditionalProperties = additionalProperties
 	}
 
